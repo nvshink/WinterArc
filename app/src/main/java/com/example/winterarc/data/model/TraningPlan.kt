@@ -1,5 +1,3 @@
 package com.example.winterarc.data.model
 
-class TrainingPlan (name: String, description: String, exercises: List<Triple<Exercise, Int, Boolean>>) {
-
-}
+data class TrainingPlan (var name: String, var description: String, var exercises: List<Triple<Exercise, Int, Boolean>>)

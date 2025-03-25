@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">WinterArc</string>
+    <string name="training_plans_nav_label">Training plans</string>
+    <string name="exercises_nav_label">Exercises</string>
+    <string name="profile_nav_label">Profile</string>
     <string name="training_plans_nav_content_description"></string>
     <string name="exercises_nav_content_description"></string>
     <string name="profile_nav_content_description"></string>

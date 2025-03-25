@@ -1,7 +1,6 @@
 package com.example.winterarc.ui
 
 import androidx.lifecycle.ViewModel
-import com.example.winterarc.data.Datasource
 import com.example.winterarc.data.model.Exercise
 import com.example.winterarc.data.repository.ExerciseRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,9 +11,9 @@ class ExerciseViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(
         ExerciseUiState (
-            exercisesList = Datasource.loadExercises(),
-            currentExercise = Datasource.loadExercises().getOrElse(0) {
-                Datasource.defaultExercise
+            exercisesList = exerciseRepository.getExercises(),
+            currentExercise = exerciseRepository.getExercises().getOrElse(0) {
+                exerciseRepository.getExercises()[0]
             }
         )
     )
@@ -25,5 +24,5 @@ class ExerciseViewModel : ViewModel() {
 
 data class ExerciseUiState(
     val exercisesList: List<Exercise> = emptyList(),
-    val currentExercise: Exercise = Datasource.defaultExercise
+    val currentExercise: Exercise = exercisesList[0]
 )
