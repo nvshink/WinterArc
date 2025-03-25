@@ -1,15 +1,19 @@
 package com.example.winterarc.ui
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
@@ -58,20 +62,26 @@ fun WinterArcListItem (
     onCardClick: (() -> Unit)? = null,
     additionalInfo: @Composable (() -> Unit)? = null
 ) {
-    Card (modifier = modifier.fillMaxSize().padding(5.dp), elevation = CardDefaults.cardElevation(1.dp)) {
-        Row(
-            modifier = Modifier.fillMaxSize().padding(10.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        )
-        {
-            Column (Modifier) {
-                Text(text = title, style = MaterialTheme.typography.labelMedium)
-                Text(text = subtitle ?: "", style = MaterialTheme.typography.bodySmall)
-            }
-            if (additionalInfo != null) additionalInfo()
-            if (image != null) {
-                Image(image, contentDescription = null)
+    if (onCardClick != null) {
+        OutlinedCard (
+            modifier = modifier.fillMaxWidth().height(80.dp).padding(5.dp),
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            onClick = onCardClick) {
+            Row(
+                modifier = Modifier.fillMaxSize().padding(10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            )
+            {
+                Column (Modifier, ) {
+                    Text(text = title, style = MaterialTheme.typography.titleMedium)
+                    Text(text = subtitle ?: "", style = MaterialTheme.typography.bodyMedium)
+                }
+                if (additionalInfo != null) additionalInfo()
+                if (image != null) {
+                    Image(image, contentDescription = null)
+                }
             }
         }
     }

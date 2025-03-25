@@ -9,31 +9,32 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.winterarc.data.model.Exercise
 import com.example.winterarc.data.model.TrainingPlan
+import com.example.winterarc.ui.utils.WinterArcContentType
 
 @Composable
 fun TrainingPlanScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    trainingPlanUiState: TrainingPlanUiState,
+    contentType: WinterArcContentType,
+    onTrainingPlanCardPressed: (TrainingPlan) -> Unit,
+    onTrainingPlanItemScreenBackPressed: () -> Unit
 ) {
-    val viewModel: TrainingPlanViewModel = viewModel()
-    val uiState by viewModel.uiState.collectAsState()
     Box(modifier = modifier) {
-        TrainingPlansListItems(
-            trainingPlans = uiState.trainingPlanList
-        )
-    }
-}
-
-@Composable
-fun TrainingPlansListItems(
-    trainingPlans: List<TrainingPlan>
-) {
-    LazyColumn {
-        items(trainingPlans) { trainingPlan ->
-            WinterArcListItem(
-                title = trainingPlan.name,
-                subtitle = trainingPlan.description
+        if (contentType == WinterArcContentType.LIST_AND_DETAIL) {
+            TrainingPlansListAndDetailContent (
+                trainingPlanUiState = trainingPlanUiState,
+                onTrainingPlanCardPressed = onTrainingPlanCardPressed,
+                onTrainingPlanItemScreenBackPressed = onTrainingPlanItemScreenBackPressed
+            )
+        } else {
+            TrainingPlansListOnlyContent (
+                trainingPlanUiState = trainingPlanUiState,
+                onTrainingPlanCardPressed = onTrainingPlanCardPressed,
+                onTrainingPlanItemScreenBackPressed = onTrainingPlanItemScreenBackPressed
             )
         }
     }
 }
+
