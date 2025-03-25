@@ -1,0 +1,185 @@
+{
+  "main": {
+    "id": "a88fdbe4fe90cb64",
+    "type": "split",
+    "children": [
+      {
+        "id": "e9fe1dbdc0c5ad53",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "10d551c11e31daa1",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "README.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "README"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "31e7ea23fb4ff1f9",
+    "type": "split",
+    "children": [
+      {
+        "id": "bb89368e9979ef8a",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "f112f7648f1da671",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Файловый менеджер"
+            }
+          },
+          {
+            "id": "65c096cb3af69fb4",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Поиск"
+            }
+          },
+          {
+            "id": "7d8d1c41afb23134",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Закладки"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "9ef2f8b0e5484b5b",
+    "type": "split",
+    "children": [
+      {
+        "id": "4b5ade70927f4630",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b6b4cd99f9d179e0",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "README.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Обратные ссылки для README"
+            }
+          },
+          {
+            "id": "69873ccb2963f462",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "README.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Исходящие ссылки из README"
+            }
+          },
+          {
+            "id": "d911bbe471e6001b",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Теги"
+            }
+          },
+          {
+            "id": "86f0109eae68c0b5",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "README.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Структура README"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Меню быстрого перехода": false,
+      "graph:Граф": false,
+      "canvas:Создать новый холст": false,
+      "daily-notes:Сегодняшняя заметка": false,
+      "templates:Вставить шаблон": false,
+      "command-palette:Открыть палитру команд": false
+    }
+  },
+  "active": "10d551c11e31daa1",
+  "lastOpenFiles": [
+    "app/src/main/java/com/example/winterarc/ui/TrainingPlanContent.kt~",
+    "app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/com/example/winterarc/ui/TrainingPlanContentKt$TrainingPlansListAndDetailContent$2.dex",
+    "app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/com/example/winterarc/ui/WinterArcHomeScreenKt$WinterArcHomeScreen$1$2$3.dex",
+    "app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/com/example/winterarc/ui/TrainingPlanContentKt$TrainingPlansListOnlyContent$1.dex",
+    "app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/com/example/winterarc/ui/TrainingPlanContentKt$TrainingPlansListItems$1$invoke$$inlined$items$default$2.dex",
+    "app/build/kotlin/compileDebugKotlin/cacheable/dirty-sources.txt",
+    "app/build/tmp/kotlin-classes/debug/META-INF/app_debug.kotlin_module",
+    "app/build/tmp/kotlin-classes/debug/com/example/winterarc/ui/WinterArcHomeScreenKt$WinterArcHomeScreen$2.class",
+    "app/build/tmp/kotlin-classes/debug/com/example/winterarc/ui/WinterArcHomeScreenKt$WinterArcHomeScreen$1$2$WhenMappings.class",
+    "app/build/tmp/kotlin-classes/debug/com/example/winterarc/ui/WinterArcHomeScreenKt$WinterArcHomeScreen$1$2$4.class",
+    "app/build/tmp/kotlin-classes/debug/com/example/winterarc/ui/WinterArcHomeScreenKt$WinterArcHomeScreen$1$1$1$1$1.class"
+  ]
+}
