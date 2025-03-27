@@ -170,16 +170,16 @@
   },
   "active": "10d551c11e31daa1",
   "lastOpenFiles": [
-    "app/src/main/java/com/example/winterarc/ui/TrainingPlanContent.kt~",
-    "app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/com/example/winterarc/ui/TrainingPlanContentKt$TrainingPlansListAndDetailContent$2.dex",
-    "app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/com/example/winterarc/ui/WinterArcHomeScreenKt$WinterArcHomeScreen$1$2$3.dex",
-    "app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/com/example/winterarc/ui/TrainingPlanContentKt$TrainingPlansListOnlyContent$1.dex",
-    "app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/com/example/winterarc/ui/TrainingPlanContentKt$TrainingPlansListItems$1$invoke$$inlined$items$default$2.dex",
-    "app/build/kotlin/compileDebugKotlin/cacheable/dirty-sources.txt",
     "app/build/tmp/kotlin-classes/debug/META-INF/app_debug.kotlin_module",
-    "app/build/tmp/kotlin-classes/debug/com/example/winterarc/ui/WinterArcHomeScreenKt$WinterArcHomeScreen$2.class",
-    "app/build/tmp/kotlin-classes/debug/com/example/winterarc/ui/WinterArcHomeScreenKt$WinterArcHomeScreen$1$2$WhenMappings.class",
-    "app/build/tmp/kotlin-classes/debug/com/example/winterarc/ui/WinterArcHomeScreenKt$WinterArcHomeScreen$1$2$4.class",
-    "app/build/tmp/kotlin-classes/debug/com/example/winterarc/ui/WinterArcHomeScreenKt$WinterArcHomeScreen$1$1$1$1$1.class"
+    "app/build/tmp/kotlin-classes/debug/com/example/winterarc/ui/TrainingPlanUiState.class",
+    "app/build/tmp/kotlin-classes/debug/com/example/winterarc/ui/TrainingPlanViewModel.class",
+    "app/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/dirty-output-classes.tab_i",
+    "app/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/dirty-output-classes.tab.keystream.len",
+    "app/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/dirty-output-classes.tab_i.len",
+    "app/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/dirty-output-classes.tab",
+    "app/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/dirty-output-classes.tab.len",
+    "app/build/snapshot/kotlin/compileDebugKotlin/2.zip",
+    "app/build/snapshot/kotlin/compileDebugKotlin/1.zip",
+    "app/build/snapshot/kotlin/compileDebugKotlin/0.zip"
   ]
 }

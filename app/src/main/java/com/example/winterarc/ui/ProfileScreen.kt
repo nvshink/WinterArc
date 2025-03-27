@@ -15,9 +15,9 @@ import androidx.navigation.compose.rememberNavController
 fun ProfileScreen(
     modifier: Modifier = Modifier
 ) {
-
+    val navController = rememberNavController()
     Box(modifier = modifier){
         Text("Profile screen")
-        Button({}) { }
+        Button({navController.navigate("training-plans")}) { }
     }
 }

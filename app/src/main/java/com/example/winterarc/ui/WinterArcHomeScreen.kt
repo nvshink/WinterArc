@@ -18,6 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.winterarc.data.model.Exercise
 import com.example.winterarc.data.model.TrainingPlan
 import com.example.winterarc.ui.utils.WinterArcContentType
@@ -34,56 +37,29 @@ fun WinterArcHomeScreen(
     val exerciseUiState by exerciseViewModel.uiState.collectAsState()
     val trainingPlanViewModel: TrainingPlanViewModel = viewModel()
     val trainingPlanUiState by trainingPlanViewModel.uiState.collectAsState()
-    Scaffold { paddingValues ->
-        NavigationSuiteScaffold(
-            modifier = modifier,
-            layoutType = navigationType,
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
-            navigationSuiteItems = {
-                WinterArcDestinations.entries.forEach {
-                    item(
-                        modifier = Modifier.widthIn(min = 50.dp, max = 200.dp).padding(10.dp),
-                        icon = {
-                            Icon(
-                                it.icon,
-                                contentDescription = stringResource(it.contentDescription)
-                            )
-                        },
-                        label = { Text(stringResource(it.label)) },
-                        selected = it == currentDestination,
-                        onClick = { currentDestination = it }
-                    )
-                }
-            }
-        ) {
-            when (currentDestination) {
-                WinterArcDestinations.TRAINING_PLAN -> TrainingPlanScreen(
-                    modifier = Modifier.padding(paddingValues),
-                    trainingPlanUiState = trainingPlanUiState,
-                    contentType = contentType,
-                    onTrainingPlanCardPressed = { trainingPlan: TrainingPlan ->
-                        trainingPlanViewModel.updateTrainingPlanItemState(trainingPlan)
-                    },
-                    onTrainingPlanItemScreenBackPressed = {
-                        trainingPlanViewModel.resetTrainingPlansListState()
-                    }
-                )
-                WinterArcDestinations.EXERCISES -> ExercisesScreen(
-                    modifier = Modifier.padding(paddingValues),
-                    exerciseUiState = exerciseUiState,
-                    contentType = contentType,
-                    onExerciseCardPressed = { exercise: Exercise ->
-                        exerciseViewModel.updateExerciseItemState(exercise = exercise)
-                    },
-                    onExerciseItemScreenBackPressed = {
-                        exerciseViewModel.resetExercisesListItemState()
-                    }
-                )
 
-                WinterArcDestinations.PROFILE -> ProfileScreen(Modifier.padding(paddingValues))
-            }
-        }
-    }
+//    val navController = rememberNavController()
+//    NavHost(
+//        navController = navController,
+//        startDestination = "training-plans") {
+//        composable("training-plans") {
+//            TrainingPlanScreen(
+//                modifier = Modifier.padding(),
+//                trainingPlanUiState = trainingPlanUiState,
+//                contentType = contentType,
+//                onTrainingPlanCardPressed = { trainingPlan: TrainingPlan ->
+//                    trainingPlanViewModel.updateTrainingPlanItemState(trainingPlan)
+//                },
+//                onTrainingPlanItemScreenBackPressed = {
+//                    trainingPlanViewModel.resetTrainingPlansListState()
+//                }
+//            )
+//        }
+
+
+//    }
+
+
 }
 
 //@Composable
@@ -202,3 +178,53 @@ fun WinterArcHomeScreen(
 //    // Route to the specific screen
 //    val route: String,
 //)
+
+
+//        NavigationSuiteScaffold(
+//            modifier = modifier,
+//            layoutType = navigationType,
+//            containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+//            navigationSuiteItems = {
+//                WinterArcDestinations.entries.forEach {
+//                    item(
+//                        modifier = Modifier.widthIn(min = 50.dp, max = 200.dp).padding(10.dp),
+//                        icon = {
+//                            Icon(
+//                                it.icon,
+//                                contentDescription = stringResource(it.contentDescription)
+//                            )
+//                        },
+//                        label = { Text(stringResource(it.label)) },
+//                        selected = it == currentDestination,
+//                        onClick = { currentDestination = it }
+//                    )
+//                }
+//            }
+//        ) {
+//            when (currentDestination) {
+//                WinterArcDestinations.TRAINING_PLAN -> TrainingPlanScreen(
+//                    modifier = Modifier.padding(paddingValues),
+//                    trainingPlanUiState = trainingPlanUiState,
+//                    contentType = contentType,
+//                    onTrainingPlanCardPressed = { trainingPlan: TrainingPlan ->
+//                        trainingPlanViewModel.updateTrainingPlanItemState(trainingPlan)
+//                    },
+//                    onTrainingPlanItemScreenBackPressed = {
+//                        trainingPlanViewModel.resetTrainingPlansListState()
+//                    }
+//                )
+//                WinterArcDestinations.EXERCISES -> ExercisesScreen(
+//                    modifier = Modifier.padding(paddingValues),
+//                    exerciseUiState = exerciseUiState,
+//                    contentType = contentType,
+//                    onExerciseCardPressed = { exercise: Exercise ->
+//                        exerciseViewModel.updateExerciseItemState(exercise = exercise)
+//                    },
+//                    onExerciseItemScreenBackPressed = {
+//                        exerciseViewModel.resetExercisesListItemState()
+//                    }
+//                )
+//
+//                WinterArcDestinations.PROFILE -> ProfileScreen(Modifier.padding(paddingValues))
+//            }
+//        }

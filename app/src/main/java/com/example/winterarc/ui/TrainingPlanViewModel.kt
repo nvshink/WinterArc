@@ -13,10 +13,7 @@ class TrainingPlanViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(
         TrainingPlanUiState (
-            trainingPlanList = trainingPlanRepository.getTrainingPlans(),
-            currentTrainingPlan = trainingPlanRepository.getTrainingPlans().getOrElse(0) {
-                null
-            }
+            trainingPlanList = trainingPlanRepository.getTrainingPlans()
         )
     )
     val uiState: StateFlow<TrainingPlanUiState> = _uiState

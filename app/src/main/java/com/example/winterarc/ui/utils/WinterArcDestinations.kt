@@ -11,9 +11,10 @@ import com.example.winterarc.R
 enum class WinterArcDestinations(
     @StringRes val label: Int,
     val icon: ImageVector,
-    @StringRes val contentDescription: Int
+    val route: String
 ) {
-    TRAINING_PLAN(R.string.training_plans_nav_label, Icons.Default.FormatListNumbered, R.string.training_plans_nav_content_description),
-    EXERCISES(R.string.exercises_nav_label, Icons.Default.FitnessCenter, R.string.exercises_nav_content_description),
-    PROFILE(R.string.profile_nav_label, Icons.Default.Person, R.string.profile_nav_content_description),
+    TRAINING_PLAN(R.string.training_plans_nav_label, Icons.Default.FormatListNumbered, "training-plan"),
+    EXERCISES(R.string.exercises_nav_label, Icons.Default.FitnessCenter, "exercises"),
+    PROFILE(R.string.profile_nav_label, Icons.Default.Person, "profile")
 }
+val DEFAULT_DESTINATION = WinterArcDestinations.TRAINING_PLAN
