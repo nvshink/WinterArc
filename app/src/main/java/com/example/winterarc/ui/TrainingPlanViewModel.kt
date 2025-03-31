@@ -1,7 +1,6 @@
 package com.example.winterarc.ui
 
 import androidx.lifecycle.ViewModel
-import com.example.winterarc.data.model.Exercise
 import com.example.winterarc.data.model.TrainingPlan
 import com.example.winterarc.data.repository.TrainingPlanRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -9,15 +8,22 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
 class TrainingPlanViewModel : ViewModel() {
-    private val trainingPlanRepository = TrainingPlanRepository()
 
-    private val _uiState = MutableStateFlow(
-        TrainingPlanUiState (
-            trainingPlanList = trainingPlanRepository.getTrainingPlans()
-        )
-    )
+    private val _uiState = MutableStateFlow(TrainingPlanUiState())
     val uiState: StateFlow<TrainingPlanUiState> = _uiState
 
+    init {
+        initializeUIState()
+    }
+
+    private fun initializeUIState() {
+        val trainingPlans: MutableMap<Int, TrainingPlan> =
+            TrainingPlanRepository().getTrainingPlans()
+        _uiState.value =
+            TrainingPlanUiState(
+                trainingPlanMap = trainingPlans
+            )
+    }
 
     fun updateTrainingPlanItemState(trainingPlan: TrainingPlan) {
         _uiState.update {
@@ -38,11 +44,10 @@ class TrainingPlanViewModel : ViewModel() {
     }
 
 
-
 }
 
 data class TrainingPlanUiState(
-    val trainingPlanList: List<TrainingPlan> = emptyList(),
+    val trainingPlanMap: MutableMap<Int, TrainingPlan> = mutableMapOf(),
     val currentTrainingPlan: TrainingPlan? = null,
     val isShowingList: Boolean = true
 )

@@ -11,8 +11,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.FormatListNumbered
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -24,55 +29,117 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHost
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navDeepLink
-import com.example.winterarc.ui.utils.DEFAULT_DESTINATION
+import com.example.winterarc.data.model.Exercise
+import com.example.winterarc.data.model.TrainingPlan
+import com.example.winterarc.ui.utils.ExerciseScreenRoute
+import com.example.winterarc.ui.utils.ProfileScreenRoute
+import com.example.winterarc.ui.utils.TrainingPlanScreenRoute
 import com.example.winterarc.ui.utils.WinterArcContentType
 import com.example.winterarc.ui.utils.WinterArcDestinations
+import com.example.winterarc.ui.utils.WinterArcDestinations.TopLevelRoute
+import com.example.winterarc.ui.utils.WinterArcNavigationType
 
 @Composable
 fun WinterArcApp(
-    windowSize: WindowWidthSizeClass,
-    modifier: Modifier = Modifier,
+    windowSize: WindowWidthSizeClass
 ) {
     val contentType: WinterArcContentType
+    val navigationType: WinterArcNavigationType
+
+    when (windowSize) {
+        WindowWidthSizeClass.Compact -> {
+            contentType = WinterArcContentType.LIST_ONLY
+            navigationType = WinterArcNavigationType.BOTTOM_NAVIGATION
+        }
+
+        WindowWidthSizeClass.Medium -> {
+            contentType = WinterArcContentType.LIST_ONLY
+            navigationType = WinterArcNavigationType.NAVIGATION_RAIL
+        }
+
+        WindowWidthSizeClass.Expanded -> {
+            contentType = WinterArcContentType.LIST_AND_DETAIL
+            navigationType = WinterArcNavigationType.NAVIGATION_RAIL
+        }
+
+        else -> {
+            contentType = WinterArcContentType.LIST_ONLY
+            navigationType = WinterArcNavigationType.BOTTOM_NAVIGATION
+        }
+    }
+
+    val trainingPlanViewModel: TrainingPlanViewModel = viewModel()
+    val trainingPlanUiState = trainingPlanViewModel.uiState.collectAsState().value
+
+    val exerciseViewModel: ExerciseViewModel = viewModel()
+    val exerciseUiState = exerciseViewModel.uiState.collectAsState().value
+
+    val profileViewModel: ProfileViewModel = viewModel()
+    val profilePlanUiState = profileViewModel.uiState.collectAsState().value
+
     val navController = rememberNavController()
     val navHost = remember {
         movableContentOf<PaddingValues> { innerPadding ->
             NavHost(
                 navController = navController,
-                startDestination = DEFAULT_DESTINATION.route
+                startDestination = TrainingPlanScreenRoute
             ) {
-                composable(route = WinterArcDestinations.TRAINING_PLAN.route) {
-                    TrainingPlanScreen()
+                composable<TrainingPlanScreenRoute> {
+
+                    TrainingPlanScreen(
+                        modifier = Modifier.padding(innerPadding),
+                        trainingPlanUiState = trainingPlanUiState,
+                        exerciseUiState = exerciseUiState,
+                        contentType = contentType,
+                        onTrainingPlanItemListPressed = { trainingPlan: TrainingPlan ->
+                            trainingPlanViewModel.updateTrainingPlanItemState(trainingPlan)
+                        },
+                        onTrainingPlanItemScreenBackPressed = {})
                 }
-                composable(route = WinterArcDestinations.EXERCISES.route) {
-                    ExercisesScreen(modifier = Modifier.padding(innerPadding))
+                composable<ExerciseScreenRoute> {
+                    ExercisesScreen(
+                        modifier = Modifier.padding(innerPadding),
+                        exerciseUiState = exerciseUiState,
+                        contentType = contentType,
+                        onExerciseItemListPressed = { exercise: Exercise ->
+                            exerciseViewModel.updateExerciseItemState(exercise)
+                        },
+                        onExerciseItemScreenBackPressed = {})
                 }
-                composable(route = WinterArcDestinations.PROFILE.route) {
-                    ProfileScreen(modifier = Modifier.padding(innerPadding))
+                composable<ProfileScreenRoute> {
+                    ProfileScreen(
+                        modifier = Modifier.padding(innerPadding),
+                        contentType = contentType,
+                        onTrainingPlanItemScreenBackPressed = {})
                 }
             }
         }
     }
-
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
     val winterArcNavigationBarLayout = @Composable {
         WinterArcNavigationBarLayout(
             modifier = Modifier,
-            destination =  navController.currentDestination ?: NavDestination(DEFAULT_DESTINATION.route),
+            currentDestination = currentDestination,
             onMenuItemSelected = {
-                navController.navigate(it) {
+                navController.navigate(route = it) {
                     popUpTo(navController.graph.findStartDestination().id) {
                         saveState = true
                     }
@@ -87,7 +154,7 @@ fun WinterArcApp(
     val winterArcNavigationRailLayout = @Composable {
         WinterArcNavigationRailLayout(
             modifier = Modifier,
-            destination = navController.currentDestination ?: NavDestination(DEFAULT_DESTINATION.route),
+            currentDestination = currentDestination,
             onMenuItemSelected = {
                 navController.navigate(it) {
                     popUpTo(navController.graph.findStartDestination().id) {
@@ -102,51 +169,48 @@ fun WinterArcApp(
         }
     }
 
-    when (windowSize) {
-        WindowWidthSizeClass.Compact -> {
-            contentType = WinterArcContentType.LIST_ONLY
+    when (navigationType) {
+        WinterArcNavigationType.BOTTOM_NAVIGATION -> {
             winterArcNavigationBarLayout()
         }
 
-        WindowWidthSizeClass.Medium -> {
-            contentType = WinterArcContentType.LIST_ONLY
-            winterArcNavigationRailLayout()
-        }
-
-        WindowWidthSizeClass.Expanded -> {
-            contentType = WinterArcContentType.LIST_AND_DETAIL
+        WinterArcNavigationType.NAVIGATION_RAIL -> {
             winterArcNavigationRailLayout()
         }
 
         else -> {
-            contentType = WinterArcContentType.LIST_ONLY
             winterArcNavigationBarLayout()
         }
     }
+
 }
 
 @Composable
 fun WinterArcNavigationBarLayout(
     modifier: Modifier,
-    destination: NavDestination,
-    onMenuItemSelected: (String) -> Unit,
+    currentDestination: NavDestination?,
+    onMenuItemSelected: (Any) -> Unit,
     content: @Composable (innerPadding: PaddingValues) -> Unit
 ) {
+    val topLevelRoutes = WinterArcDestinations.getTopLevelRoutes()
     Scaffold(
         modifier = modifier,
         bottomBar = {
             BottomAppBar {
-                WinterArcDestinations.entries.forEach { item ->
+                topLevelRoutes.forEach { item ->
                     NavigationBarItem(
                         label = {
-                            Text(text = item.label.toString())
+                            Text(text = item.name)
                         },
                         icon = {
-                            Icon(imageVector = item.icon, contentDescription = item.label.toString())
+                            Icon(
+                                imageVector = item.icon,
+                                contentDescription = item.name
+                            )
                         },
-                        selected = destination.route == item.route,
+                        selected = currentDestination?.hierarchy?.any { it.hasRoute(item.route::class) } == true,
                         onClick = {
-                             onMenuItemSelected(item.route)
+                            onMenuItemSelected(item.route)
                         }
                     )
                 }
@@ -160,21 +224,22 @@ fun WinterArcNavigationBarLayout(
 @Composable
 fun WinterArcNavigationRailLayout(
     modifier: Modifier,
-    destination: NavDestination,
-    onMenuItemSelected: (String) -> Unit,
+    currentDestination: NavDestination?,
+    onMenuItemSelected: (Any) -> Unit,
     content: @Composable () -> Unit
 ) {
+    val topLevelRoutes = WinterArcDestinations.getTopLevelRoutes()
     Row(modifier = modifier.fillMaxSize()) {
         NavigationRail {
-            WinterArcDestinations.entries.forEach { item ->
+            topLevelRoutes.forEach { item ->
                 NavigationRailItem(
                     label = {
-                        Text(text = item.label.toString())
+                        Text(text = item.name)
                     },
                     icon = {
-                        Icon(imageVector = item.icon, contentDescription = item.label.toString())
+                        Icon(imageVector = item.icon, contentDescription = item.name)
                     },
-                    selected = destination.route == item.route,
+                    selected = currentDestination?.hierarchy?.any { it.hasRoute(item.route::class) } == true,
                     onClick = {
                         onMenuItemSelected(item.route)
                     }
@@ -186,73 +251,72 @@ fun WinterArcNavigationRailLayout(
 }
 
 @Composable
-fun WinterArcListDetailRoute(
+fun <T> WinterArcListDetailTrainingPlansRoute(
     modifier: Modifier = Modifier,
+    isShowingList: Boolean,
+    listOfItems: MutableMap<Int, T>,
+    listItem: @Composable (T) -> Unit,
+    details: @Composable () -> Unit,
     contentType: WinterArcContentType = WinterArcContentType.LIST_ONLY,
     onTrainingPlanItemScreenBackPressed: () -> Unit,
-    selectedItemId: String?
 ) {
     if (contentType == WinterArcContentType.LIST_ONLY) {
-        if (selectedItemId != null) {
-            WinterArcItemDetail(selectedItemId)
-            BackHandler { onTrainingPlanItemScreenBackPressed() }
+        if (isShowingList) {
+            WinterArcListOfItems(
+                modifier = modifier,
+                listOfItems = listOfItems,
+                listItem = listItem
+            )
         } else {
-            WinterArcListOfItems()
+            WinterArcItemDetail(details = details)
+            BackHandler { onTrainingPlanItemScreenBackPressed() }
         }
     } else {
-        WinterArcListAndDetail(selectedItemId)
+        WinterArcListAndDetail()
     }
 }
 
 @Composable
 fun WinterArcListAndDetail(
-    selectedItemId: String?
 ) {
 
 }
 
 @Composable
 fun WinterArcItemDetail(
-    selectedItemId: String?
+    details: @Composable () -> Unit
 ) {
-    val navController = rememberNavController()
-    NavHost(navController, "landing_screen_route") {
-        composable("landing_screen_route") {
-            WinterArcTestScreen("1") { navController.navigate("second_screen_route") }
-        }
-        composable("second_screen_route", deepLinks = listOf(
-            navDeepLink {
-                uriPattern = "" //TODO
-            }
-        )) {
-            WinterArcTestScreen("2") { navController.navigate("second_screen_route") }
+    details()
+}
+
+
+@Composable
+fun WinterArcEmptyItemScreen(
+) {
+    Text("Empty screen")
+}
+
+@Composable
+fun <T> WinterArcListOfItems(
+    modifier: Modifier,
+    listOfItems: MutableMap<Int, T>,
+    listItem: @Composable (T) -> Unit,
+//    onTrainingPlanItemScreenBackPressed: () -> Unit,
+) {
+    LazyColumn {
+        items(listOfItems.toList()) { item ->
+            listItem(item.second)
         }
     }
-}
-
-@Composable
-fun WinterArcTestScreen(
-    screenName: String,
-    onButtonClick: () -> Unit
-) {
-    Text(screenName)
-    Button({
-        onButtonClick()
-    }) { Text("next screen") }
-}
-
-@Composable
-fun WinterArcListOfItems() {
-
 }
 
 @Composable
 fun WinterArcListItem(
     modifier: Modifier = Modifier,
     title: String,
-    subtitle: String? = null,
+    subtitle: String?,
     image: ImageBitmap? = null,
-    onCardClick: (() -> Unit)? = null,
+    onCardClick: (() -> Unit)?,
     additionalInfo: @Composable (() -> Unit)? = null
 ) {
     if (onCardClick != null) {

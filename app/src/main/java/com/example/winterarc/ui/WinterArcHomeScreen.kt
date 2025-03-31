@@ -26,17 +26,17 @@ import com.example.winterarc.data.model.TrainingPlan
 import com.example.winterarc.ui.utils.WinterArcContentType
 import com.example.winterarc.ui.utils.WinterArcDestinations
 
-@Composable
-fun WinterArcHomeScreen(
-    modifier: Modifier = Modifier,
-    navigationType: NavigationSuiteType,
-    contentType: WinterArcContentType
-) {
-    var currentDestination by rememberSaveable { mutableStateOf(WinterArcDestinations.TRAINING_PLAN) }
-    val exerciseViewModel: ExerciseViewModel = viewModel()
-    val exerciseUiState by exerciseViewModel.uiState.collectAsState()
-    val trainingPlanViewModel: TrainingPlanViewModel = viewModel()
-    val trainingPlanUiState by trainingPlanViewModel.uiState.collectAsState()
+//@Composable
+//fun WinterArcHomeScreen(
+//    modifier: Modifier = Modifier,
+//    navigationType: NavigationSuiteType,
+//    contentType: WinterArcContentType
+//) {
+//    var currentDestination by rememberSaveable { mutableStateOf(WinterArcDestinations.TRAINING_PLAN) }
+//    val exerciseViewModel: ExerciseViewModel = viewModel()
+//    val exerciseUiState by exerciseViewModel.uiState.collectAsState()
+//    val trainingPlanViewModel: TrainingPlanViewModel = viewModel()
+//    val trainingPlanUiState by trainingPlanViewModel.uiState.collectAsState()
 
 //    val navController = rememberNavController()
 //    NavHost(
@@ -60,7 +60,7 @@ fun WinterArcHomeScreen(
 //    }
 
 
-}
+//}
 
 //@Composable
 //fun WinterArcHomeScreenTopBar() {

@@ -12,7 +12,7 @@ class ExerciseViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(
         ExerciseUiState (
-            exercisesList = exerciseRepository.getExercises()
+            exercisesMap = exerciseRepository.getExercises()
         )
     )
     val uiState: StateFlow<ExerciseUiState> = _uiState
@@ -39,7 +39,7 @@ class ExerciseViewModel : ViewModel() {
 }
 
 data class ExerciseUiState(
-    val exercisesList: List<Exercise> = emptyList(),
+    val exercisesMap: MutableMap<Int, Exercise> = mutableMapOf(),
     val currentExercise: Exercise? = null,
     val isShowingList: Boolean = true
 )

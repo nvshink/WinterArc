@@ -10,14 +10,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.winterarc.ui.utils.WinterArcContentType
 
 @Composable
 fun ProfileScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    contentType: WinterArcContentType,
+    onTrainingPlanItemScreenBackPressed: () -> Unit
 ) {
-    val navController = rememberNavController()
-    Box(modifier = modifier){
-        Text("Profile screen")
-        Button({navController.navigate("training-plans")}) { }
-    }
+    Text("Profile")
 }
