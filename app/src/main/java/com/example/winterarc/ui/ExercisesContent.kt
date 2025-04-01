@@ -1,83 +1,63 @@
 package com.example.winterarc.ui
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.example.winterarc.data.model.Exercise
-//
-//@Composable
-//fun ExerciseListOnlyContent(
-//    modifier: Modifier = Modifier,
-//    exerciseUiState: ExerciseUiState,
-//    onExerciseCardPressed: (Exercise) -> Unit,
-//    onExerciseItemScreenBackPressed: () -> Unit
-//) {
-//    if (exerciseUiState.isShowingList) {
-//        ExercisesListItems(
-//            exercises = exerciseUiState.exercisesMap,
-//            onExerciseCardPressed = onExerciseCardPressed
-//        )
-//    } else {
-//        ExerciseItemScreen(
-//            modifier = Modifier.fillMaxSize(),
-//            onBackPressed = onExerciseItemScreenBackPressed,
-//            exercise = exerciseUiState.currentExercise
-//        )
-//    }
-//}
-//
-//@Composable
-//fun ExerciseListAndDetailContent(
-//    modifier: Modifier = Modifier,
-//    exerciseUiState: ExerciseUiState,
-//    onExerciseCardPressed: (Exercise) -> Unit,
-//    onExerciseItemScreenBackPressed: () -> Unit
-//) {
-//    Row(modifier = modifier) {
-//        ExercisesListItems(modifier = Modifier.weight(1f), exerciseUiState.exercisesMap, onExerciseCardPressed)
-//        ExerciseItemScreen(
-//            modifier = Modifier.weight(1f),
-//            onBackPressed = onExerciseItemScreenBackPressed,
-//            exercise = exerciseUiState.currentExercise
-//        )
-//    }
-//}
-//
-//@Composable
-//fun ExercisesListItems(
-//    modifier: Modifier = Modifier,
-//    exercises: List<Exercise>,
-//    onExerciseCardPressed: (Exercise) -> Unit
-//) {
-//    LazyColumn(modifier = modifier) {
-//        items(exercises) { exercise ->
-//            WinterArcListItem(
-//                title = exercise.name,
-//                subtitle = exercise.description,
-//                onCardClick = { onExerciseCardPressed(exercise) }
-//            )
-//        }
-//    }
-//}
 
 @Composable
 fun WinterArcExerciseItemScreen(
     modifier: Modifier = Modifier,
-//    onBackPressed: () -> Unit,
+    onBackPressed: () -> Unit,
     exercise: Exercise?,
 ) {
-//    BackHandler {
-//        onBackPressed()
-//    }
+    val state = rememberScrollState()
+    BackHandler {
+        onBackPressed()
+    }
     Column(modifier = modifier.fillMaxSize()) {
-        if (exercise != null) {
-            Text(text = exercise.name)
+        WinterArcItemScreenTopBar(onBackButtonClicked = onBackPressed) {
+            IconButton(onClick = {}) {
+                Icon(Icons.Filled.Edit, contentDescription = "")
+            }
+            IconButton(onClick = {}) {
+                Icon(Icons.Filled.Delete, contentDescription = "")
+            }
+        }
+        if (exercise == null) {
+            Text(text = "No selected")
+        } else {
+            Column {
+                Text(
+                    text = exercise.name,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(bottom = 20.dp)
+                )
+                Text(
+                    text = exercise.description,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(bottom = 15.dp)
+                )
+
+
+            }
         }
     }
 }

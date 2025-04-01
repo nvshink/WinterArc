@@ -29,68 +29,6 @@ import androidx.compose.ui.unit.dp
 import com.example.winterarc.data.model.Exercise
 import com.example.winterarc.data.model.TrainingPlan
 
-//@Composable
-//fun TrainingPlansListOnlyContent(
-//    modifier: Modifier = Modifier,
-//    trainingPlanUiState: TrainingPlanUiState,
-//    onTrainingPlanCardPressed: (TrainingPlan) -> Unit,
-//    onTrainingPlanItemScreenBackPressed: () -> Unit
-//) {
-//    if (trainingPlanUiState.isShowingList) {
-//        TrainingPlansListItems(
-//            trainingPlans = trainingPlanUiState.trainingPlanList,
-//            onTrainingPlanCardPressed = onTrainingPlanCardPressed
-//        )
-//    } else {
-//        WinterArcTrainingPlanItemScreen(
-//            modifier = Modifier.fillMaxSize(),
-//            onBackPressed = onTrainingPlanItemScreenBackPressed,
-//            trainingPlan = trainingPlanUiState.currentTrainingPlan
-//        )
-//    }
-//}
-
-//@Composable
-//fun TrainingPlansListAndDetailContent(
-//    modifier: Modifier = Modifier,
-//    trainingPlanUiState: TrainingPlanUiState,
-//    onTrainingPlanCardPressed: (TrainingPlan) -> Unit,
-//    onTrainingPlanItemScreenBackPressed: () -> Unit
-//) {
-//    Row(modifier = modifier) {
-//        TrainingPlansListItems(
-//            modifier = Modifier.weight(1f),
-//            trainingPlanUiState.trainingPlanList,
-//            onTrainingPlanCardPressed
-//        )
-//        WinterArcTrainingPlanItemScreen(
-//            modifier = Modifier.weight(1f),
-//            onBackPressed = onTrainingPlanItemScreenBackPressed,
-//            trainingPlan = trainingPlanUiState.currentTrainingPlan
-//        )
-//    }
-//}
-
-//@Composable
-//fun TrainingPlansListItems(
-//    modifier: Modifier = Modifier,
-//    trainingPlans: List<TrainingPlan>,
-//    onTrainingPlanCardPressed: (TrainingPlan) -> Unit
-//) {
-//    LazyColumn(
-//        modifier = modifier.padding(20.dp),
-//        verticalArrangement = Arrangement.spacedBy(10.dp)
-//    ) {
-//        items(trainingPlans) { trainingPlan ->
-//            WinterArcListItem(
-//                title = trainingPlan.name,
-//                subtitle = trainingPlan.description,
-//                onCardClick = { onTrainingPlanCardPressed(trainingPlan) }
-//            )
-//        }
-//    }
-//}
-
 @Composable
 fun WinterArcTrainingPlanItemScreen(
     modifier: Modifier = Modifier,
@@ -98,12 +36,11 @@ fun WinterArcTrainingPlanItemScreen(
     onBackPressed: () -> Unit,
     trainingPlan: TrainingPlan?,
 ) {
-    val state = rememberScrollState()
     BackHandler {
         onBackPressed()
     }
     Column(modifier = modifier.fillMaxSize()) {
-        ItemScreenTopBar(onBackButtonClicked = onBackPressed) {
+        WinterArcItemScreenTopBar(onBackButtonClicked = onBackPressed) {
             IconButton(onClick = {}) {
                 Icon(Icons.Filled.Edit, contentDescription = "")
             }
@@ -158,24 +95,3 @@ fun WinterArcTrainingPlanItemScreen(
     }
 }
 
-@Composable
-fun ItemScreenTopBar(
-    modifier: Modifier = Modifier,
-    onBackButtonClicked: (() -> Unit)? = null,
-    actions: @Composable (() -> Unit)? = null
-) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        if (onBackButtonClicked != null) {
-            IconButton(onClick = { onBackButtonClicked() }) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "backButton")
-            }
-        }
-        Row {
-            if (actions != null) actions()
-        }
-    }
-}

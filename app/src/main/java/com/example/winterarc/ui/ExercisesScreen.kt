@@ -1,7 +1,6 @@
 package com.example.winterarc.ui
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.movableContentOf
 import androidx.compose.ui.Modifier
@@ -23,7 +22,7 @@ fun ExercisesScreen(
     onExerciseItemScreenBackPressed: () -> Unit
 ) {
     val navController = rememberNavController()
-    val navHost = movableContentOf<PaddingValues> { innerPadding ->
+    val navHost = movableContentOf<PaddingValues> {
         NavHost(navController = navController, startDestination = EmptyItemScreen) {
             composable<EmptyItemScreen> {
                 WinterArcEmptyItemScreen()
@@ -31,31 +30,30 @@ fun ExercisesScreen(
             composable<ExerciseItemScreen> {
                 val args = it.toRoute<ExerciseItemScreen>()
                 WinterArcExerciseItemScreen(
-                    modifier = Modifier.padding(
-                        innerPadding
-                    ),
-                    exercise = exerciseUiState.exercisesMap[args.id]
+                    exercise = exerciseUiState.exercisesMap[args.id],
+                    onBackPressed = onExerciseItemScreenBackPressed
                 )
             }
         }
     }
-    WinterArcListDetailTrainingPlansRoute(
+    WinterArcListDetailRoute(
+        modifier = modifier,
         contentType = contentType,
         isShowingList = exerciseUiState.isShowingList,
         listOfItems = exerciseUiState.exercisesMap,
         details = {
-            WinterArcExerciseItemScreen(
-                exercise =  exerciseUiState.currentExercise
-            )
+            WinterArcItemDetail {
+                navHost(PaddingValues())
+            }
         },
-        onTrainingPlanItemScreenBackPressed = onExerciseItemScreenBackPressed,
+        onItemScreenBackPressed = onExerciseItemScreenBackPressed,
         listItem = { item ->
             WinterArcListItem(
                 title = item.name,
                 subtitle = null,
                 additionalInfo = null,
                 onCardClick = {
-//                    navController.navigate(route = ExerciseItemScreen(item.id))
+                    navController.navigate(route = ExerciseItemScreen(item.id))
                     onExerciseItemListPressed(item)
                 }
             )

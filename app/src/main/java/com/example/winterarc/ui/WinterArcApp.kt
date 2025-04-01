@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -14,12 +15,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FitnessCenter
-import androidx.compose.material.icons.filled.FormatListNumbered
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationRail
@@ -35,6 +35,7 @@ import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -53,7 +54,6 @@ import com.example.winterarc.ui.utils.ProfileScreenRoute
 import com.example.winterarc.ui.utils.TrainingPlanScreenRoute
 import com.example.winterarc.ui.utils.WinterArcContentType
 import com.example.winterarc.ui.utils.WinterArcDestinations
-import com.example.winterarc.ui.utils.WinterArcDestinations.TopLevelRoute
 import com.example.winterarc.ui.utils.WinterArcNavigationType
 
 @Composable
@@ -85,15 +85,6 @@ fun WinterArcApp(
         }
     }
 
-    val trainingPlanViewModel: TrainingPlanViewModel = viewModel()
-    val trainingPlanUiState = trainingPlanViewModel.uiState.collectAsState().value
-
-    val exerciseViewModel: ExerciseViewModel = viewModel()
-    val exerciseUiState = exerciseViewModel.uiState.collectAsState().value
-
-    val profileViewModel: ProfileViewModel = viewModel()
-    val profilePlanUiState = profileViewModel.uiState.collectAsState().value
-
     val navController = rememberNavController()
     val navHost = remember {
         movableContentOf<PaddingValues> { innerPadding ->
@@ -102,18 +93,22 @@ fun WinterArcApp(
                 startDestination = TrainingPlanScreenRoute
             ) {
                 composable<TrainingPlanScreenRoute> {
-
+                    val trainingPlanViewModel: TrainingPlanViewModel = viewModel()
+                    val trainingPlanUiState = trainingPlanViewModel.uiState.collectAsState().value
                     TrainingPlanScreen(
                         modifier = Modifier.padding(innerPadding),
                         trainingPlanUiState = trainingPlanUiState,
-                        exerciseUiState = exerciseUiState,
                         contentType = contentType,
                         onTrainingPlanItemListPressed = { trainingPlan: TrainingPlan ->
                             trainingPlanViewModel.updateTrainingPlanItemState(trainingPlan)
                         },
-                        onTrainingPlanItemScreenBackPressed = {})
+                        onTrainingPlanItemScreenBackPressed = {
+                            trainingPlanViewModel.resetTrainingPlansListState()
+                        })
                 }
                 composable<ExerciseScreenRoute> {
+                    val exerciseViewModel: ExerciseViewModel = viewModel()
+                    val exerciseUiState = exerciseViewModel.uiState.collectAsState().value
                     ExercisesScreen(
                         modifier = Modifier.padding(innerPadding),
                         exerciseUiState = exerciseUiState,
@@ -121,9 +116,13 @@ fun WinterArcApp(
                         onExerciseItemListPressed = { exercise: Exercise ->
                             exerciseViewModel.updateExerciseItemState(exercise)
                         },
-                        onExerciseItemScreenBackPressed = {})
+                        onExerciseItemScreenBackPressed = {
+                            exerciseViewModel.resetExercisesListItemState()
+                        })
                 }
                 composable<ProfileScreenRoute> {
+                    val profileViewModel: ProfileViewModel = viewModel()
+                    val profilePlanUiState = profileViewModel.uiState.collectAsState().value
                     ProfileScreen(
                         modifier = Modifier.padding(innerPadding),
                         contentType = contentType,
@@ -251,42 +250,68 @@ fun WinterArcNavigationRailLayout(
 }
 
 @Composable
-fun <T> WinterArcListDetailTrainingPlansRoute(
+fun <T> WinterArcListDetailRoute(
     modifier: Modifier = Modifier,
     isShowingList: Boolean,
+    details: @Composable () -> Unit,
     listOfItems: MutableMap<Int, T>,
     listItem: @Composable (T) -> Unit,
-    details: @Composable () -> Unit,
     contentType: WinterArcContentType = WinterArcContentType.LIST_ONLY,
-    onTrainingPlanItemScreenBackPressed: () -> Unit,
+    onItemScreenBackPressed: () -> Unit,
 ) {
-    if (contentType == WinterArcContentType.LIST_ONLY) {
-        if (isShowingList) {
-            WinterArcListOfItems(
-                modifier = modifier,
-                listOfItems = listOfItems,
-                listItem = listItem
+    Box(modifier = modifier) {
+        if (contentType == WinterArcContentType.LIST_ONLY) {
+            if (isShowingList) {
+                WinterArcListOfItems(
+                    listOfItems = listOfItems,
+                    listItem = listItem
+                )
+            } else {
+                BackHandler { onItemScreenBackPressed() }
+            }
+            WinterArcItemDetail (
+                modifier = Modifier.alpha(if (isShowingList) 0f else 1f),
+                details = details
             )
         } else {
-            WinterArcItemDetail(details = details)
-            BackHandler { onTrainingPlanItemScreenBackPressed() }
+            WinterArcListAndDetail(
+                listOfItems = listOfItems,
+                listItem = listItem,
+                details = details
+            )
+            BackHandler { onItemScreenBackPressed() }
         }
-    } else {
-        WinterArcListAndDetail()
     }
 }
 
 @Composable
-fun WinterArcListAndDetail(
+fun <T> WinterArcListAndDetail(
+    modifier: Modifier = Modifier,
+    listOfItems: MutableMap<Int, T>,
+    listItem: @Composable (T) -> Unit,
+    details: @Composable () -> Unit,
 ) {
-
+    Row(modifier = modifier) {
+        WinterArcListOfItems(
+            modifier = Modifier.weight(1f),
+            listOfItems = listOfItems,
+            listItem = listItem
+        )
+        WinterArcItemDetail (
+            modifier = Modifier.weight(1f),
+            details = details
+        )
+    }
 }
 
 @Composable
 fun WinterArcItemDetail(
+    modifier: Modifier = Modifier,
     details: @Composable () -> Unit
 ) {
-    details()
+    Box(modifier = modifier) {
+        details()
+    }
 }
 
 
@@ -298,12 +323,11 @@ fun WinterArcEmptyItemScreen(
 
 @Composable
 fun <T> WinterArcListOfItems(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     listOfItems: MutableMap<Int, T>,
     listItem: @Composable (T) -> Unit,
-//    onTrainingPlanItemScreenBackPressed: () -> Unit,
 ) {
-    LazyColumn {
+    LazyColumn(modifier = modifier) {
         items(listOfItems.toList()) { item ->
             listItem(item.second)
         }
@@ -349,3 +373,24 @@ fun WinterArcListItem(
     }
 }
 
+@Composable
+fun WinterArcItemScreenTopBar(
+    modifier: Modifier = Modifier,
+    onBackButtonClicked: (() -> Unit)? = null,
+    actions: @Composable (() -> Unit)? = null
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (onBackButtonClicked != null) {
+            IconButton(onClick = { onBackButtonClicked() }) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "backButton")
+            }
+        }
+        Row {
+            if (actions != null) actions()
+        }
+    }
+}
