@@ -1,0 +1,1 @@
+**WinterArc** - An application for selecting exercises from a large library and creating a training plan based on them.
