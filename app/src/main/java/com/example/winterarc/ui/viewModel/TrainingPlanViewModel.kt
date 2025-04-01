@@ -1,4 +1,4 @@
-package com.example.winterarc.ui
+package com.example.winterarc.ui.viewModel
 
 import androidx.lifecycle.ViewModel
 import com.example.winterarc.data.model.TrainingPlan

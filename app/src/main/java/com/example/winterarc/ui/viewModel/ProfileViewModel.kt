@@ -1,9 +1,7 @@
-package com.example.winterarc.ui
+package com.example.winterarc.ui.viewModel
 
 import androidx.lifecycle.ViewModel
-import com.example.winterarc.data.model.Exercise
 import com.example.winterarc.data.model.User
-import com.example.winterarc.data.repository.ExerciseRepository
 import com.example.winterarc.data.repository.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

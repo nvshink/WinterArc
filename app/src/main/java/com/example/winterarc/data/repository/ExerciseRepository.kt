@@ -10,7 +10,7 @@ class ExerciseRepository {
     fun getExercises(): MutableMap<Int, Exercise> {
         val exercisesMap: MutableMap<Int, Exercise> = mutableMapOf()
         exercises.forEach { exercise ->
-            exercisesMap.put(exercise.id, exercise)
+            exercisesMap[exercise.id] = exercise
         }
         return exercisesMap
     }

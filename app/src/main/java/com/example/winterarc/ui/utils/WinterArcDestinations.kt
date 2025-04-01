@@ -1,12 +1,10 @@
 package com.example.winterarc.ui.utils
 
-import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.FormatListNumbered
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.example.winterarc.R
 import kotlinx.serialization.Serializable
 
 object WinterArcDestinations {
@@ -22,11 +20,20 @@ object WinterArcDestinations {
         return topLevelRoutes
     }
 
-    fun getTopDefaultRoute(): TopLevelRoute<out Any> {
+    fun getDefaultTopLevelRoute(): TopLevelRoute<out Any> {
         val defaultTopLevelRoute: TopLevelRoute<out Any> = topLevelRoutes.get(0)
         return defaultTopLevelRoute
     }
 }
+
+@Serializable
+object ExerciseScreenRoute
+
+@Serializable
+object TrainingPlanScreenRoute
+
+@Serializable
+object ProfileScreenRoute
 
 @Serializable
 object EmptyItemScreen
@@ -40,18 +47,3 @@ data class ExerciseItemScreen(
 data class TrainingPlanItemScreen(
     val id: Int
 )
-
-@Serializable
-data class ProfilePlanItemScreen(
-    val id: String
-)
-
-@Serializable
-object ExerciseScreenRoute
-
-@Serializable
-object TrainingPlanScreenRoute
-
-@Serializable
-object ProfileScreenRoute
-
