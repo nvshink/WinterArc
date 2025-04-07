@@ -12,18 +12,18 @@ class TrainingPlanViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(TrainingPlanUiState())
     val uiState: StateFlow<TrainingPlanUiState> = _uiState
 
-    init {
-        initializeUIState()
-    }
-
-    private fun initializeUIState() {
-        val trainingPlans: MutableMap<Int, TrainingPlan> =
-            TrainingPlanRepository().getTrainingPlans()
-        _uiState.value =
-            TrainingPlanUiState(
-                trainingPlanMap = trainingPlans
-            )
-    }
+//    init {
+//        initializeUIState()
+//    }
+//
+//    private fun initializeUIState() {
+////        val trainingPlans: MutableMap<Int, TrainingPlan> =
+////            TrainingPlanRepository().getTrainingPlans()
+////        _uiState.value =
+////            TrainingPlanUiState(
+////                trainingPlanMap = trainingPlans
+////            )
+//    }
 
     fun updateTrainingPlanItemState(trainingPlan: TrainingPlan) {
         _uiState.update {

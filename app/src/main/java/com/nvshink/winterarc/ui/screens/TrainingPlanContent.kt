@@ -63,30 +63,30 @@ fun WinterArcTrainingPlanItemScreen(
                         modifier = Modifier.padding(bottom = 15.dp)
                     )
                 }
-                items(trainingPlan.exercises) { trainingPlanExercise ->
-                    val exercise: Exercise = trainingPlanExercise.exercise
-                    WinterArcListItem(
-                        modifier = Modifier.padding(bottom = 5.dp),
-                        title = exercise.name,
-                        subtitle = exercise.description,
-                        onCardClick = { onExercisePressed(exercise.id) },
-                    ) {
-                        Column(
-                            modifier = Modifier.width(70.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Icon(
-                                if (trainingPlanExercise.isInSets) Icons.Filled.Repeat else Icons.Filled.HourglassEmpty,
-                                contentDescription = "",
-                                modifier = Modifier.size(16.dp)
-                            )
-                            Text(
-                                text = if (trainingPlanExercise.isInSets) "x${trainingPlanExercise.duration}" else "${trainingPlanExercise.duration} c",
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
-                    }
-                }
+//                items(trainingPlan.exercises) { trainingPlanExercise ->
+//                    val exercise: Exercise = trainingPlanExercise.exercise
+//                    WinterArcListItem(
+//                        modifier = Modifier.padding(bottom = 5.dp),
+//                        title = exercise.name,
+//                        subtitle = exercise.description,
+//                        onCardClick = { onExercisePressed(exercise.id) },
+//                    ) {
+//                        Column(
+//                            modifier = Modifier.width(70.dp),
+//                            horizontalAlignment = Alignment.CenterHorizontally
+//                        ) {
+//                            Icon(
+//                                if (trainingPlanExercise.isInSets) Icons.Filled.Repeat else Icons.Filled.HourglassEmpty,
+//                                contentDescription = "",
+//                                modifier = Modifier.size(16.dp)
+//                            )
+//                            Text(
+//                                text = if (trainingPlanExercise.isInSets) "x${trainingPlanExercise.duration}" else "${trainingPlanExercise.duration} c",
+//                                style = MaterialTheme.typography.bodyMedium
+//                            )
+//                        }
+//                    }
+//                }
             }
         }
     }

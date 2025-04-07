@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.support.kotlinCompilerOptions
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -5,6 +7,8 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.google.services)
     alias(libs.plugins.kotlin.ksp)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -34,26 +38,29 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "21"
     }
     buildFeatures {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.15"
     }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
+    }
 }
 kotlin {
-    jvmToolchain(8)
+    jvmToolchain(21)
 }
 dependencies {
 
@@ -79,8 +86,15 @@ dependencies {
     implementation(libs.firebase.auth.ktx)
     implementation(libs.play.services.auth)
     implementation(libs.firebase.firestore.ktx)
+    // Room Database
     implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.androidx.room.compiler)
+    // Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

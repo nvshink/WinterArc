@@ -1,5 +1,6 @@
 package com.nvshink.winterarc.ui
 
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
@@ -9,6 +10,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -17,6 +22,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.nvshink.winterarc.data.model.Exercise
 import com.nvshink.winterarc.data.model.TrainingPlan
+import com.nvshink.winterarc.data.repository.ExerciseRepository
+import com.nvshink.winterarc.data.room.WinterArcDatabase
 import com.nvshink.winterarc.ui.components.WinterArcNavigationBarLayout
 import com.nvshink.winterarc.ui.components.WinterArcNavigationRailLayout
 import com.nvshink.winterarc.ui.screens.ExercisesScreen
@@ -34,10 +41,14 @@ import com.nvshink.winterarc.ui.viewModel.ProfileViewModel
 
 @Composable
 fun WinterArcApp(
-    windowSize: WindowWidthSizeClass
+    windowSize: WindowWidthSizeClass,
+    db: WinterArcDatabase,
+//    exerciseViewModel: ExerciseViewModel
 ) {
     val contentType: WinterArcContentType
     val navigationType: WinterArcNavigationType
+
+
 
     when (windowSize) {
         WindowWidthSizeClass.Compact -> {
@@ -71,9 +82,12 @@ fun WinterArcApp(
                 composable<TrainingPlanScreenRoute> {
                     val trainingPlanViewModel: TrainingPlanViewModel = viewModel()
                     val trainingPlanUiState = trainingPlanViewModel.uiState.collectAsState().value
+                    val exerciseViewModel: ExerciseViewModel = hiltViewModel()
+                    val exerciseUiState = exerciseViewModel. uiState.collectAsState().value
                     TrainingPlanScreen(
                         modifier = Modifier.padding(innerPadding),
                         trainingPlanUiState = trainingPlanUiState,
+                        exerciseUiState = exerciseUiState,
                         contentType = contentType,
                         onTrainingPlanItemListPressed = { trainingPlan: TrainingPlan ->
                             trainingPlanViewModel.updateTrainingPlanItemState(trainingPlan)
@@ -83,15 +97,16 @@ fun WinterArcApp(
                         })
                 }
                 composable<ExerciseScreenRoute> {
-                    val exerciseViewModel: ExerciseViewModel = viewModel()
-                    val exerciseUiState = exerciseViewModel.uiState.collectAsState().value
+                    val exerciseViewModel: ExerciseViewModel = hiltViewModel()
+                    val exerciseUiState = exerciseViewModel. uiState.collectAsState().value
                     ExercisesScreen(
                         modifier = Modifier.padding(innerPadding),
                         exerciseUiState = exerciseUiState,
                         contentType = contentType,
-                        onExerciseItemListPressed = { exercise: Exercise ->
-                            exerciseViewModel.updateExerciseItemState(exercise)
-                        },
+//                        onExerciseItemListPressed = { exercise: Exercise ->
+//                            exerciseViewModel.updateExerciseItemState(exercise)
+//                        },
+                        onEvent = exerciseViewModel::onEvent,
                         onExerciseItemScreenBackPressed = {
                             exerciseViewModel.resetExercisesListItemState()
                         })
