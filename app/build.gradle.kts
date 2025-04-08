@@ -73,7 +73,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.room.common)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.material3.windowsizeclass)
     implementation(libs.androidx.navigation.compose)
@@ -81,13 +80,17 @@ dependencies {
     implementation(libs.androidx.material3.adaptive.navigation.suite)
     implementation(libs.androidx.adaptive.navigation)
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.com.google.gms.google.services.gradle.plugin)
+    //Coil
     implementation(libs.coil.compose)
+    //Firebase
     implementation(libs.firebase.auth.ktx)
-    implementation(libs.play.services.auth)
     implementation(libs.firebase.firestore.ktx)
+    //Google play services
+    implementation(libs.play.services.auth)
+    implementation(libs.com.google.gms.google.services.gradle.plugin)
     // Room Database
     implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.common)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.androidx.room.compiler)

@@ -11,10 +11,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TrainingPlanExerciseDao {
     @Upsert
-    fun upsertTrainingPlanExercise(trainingPlanExercise: TrainingPlanExercise)
+    suspend fun upsertTrainingPlanExercise(trainingPlanExercise: TrainingPlanExercise)
 
     @Delete
-    fun deleteTrainingPlanExercise(trainingPlanExercise: TrainingPlanExercise)
+    suspend fun deleteTrainingPlanExercise(trainingPlanExercise: TrainingPlanExercise)
 
     @Query("SELECT * FROM training_plan_exercise")
     fun getTrainingPlanExerciseByName(): Flow<MutableMap<@MapColumn(columnName = "training_plan_exercise_id") Int, TrainingPlanExercise>>

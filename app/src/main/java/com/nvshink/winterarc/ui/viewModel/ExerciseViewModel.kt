@@ -3,15 +3,11 @@ package com.nvshink.winterarc.ui.viewModel
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nvshink.winterarc.data.model.Exercise
 import com.nvshink.winterarc.data.model.InternalStoragePhoto
 import com.nvshink.winterarc.data.repository.ExerciseRepository
-import com.nvshink.winterarc.data.room.ExerciseDao
 import com.nvshink.winterarc.ui.event.ExerciseEvent
 import com.nvshink.winterarc.ui.utils.SortTypes
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,14 +15,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.FileDescriptor
 import java.io.IOException
 import javax.inject.Inject
 
@@ -66,7 +60,7 @@ open class ExerciseViewModel @Inject constructor(
 
     fun onEvent(event: ExerciseEvent) {
         when (event) {
-            is ExerciseEvent.DeleteExercises -> {
+            is ExerciseEvent.DeleteExercise -> {
                 viewModelScope.launch {
                     repository.deleteExercise(event.exercise)
                 }
@@ -86,7 +80,10 @@ open class ExerciseViewModel @Inject constructor(
             is ExerciseEvent.UpdateCurrentExercise -> {
                 _uiState.update {
                     it.copy(
-                        currentExercise = event.exercise
+                        currentExercise = event.exercise,
+                        name = event.exercise.name,
+                        description = event.exercise.description ?: "",
+                        images = event.exercise.images ?: emptyList()
                     )
                 }
             }

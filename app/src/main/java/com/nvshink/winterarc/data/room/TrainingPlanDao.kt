@@ -13,10 +13,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TrainingPlanDao {
     @Upsert
-    fun upsertTrainingPlan(trainingPlan: TrainingPlan)
+    suspend fun upsertTrainingPlan(trainingPlan: TrainingPlan)
 
     @Delete
-    fun deleteTrainingPlan(trainingPlan: TrainingPlan)
+    suspend fun deleteTrainingPlan(trainingPlan: TrainingPlan)
 
     @Query("SELECT * FROM training_plan ORDER BY name ASC")
     fun getTrainingPlanByName(): Flow<MutableMap<@MapColumn(columnName = "training_plan_id")Int, TrainingPlan>>

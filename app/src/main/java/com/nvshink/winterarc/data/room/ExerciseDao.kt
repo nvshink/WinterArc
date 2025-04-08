@@ -17,7 +17,7 @@ interface ExerciseDao {
     suspend fun upsertExercise(exercise: Exercise)
 
     @Delete
-    fun deleteExercise(exercise: Exercise)
+    suspend fun deleteExercise(exercise: Exercise)
 
     @Query("SELECT * FROM exercise ORDER BY name ASC")
     fun getExercisesByName(): Flow<MutableMap<@MapColumn(columnName = "exercise_id") Int, Exercise>>

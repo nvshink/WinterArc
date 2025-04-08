@@ -14,5 +14,5 @@ sealed interface ExerciseEvent {
     data class SetDescription (val description: String): ExerciseEvent
     data class SetImages (val images: List<String>): ExerciseEvent
     data class SortExercises(val sortType:SortTypes):ExerciseEvent
-    data class DeleteExercises(val exercise: Exercise):ExerciseEvent
+    data class DeleteExercise(val exercise: Exercise):ExerciseEvent
 }

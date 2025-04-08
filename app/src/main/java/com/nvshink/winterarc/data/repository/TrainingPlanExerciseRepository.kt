@@ -11,5 +11,5 @@ class TrainingPlanExerciseRepository(
 ) {
     suspend fun upsertTrainingPlan(trainingPlanExercise: TrainingPlanExercise) = dao.upsertTrainingPlanExercise(trainingPlanExercise = trainingPlanExercise)
     suspend fun deleteTrainingPlan(trainingPlanExercise: TrainingPlanExercise) = dao.deleteTrainingPlanExercise(trainingPlanExercise = trainingPlanExercise)
-    suspend fun getTrainingPlansByName(): Flow<MutableMap<Int, TrainingPlanExercise>> = dao.getTrainingPlanExerciseByName()
+    fun getTrainingPlansByName(): Flow<MutableMap<Int, TrainingPlanExercise>> = dao.getTrainingPlanExerciseByName()
 }

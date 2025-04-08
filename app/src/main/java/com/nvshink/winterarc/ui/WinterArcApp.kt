@@ -1,6 +1,5 @@
 package com.nvshink.winterarc.ui
 
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
@@ -10,23 +9,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.nvshink.winterarc.data.model.Exercise
 import com.nvshink.winterarc.data.model.TrainingPlan
-import com.nvshink.winterarc.data.repository.ExerciseRepository
 import com.nvshink.winterarc.data.room.WinterArcDatabase
 import com.nvshink.winterarc.ui.components.WinterArcNavigationBarLayout
 import com.nvshink.winterarc.ui.components.WinterArcNavigationRailLayout
-import com.nvshink.winterarc.ui.screens.ExercisesScreen
+import com.nvshink.winterarc.ui.screens.exercise.ExercisesScreen
 import com.nvshink.winterarc.ui.screens.ProfileScreen
 import com.nvshink.winterarc.ui.screens.TrainingPlanScreen
 import com.nvshink.winterarc.ui.viewModel.TrainingPlanViewModel
@@ -47,8 +41,6 @@ fun WinterArcApp(
 ) {
     val contentType: WinterArcContentType
     val navigationType: WinterArcNavigationType
-
-
 
     when (windowSize) {
         WindowWidthSizeClass.Compact -> {
@@ -71,7 +63,6 @@ fun WinterArcApp(
             navigationType = WinterArcNavigationType.BOTTOM_NAVIGATION
         }
     }
-
     val navController = rememberNavController()
     val navHost = remember {
         movableContentOf<PaddingValues> { innerPadding ->
@@ -80,7 +71,7 @@ fun WinterArcApp(
                 startDestination = WinterArcDestinations.getDefaultTopLevelRoute().route
             ) {
                 composable<TrainingPlanScreenRoute> {
-                    val trainingPlanViewModel: TrainingPlanViewModel = viewModel()
+                    val trainingPlanViewModel: TrainingPlanViewModel = hiltViewModel()
                     val trainingPlanUiState = trainingPlanViewModel.uiState.collectAsState().value
                     val exerciseViewModel: ExerciseViewModel = hiltViewModel()
                     val exerciseUiState = exerciseViewModel. uiState.collectAsState().value
@@ -94,7 +85,11 @@ fun WinterArcApp(
                         },
                         onTrainingPlanItemScreenBackPressed = {
                             trainingPlanViewModel.resetTrainingPlansListState()
-                        })
+                        },
+                        onExerciseEvent = {
+                            exerciseViewModel.resetExercisesListItemState()
+                        }
+                    )
                 }
                 composable<ExerciseScreenRoute> {
                     val exerciseViewModel: ExerciseViewModel = hiltViewModel()
@@ -103,13 +98,8 @@ fun WinterArcApp(
                         modifier = Modifier.padding(innerPadding),
                         exerciseUiState = exerciseUiState,
                         contentType = contentType,
-//                        onExerciseItemListPressed = { exercise: Exercise ->
-//                            exerciseViewModel.updateExerciseItemState(exercise)
-//                        },
-                        onEvent = exerciseViewModel::onEvent,
-                        onExerciseItemScreenBackPressed = {
-                            exerciseViewModel.resetExercisesListItemState()
-                        })
+                        onEvent = exerciseViewModel::onEvent
+                    )
                 }
                 composable<ProfileScreenRoute> {
                     val profileViewModel: ProfileViewModel = viewModel()
@@ -122,8 +112,10 @@ fun WinterArcApp(
             }
         }
     }
+
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
+
     val winterArcNavigationBarLayout = @Composable {
         WinterArcNavigationBarLayout(
             modifier = Modifier,
@@ -141,6 +133,7 @@ fun WinterArcApp(
             navHost(innerPadding)
         }
     }
+
     val winterArcNavigationRailLayout = @Composable {
         WinterArcNavigationRailLayout(
             modifier = Modifier,

@@ -4,11 +4,16 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.nvshink.winterarc.ui.event.ExerciseEvent
 import com.nvshink.winterarc.ui.utils.WinterArcContentType
 
 @Composable
@@ -19,19 +24,22 @@ fun <T> WinterArcListDetailRoute(
     listOfItems: MutableMap<Int, T>,
     listItem: @Composable (T) -> Unit,
     listArrangement: Dp = 0.dp,
+    onEvent: (ExerciseEvent) -> Unit,
     contentType: WinterArcContentType = WinterArcContentType.LIST_ONLY,
-    onItemScreenBackPressed: () -> Unit,
+    fab: (@Composable (Modifier) -> Unit)? = null
 ) {
     Box(modifier = modifier) {
         if (contentType == WinterArcContentType.LIST_ONLY) {
             if (isShowingList) {
                 WinterArcListOfItems(
+                    modifier = Modifier.fillMaxSize(),
                     listOfItems = listOfItems,
                     listItem = listItem,
-                    listArrangement = listArrangement
+                    listArrangement = listArrangement,
+                    fab = fab
                 )
             } else {
-                BackHandler { onItemScreenBackPressed() }
+                BackHandler { onEvent(ExerciseEvent.ShowList) }
             }
             WinterArcItemDetail(
                 modifier = Modifier.alpha(if (isShowingList) 0f else 1f),
@@ -42,9 +50,10 @@ fun <T> WinterArcListDetailRoute(
                 listOfItems = listOfItems,
                 listItem = listItem,
                 details = details,
-                listArrangement = listArrangement
+                listArrangement = listArrangement,
+                fab = fab
             )
-            BackHandler { onItemScreenBackPressed() }
+            BackHandler { onEvent(ExerciseEvent.ShowList)  }
         }
     }
 }
@@ -56,13 +65,15 @@ fun <T> WinterArcListAndDetail(
     listItem: @Composable (T) -> Unit,
     listArrangement: Dp = 0.dp,
     details: @Composable () -> Unit,
+    fab: (@Composable (Modifier) -> Unit)?
 ) {
     Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
         WinterArcListOfItems(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.fillMaxHeight().weight(1f),
             listOfItems = listOfItems,
             listItem = listItem,
-            listArrangement = listArrangement
+            listArrangement = listArrangement,
+            fab = fab
         )
         WinterArcItemDetail(
             modifier = Modifier.weight(1f),
