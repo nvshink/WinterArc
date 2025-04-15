@@ -3,6 +3,8 @@ package com.nvshink.winterarc.ui.viewModel
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nvshink.winterarc.data.model.Exercise
@@ -21,6 +23,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.io.IOException
 import javax.inject.Inject
 
@@ -45,7 +48,7 @@ open class ExerciseViewModel @Inject constructor(
     val uiState = combine(_uiState, _sortType, _exercises) { uiState, sortType, exercises ->
         uiState.copy(
             exercisesMap = exercises,
-            sortType = sortType,
+            sortType = sortType
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ExerciseUiState())
 
@@ -67,7 +70,11 @@ open class ExerciseViewModel @Inject constructor(
             }
 
             is ExerciseEvent.SaveExercise -> {
-                val exercise: Exercise = uiState.value.currentExercise ?: Exercise(
+                val exercise: Exercise = uiState.value.currentExercise?.copy(
+                    name = uiState.value.name,
+                    images = uiState.value.images,
+                    description = uiState.value.description
+                ) ?: Exercise(
                     name = uiState.value.name,
                     images = uiState.value.images,
                     description = uiState.value.description
@@ -81,9 +88,6 @@ open class ExerciseViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         currentExercise = event.exercise,
-                        name = event.exercise.name,
-                        description = event.exercise.description ?: "",
-                        images = event.exercise.images ?: emptyList()
                     )
                 }
             }
@@ -151,48 +155,6 @@ open class ExerciseViewModel @Inject constructor(
     }
 
 
-    private suspend fun deletePhotoToInternalStorage(context: Context, filename: String): Boolean {
-        return try {
-            context.deleteFile(filename)
-        } catch (e: IOException) {
-            e.printStackTrace()
-            false
-        }
-    }
-
-    private suspend fun loadPhotosFromInternalStorage(context: Context): List<InternalStoragePhoto> {
-        return withContext(Dispatchers.IO) {
-            val files = context.filesDir.listFiles()
-            files?.filter {
-                it.canRead() && it.isFile && it.name.endsWith(".jpg")
-            }?.map {
-                val bytes = it.readBytes()
-                val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-                InternalStoragePhoto(it.name, bmp)
-            } ?: listOf()
-        }
-    }
-
-    private suspend fun savePhotoToInternalStorage(
-        context: Context,
-        filename: String,
-        fileFormat: String,
-        bmp: Bitmap
-    ): Boolean {
-        return try {
-            withContext(Dispatchers.IO) {
-                context.openFileOutput("$filename.$fileFormat", Context.MODE_PRIVATE).use {
-                    if (!bmp.compress(Bitmap.CompressFormat.JPEG, 95, it)) {
-                        throw IOException("Couldn't save bitmap.")
-                    }
-                }
-                true
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-            false
-        }
-    }
 
 }
 

@@ -3,9 +3,11 @@ package com.nvshink.winterarc.ui.screens
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.movableContentOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -22,6 +24,7 @@ import com.nvshink.winterarc.ui.utils.EmptyItemScreen
 import com.nvshink.winterarc.ui.utils.TrainingPlanItemScreen
 import com.nvshink.winterarc.ui.utils.WinterArcContentType
 import com.nvshink.winterarc.ui.viewModel.ExerciseUiState
+import com.nvshink.winterarc.ui.viewModel.ExerciseViewModel
 import com.nvshink.winterarc.ui.viewModel.TrainingPlanUiState
 
 @Composable
@@ -55,10 +58,15 @@ fun TrainingPlanScreen(
             composable<ExerciseItemScreen> {
                 val args = it.toRoute<ExerciseItemScreen>()
                 val exercise: Exercise? = exerciseUiState.exercisesMap[args.id]
+                val exerciseViewModel: ExerciseViewModel = hiltViewModel()
+                val exerciseItemScreenUiState = exerciseViewModel. uiState.collectAsState().value
+                val exerciseItemScreenOnEvent = exerciseViewModel::onEvent
                 if (exercise != null) {
                     onExerciseEvent(ExerciseEvent.UpdateCurrentExercise(exercise))
                     WinterArcExerciseItemScreen(
                         exercise = exercise,
+                        onEvent = exerciseItemScreenOnEvent,
+                        exerciseUiState = exerciseItemScreenUiState,
                         onEditButtonClick = {
                             onExerciseEvent(ExerciseEvent.ShowDialog)
                         },

@@ -37,7 +37,6 @@ import com.nvshink.winterarc.ui.viewModel.ProfileViewModel
 fun WinterArcApp(
     windowSize: WindowWidthSizeClass,
     db: WinterArcDatabase,
-//    exerciseViewModel: ExerciseViewModel
 ) {
     val contentType: WinterArcContentType
     val navigationType: WinterArcNavigationType

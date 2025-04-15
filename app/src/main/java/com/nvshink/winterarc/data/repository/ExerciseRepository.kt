@@ -13,7 +13,7 @@ class ExerciseRepository(
 
     suspend fun deleteExercise(exercise: Exercise) = dao.deleteExercise(exercise = exercise)
 
-    suspend fun getExercisesByName(): Flow<MutableMap<Int, Exercise>> = dao.getExercisesByName()
+    fun getExercisesByName(): Flow<MutableMap<Int, Exercise>> = dao.getExercisesByName()
 
-    suspend fun getExerciseWithTrainingPlanExercises() = dao.getExerciseWithTrainingPlanExercises()
+    fun getExerciseWithTrainingPlanExercises() = dao.getExerciseWithTrainingPlanExercises()
 }

@@ -3,7 +3,19 @@
     <string name="training_plans_nav_label">Training plans</string>
     <string name="exercises_nav_label">Exercises</string>
     <string name="profile_nav_label">Profile</string>
-    <string name="training_plans_nav_content_description"></string>
-    <string name="exercises_nav_content_description"></string>
-    <string name="profile_nav_content_description"></string>
+    <string name="save_button_name">Save</string>
+    <string name="save_button_icon_description">Save button</string>
+    <string name="edit_button_name">Edit</string>
+    <string name="edit_button_icon_description">Edit button</string>
+    <string name="delete_button_name">Delete</string>
+    <string name="delete_button_icon_description">Delete button</string>
+    <string name="close_button_name">Close</string>
+    <string name="close_button_icon_description">Close button</string>
+    <string name="add_exercise_dialog_title">Add exercise</string>
+    <string name="edit_exercise_dialog_title">Edit exercise</string>
+    <string name="text_field_label_name">Name</string>
+    <string name="text_field_placeholder_name">Name</string>
+    <string name="text_field_label_description">Description</string>
+    <string name="text_field_placeholder_description">Description</string>
+    <string name="add_exercise_image_icon_description">Add exercise image</string>
 </resources>
