@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TrainingPlanDao {
     @Upsert
-    suspend fun upsertTrainingPlan(trainingPlan: TrainingPlan)
+    suspend fun upsertTrainingPlan(trainingPlan: TrainingPlan): Long
 
     @Delete
     suspend fun deleteTrainingPlan(trainingPlan: TrainingPlan)

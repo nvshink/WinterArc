@@ -23,7 +23,7 @@ data class TrainingPlan(
     var description: String,
     @ColumnInfo(name = "training_plan_id")
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0
+    val id: Long = 0
 )
 
 data class TrainingPlanWithTrainingPlanExercises(

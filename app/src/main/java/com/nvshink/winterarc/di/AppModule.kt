@@ -3,7 +3,6 @@ package com.nvshink.winterarc.di
 import android.content.Context
 import androidx.room.Room
 import com.nvshink.winterarc.data.repository.ExerciseRepository
-import com.nvshink.winterarc.data.repository.TrainingPlanExerciseRepository
 import com.nvshink.winterarc.data.repository.TrainingPlanRepository
 import com.nvshink.winterarc.data.room.ExerciseDao
 import com.nvshink.winterarc.data.room.TrainingPlanDao
@@ -42,12 +41,8 @@ object AppModule {
     fun provideTrainingPlanDao(db: WinterArcDatabase): TrainingPlanDao = db.trainingPlanDao
     @Provides
     @Singleton
-    fun provideTrainingPlanRepository(dao: TrainingPlanDao): TrainingPlanRepository = TrainingPlanRepository(dao = dao)
-
-    @Provides
-    @Singleton
     fun provideTrainingPlanExerciseDao(db: WinterArcDatabase): TrainingPlanExerciseDao = db.trainingPlanExerciseDao
     @Provides
     @Singleton
-    fun provideTrainingPlanExerciseRepository(dao: TrainingPlanExerciseDao): TrainingPlanExerciseRepository = TrainingPlanExerciseRepository(dao = dao)
+    fun provideTrainingPlanRepository(trainingPlanDao: TrainingPlanDao, trainingPlanExerciseDao: TrainingPlanExerciseDao): TrainingPlanRepository = TrainingPlanRepository(trainingPlanDao = trainingPlanDao, trainingPlanExerciseDao = trainingPlanExerciseDao)
 }

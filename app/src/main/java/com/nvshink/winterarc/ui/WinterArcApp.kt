@@ -1,7 +1,11 @@
 package com.nvshink.winterarc.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -9,6 +13,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -17,9 +23,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.nvshink.winterarc.data.model.TrainingPlan
-import com.nvshink.winterarc.data.room.WinterArcDatabase
-import com.nvshink.winterarc.ui.components.WinterArcNavigationBarLayout
-import com.nvshink.winterarc.ui.components.WinterArcNavigationRailLayout
+import com.nvshink.winterarc.ui.components.generic.WinterArcNavigationBarLayout
+import com.nvshink.winterarc.ui.components.generic.WinterArcNavigationRailLayout
 import com.nvshink.winterarc.ui.screens.exercise.ExercisesScreen
 import com.nvshink.winterarc.ui.screens.ProfileScreen
 import com.nvshink.winterarc.ui.screens.TrainingPlanScreen
@@ -36,11 +41,10 @@ import com.nvshink.winterarc.ui.viewModel.ProfileViewModel
 @Composable
 fun WinterArcApp(
     windowSize: WindowWidthSizeClass,
-    db: WinterArcDatabase,
 ) {
     val contentType: WinterArcContentType
     val navigationType: WinterArcNavigationType
-
+    var screensShape: RoundedCornerShape = RoundedCornerShape(0.dp)
     when (windowSize) {
         WindowWidthSizeClass.Compact -> {
             contentType = WinterArcContentType.LIST_ONLY
@@ -50,11 +54,21 @@ fun WinterArcApp(
         WindowWidthSizeClass.Medium -> {
             contentType = WinterArcContentType.LIST_ONLY
             navigationType = WinterArcNavigationType.NAVIGATION_RAIL
+            screensShape = MaterialTheme.shapes.extraLarge.copy(
+                topEnd = CornerSize(
+                    0.dp
+                ), bottomEnd = CornerSize(0.dp)
+            ) as RoundedCornerShape
         }
 
         WindowWidthSizeClass.Expanded -> {
             contentType = WinterArcContentType.LIST_AND_DETAIL
             navigationType = WinterArcNavigationType.NAVIGATION_RAIL
+            screensShape = MaterialTheme.shapes.extraLarge.copy(
+                topEnd = CornerSize(
+                    0.dp
+                ), bottomEnd = CornerSize(0.dp)
+            ) as RoundedCornerShape
         }
 
         else -> {
@@ -72,13 +86,21 @@ fun WinterArcApp(
                 composable<TrainingPlanScreenRoute> {
                     val trainingPlanViewModel: TrainingPlanViewModel = hiltViewModel()
                     val trainingPlanUiState = trainingPlanViewModel.uiState.collectAsState().value
-                    val exerciseViewModel: ExerciseViewModel = hiltViewModel()
-                    val exerciseUiState = exerciseViewModel. uiState.collectAsState().value
                     TrainingPlanScreen(
-                        modifier = Modifier.padding(innerPadding),
+                        modifier = Modifier
+                            .clip(
+                                screensShape
+                            )
+                            .background(MaterialTheme.colorScheme.surface),
                         trainingPlanUiState = trainingPlanUiState,
-                        exerciseUiState = exerciseUiState,
+                        trainingPlanScreenModifier = Modifier
+                            .clip(
+                                screensShape
+                            )
+                            .background(MaterialTheme.colorScheme.surface),
                         contentType = contentType,
+                        innerPadding = innerPadding,
+                        onEvent = trainingPlanViewModel::onEvent,
                         onTrainingPlanItemListPressed = { trainingPlan: TrainingPlan ->
                             trainingPlanViewModel.updateTrainingPlanItemState(trainingPlan)
                         },
@@ -86,17 +108,29 @@ fun WinterArcApp(
                             trainingPlanViewModel.resetTrainingPlansListState()
                         },
                         onExerciseEvent = {
-                            exerciseViewModel.resetExercisesListItemState()
                         }
                     )
                 }
                 composable<ExerciseScreenRoute> {
                     val exerciseViewModel: ExerciseViewModel = hiltViewModel()
-                    val exerciseUiState = exerciseViewModel. uiState.collectAsState().value
+                    val exerciseUiState = exerciseViewModel.uiState.collectAsState().value
                     ExercisesScreen(
-                        modifier = Modifier.padding(innerPadding),
+                        modifier = Modifier
+                            .clip(
+                                screensShape
+                            )
+                            .background(
+                                MaterialTheme.colorScheme.surfaceContainer
+                            ),
                         exerciseUiState = exerciseUiState,
+                        exerciseScreenModifier = Modifier
+                            .clip(
+                                screensShape
+                            )
+                            .background(MaterialTheme.colorScheme.surface),
                         contentType = contentType,
+                        innerPadding = innerPadding,
+                        navigationType = navigationType,
                         onEvent = exerciseViewModel::onEvent
                     )
                 }

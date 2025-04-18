@@ -17,7 +17,7 @@ import kotlinx.serialization.Serializable
  * @param isInSets Describes how the duration is measured. if true, then in approaches, otherwise in time.
  */
 @Entity(
-    tableName = "training_plan_exercise"
+    tableName = "training_plan_exercise",
 )
 @Serializable
 data class TrainingPlanExercise(
@@ -28,7 +28,7 @@ data class TrainingPlanExercise(
     @ColumnInfo(name = "is_in_sets")
     val isInSets: Boolean,
     @ColumnInfo(name = "training_plan_id_foreign_key")
-    val trainingPlanIdForeignKey: Int,
+    val trainingPlanIdForeignKey: Long,
     @ColumnInfo(name = "training_plan_exercise_id")
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0

@@ -1,19 +1,13 @@
 package com.nvshink.winterarc.ui.viewModel
 
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nvshink.winterarc.data.model.Exercise
-import com.nvshink.winterarc.data.model.InternalStoragePhoto
 import com.nvshink.winterarc.data.repository.ExerciseRepository
 import com.nvshink.winterarc.ui.event.ExerciseEvent
 import com.nvshink.winterarc.ui.utils.SortTypes
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,9 +16,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.File
-import java.io.IOException
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -66,21 +57,44 @@ open class ExerciseViewModel @Inject constructor(
             is ExerciseEvent.DeleteExercise -> {
                 viewModelScope.launch {
                     repository.deleteExercise(event.exercise)
+                    repository.deleteExerciseImagesListFromLocalStorage(event.exercise.images)
                 }
             }
 
             is ExerciseEvent.SaveExercise -> {
-                val exercise: Exercise = uiState.value.currentExercise?.copy(
-                    name = uiState.value.name,
-                    images = uiState.value.images,
-                    description = uiState.value.description
-                ) ?: Exercise(
-                    name = uiState.value.name,
-                    images = uiState.value.images,
-                    description = uiState.value.description
-                )
+                val exercise: Exercise =
+                    if (uiState.value.currentExercise == null || uiState.value.isAddingExercise) {
+                        Exercise(
+                            name = uiState.value.name,
+                            images = repository.saveExerciseImagesListToLocalStorageAndGetList(
+                                context = event.context,
+                                uriList = uiState.value.images
+                            ),
+                            description = uiState.value.description
+                        )
+                    } else {
+                        uiState.value.currentExercise!!.copy(
+                            name = uiState.value.name,
+                            images = uiState.value.images.map { imagesUriString ->
+                                if (!uiState.value.currentExercise!!.images.contains(imagesUriString)) {
+                                    return@map repository.saveExerciseImageToLocalStorageAndGetUri(
+                                        context = event.context,
+                                        Uri.parse(imagesUriString)
+                                    ).toString()
+                                } else {
+                                    return@map imagesUriString
+                                }
+                            },
+                            description = uiState.value.description
+                        )
+                    }
                 viewModelScope.launch {
                     repository.upsertExercise(exercise)
+                    if (uiState.value.currentExercise != null) {
+                        uiState.value.currentExercise!!.images.forEach {
+                            if (!uiState.value.images.contains(it)) repository.deleteExerciseImageFromLocalStorage(Uri.parse(it))
+                        }
+                    }
                 }
             }
 
@@ -116,10 +130,10 @@ open class ExerciseViewModel @Inject constructor(
                 }
             }
 
-            is ExerciseEvent.HideDialog -> {
+            ExerciseEvent.HideDialog -> {
                 _uiState.update {
                     it.copy(
-                        isAddingDialog = false
+                        isShowingEditDialog = false
                     )
                 }
             }
@@ -127,13 +141,10 @@ open class ExerciseViewModel @Inject constructor(
             is ExerciseEvent.ShowDialog -> {
                 _uiState.update {
                     it.copy(
-                        isAddingDialog = true
+                        isShowingEditDialog = true,
+                        isAddingExercise = event.isAdding
                     )
                 }
-            }
-
-            is ExerciseEvent.SortExercises -> {
-                _sortType.value = event.sortType
             }
 
             ExerciseEvent.HideList -> {
@@ -151,9 +162,20 @@ open class ExerciseViewModel @Inject constructor(
                     )
                 }
             }
+
+            is ExerciseEvent.SetIsBigScreen -> {
+                _uiState.update {
+                    it.copy(
+                        isBigScreen = event.isBigScreen
+                    )
+                }
+            }
+
+            is ExerciseEvent.SortExercises -> {
+                _sortType.value = event.sortType
+            }
         }
     }
-
 
 
 }
@@ -165,6 +187,8 @@ data class ExerciseUiState(
     val description: String = "",
     val images: List<String> = emptyList(),
     val isShowingList: Boolean = true,
-    val isAddingDialog: Boolean = false,
+    val isAddingExercise: Boolean = true,
+    val isBigScreen: Boolean = false,
+    val isShowingEditDialog: Boolean = false,
     val sortType: SortTypes = SortTypes.NAME
 )

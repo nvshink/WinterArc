@@ -11,8 +11,8 @@ object WinterArcDestinations {
     data class TopLevelRoute<T : Any>(val name: String, val route: T, val icon: ImageVector)
 
     private val topLevelRoutes = listOf(
-        TopLevelRoute("Training plan", TrainingPlanScreenRoute, Icons.Filled.FormatListNumbered),
-        TopLevelRoute("Exercise", ExerciseScreenRoute, Icons.Filled.FitnessCenter),
+        TopLevelRoute("Training plans", TrainingPlanScreenRoute, Icons.Filled.FormatListNumbered),
+        TopLevelRoute("Exercises", ExerciseScreenRoute, Icons.Filled.FitnessCenter),
         TopLevelRoute("Profile", ProfileScreenRoute, Icons.Filled.Person)
     )
 
@@ -45,5 +45,5 @@ data class ExerciseItemScreen(
 
 @Serializable
 data class TrainingPlanItemScreen(
-    val id: Int
+    val id: Long
 )

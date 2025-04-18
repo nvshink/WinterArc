@@ -1,4 +1,4 @@
-package com.nvshink.winterarc.ui.components
+package com.nvshink.winterarc.ui.components.generic
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
@@ -6,11 +6,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.nvshink.winterarc.ui.event.ExerciseEvent
@@ -23,6 +22,9 @@ fun <T> WinterArcListDetailRoute(
     details: @Composable () -> Unit,
     listOfItems: MutableMap<Int, T>,
     listItem: @Composable (T) -> Unit,
+    emptyListIcon: ImageVector? = null,
+    emptyListIconDescription: String = "",
+    emptyListTitle: String? = "",
     listArrangement: Dp = 0.dp,
     onEvent: (ExerciseEvent) -> Unit,
     contentType: WinterArcContentType = WinterArcContentType.LIST_ONLY,
@@ -35,6 +37,9 @@ fun <T> WinterArcListDetailRoute(
                     modifier = Modifier.fillMaxSize(),
                     listOfItems = listOfItems,
                     listItem = listItem,
+                    emptyListIcon = emptyListIcon,
+                    emptyListIconDescription = emptyListIconDescription,
+                    emptyListTitle = emptyListTitle,
                     listArrangement = listArrangement,
                     fab = fab
                 )
@@ -49,6 +54,9 @@ fun <T> WinterArcListDetailRoute(
             WinterArcListAndDetail(
                 listOfItems = listOfItems,
                 listItem = listItem,
+                emptyListIcon = emptyListIcon,
+                emptyListIconDescription = emptyListIconDescription,
+                emptyListTitle = emptyListTitle,
                 details = details,
                 listArrangement = listArrangement,
                 fab = fab
@@ -63,20 +71,26 @@ fun <T> WinterArcListAndDetail(
     modifier: Modifier = Modifier,
     listOfItems: MutableMap<Int, T>,
     listItem: @Composable (T) -> Unit,
+    emptyListIcon: ImageVector? = null,
+    emptyListIconDescription: String = "",
+    emptyListTitle: String? = "",
     listArrangement: Dp = 0.dp,
     details: @Composable () -> Unit,
     fab: (@Composable (Modifier) -> Unit)?
 ) {
     Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
         WinterArcListOfItems(
-            modifier = Modifier.fillMaxHeight().weight(1f),
+            modifier = Modifier.fillMaxHeight().weight(0.4f),
             listOfItems = listOfItems,
             listItem = listItem,
+            emptyListIcon = emptyListIcon,
+            emptyListIconDescription = emptyListIconDescription,
+            emptyListTitle = emptyListTitle,
             listArrangement = listArrangement,
             fab = fab
         )
         WinterArcItemDetail(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(0.6f),
             details = details
         )
     }

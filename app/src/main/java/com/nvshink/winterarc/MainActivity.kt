@@ -38,7 +38,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val db = AppModule.provideLocalDatabase(applicationContext)
             WinterArcTheme {
                 val layoutDirection = LocalLayoutDirection.current
                 Surface(modifier = Modifier
@@ -50,7 +49,7 @@ class MainActivity : ComponentActivity() {
                     )
                 ) {
                     val windowSize = calculateWindowSizeClass(this)
-                    WinterArcApp(windowSize = windowSize.widthSizeClass, db = db)
+                    WinterArcApp(windowSize = windowSize.widthSizeClass)
                 }
             }
         }
