@@ -170,16 +170,16 @@
   },
   "active": "10d551c11e31daa1",
   "lastOpenFiles": [
-    "app/build/tmp/kotlin-classes/debug/META-INF/app_debug.kotlin_module",
-    "app/build/tmp/kotlin-classes/debug/com/example/winterarc/ui/TrainingPlanUiState.class",
-    "app/build/tmp/kotlin-classes/debug/com/example/winterarc/ui/TrainingPlanViewModel.class",
-    "app/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/dirty-output-classes.tab_i",
-    "app/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/dirty-output-classes.tab.keystream.len",
-    "app/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/dirty-output-classes.tab_i.len",
-    "app/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/dirty-output-classes.tab",
-    "app/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/dirty-output-classes.tab.len",
-    "app/build/snapshot/kotlin/compileDebugKotlin/2.zip",
-    "app/build/snapshot/kotlin/compileDebugKotlin/1.zip",
-    "app/build/snapshot/kotlin/compileDebugKotlin/0.zip"
+    "app/src/main/java/com/nvshink/winterarc/data/repository/TrainingPlanExerciseRepository.kt",
+    "build.gradle.kts~",
+    "app/src/main/java/com/nvshink/winterarc/di/AppModule.kt",
+    "app/src/main/java/com/nvshink/winterarc/di",
+    "app/build/generated/hilt/component_sources/debug/com/nvshink/winterarc/Hilt_MyApplication.java",
+    "app/build/generated/hilt/component_sources/debug/com/nvshink/winterarc/MyApplication_HiltComponents.java",
+    "app/build/generated/hilt/component_sources/debug/com/nvshink/winterarc",
+    "app/build/generated/hilt/component_sources/debug/com/nvshink",
+    "app/build/generated/hilt/component_sources/debug/com",
+    "app/build/tmp/hiltJavaCompileDebug",
+    "app/build/generated/hilt/component_sources/debug"
   ]
 }

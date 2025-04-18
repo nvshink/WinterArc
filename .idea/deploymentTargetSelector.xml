@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="WinterArcApp">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-03-21T10:13:23.968592300Z">
+        <DropdownSelection timestamp="2025-04-10T08:44:02.321063200Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\shinkarev_ns\.android\avd\Resizable_Experimental_API_35.avd" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\shinkarev_ns\.android\avd\Pixel_8_Pro_API_35.avd" />
             </handle>
           </Target>
         </DropdownSelection>
