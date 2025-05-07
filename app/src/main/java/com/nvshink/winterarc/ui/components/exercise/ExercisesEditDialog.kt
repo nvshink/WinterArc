@@ -1,7 +1,5 @@
 package com.nvshink.winterarc.ui.components.exercise
 
-import android.content.Context
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -27,7 +25,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -44,8 +41,7 @@ import androidx.compose.ui.window.DialogProperties
 import coil.compose.AsyncImage
 import com.nvshink.winterarc.R
 import com.nvshink.winterarc.ui.event.ExerciseEvent
-import com.nvshink.winterarc.ui.viewModel.ExerciseUiState
-import java.io.File
+import com.nvshink.winterarc.ui.states.ExerciseUiState
 
 @Composable
 fun ExerciseEditDialog(

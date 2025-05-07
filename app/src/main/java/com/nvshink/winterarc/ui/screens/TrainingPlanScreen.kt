@@ -34,8 +34,8 @@ import com.nvshink.winterarc.ui.utils.ExerciseItemScreen
 import com.nvshink.winterarc.ui.utils.EmptyItemScreen
 import com.nvshink.winterarc.ui.utils.TrainingPlanItemScreen
 import com.nvshink.winterarc.ui.utils.WinterArcContentType
-import com.nvshink.winterarc.ui.viewModel.ExerciseViewModel
-import com.nvshink.winterarc.ui.viewModel.TrainingPlanUiState
+import com.nvshink.winterarc.ui.viewModels.ExerciseViewModel
+import com.nvshink.winterarc.ui.states.TrainingPlanUiState
 
 @Composable
 fun TrainingPlanScreen(
@@ -62,6 +62,7 @@ fun TrainingPlanScreen(
             composable<TrainingPlanItemScreen> {
                 val args = it.toRoute<TrainingPlanItemScreen>()
                 WinterArcTrainingPlanItemScreen(
+                    modifier = trainingPlanScreenModifier,
                     trainingPlanUiState = trainingPlanUiState,
                     onExercisePressed = { id ->
                         navController.navigate(route = ExerciseItemScreen(id))

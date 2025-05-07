@@ -1,8 +1,9 @@
-package com.nvshink.winterarc.ui.viewModel
+package com.nvshink.winterarc.ui.viewModels
 
 import androidx.lifecycle.ViewModel
 import com.nvshink.winterarc.data.model.User
 import com.nvshink.winterarc.data.repository.UserRepository
+import com.nvshink.winterarc.ui.states.ProfileUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -11,7 +12,7 @@ class ProfileViewModel : ViewModel() {
     private val userRepository = UserRepository()
 
     private val _uiState = MutableStateFlow(
-        ProfileUiState (
+        ProfileUiState(
             currentUser = userRepository.getUser()
         )
     )
@@ -29,6 +30,3 @@ class ProfileViewModel : ViewModel() {
 
 }
 
-data class ProfileUiState(
-    val currentUser: User? = null,
-)

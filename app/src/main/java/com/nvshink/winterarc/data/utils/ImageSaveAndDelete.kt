@@ -1,4 +1,4 @@
-package com.nvshink.winterarc.data
+package com.nvshink.winterarc.data.utils
 
 import android.content.Context
 import android.net.Uri

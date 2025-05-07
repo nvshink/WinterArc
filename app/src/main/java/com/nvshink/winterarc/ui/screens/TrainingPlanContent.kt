@@ -15,9 +15,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.nvshink.winterarc.data.model.TrainingPlan
 import com.nvshink.winterarc.ui.components.generic.WinterArcItemScreenTopBar
-import com.nvshink.winterarc.ui.viewModel.TrainingPlanUiState
+import com.nvshink.winterarc.ui.states.TrainingPlanUiState
 
 @Composable
 fun WinterArcTrainingPlanItemScreen(

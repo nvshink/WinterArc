@@ -11,10 +11,11 @@ import kotlinx.serialization.Serializable
 
 /**
  * A data class which represent exercise recorded in training plan
- * @param id Unique ID of an training plan exercise.
- * @param exercise Exercise object.
+ * @param exerciseIdForeignKey Unique ID of an related exercise.
  * @param duration The duration indicates the time or number of approaches required to complete it.
  * @param isInSets Describes how the duration is measured. if true, then in approaches, otherwise in time.
+ * @param trainingPlanIdForeignKey Unique ID of an related training plan.
+ * @param id Unique ID of an training plan exercise.
  */
 @Entity(
     tableName = "training_plan_exercise",

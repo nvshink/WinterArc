@@ -28,15 +28,15 @@ import com.nvshink.winterarc.ui.components.generic.WinterArcNavigationRailLayout
 import com.nvshink.winterarc.ui.screens.exercise.ExercisesScreen
 import com.nvshink.winterarc.ui.screens.ProfileScreen
 import com.nvshink.winterarc.ui.screens.TrainingPlanScreen
-import com.nvshink.winterarc.ui.viewModel.TrainingPlanViewModel
+import com.nvshink.winterarc.ui.viewModels.TrainingPlanViewModel
 import com.nvshink.winterarc.ui.utils.ExerciseScreenRoute
 import com.nvshink.winterarc.ui.utils.ProfileScreenRoute
 import com.nvshink.winterarc.ui.utils.TrainingPlanScreenRoute
 import com.nvshink.winterarc.ui.utils.WinterArcContentType
 import com.nvshink.winterarc.ui.utils.WinterArcDestinations
 import com.nvshink.winterarc.ui.utils.WinterArcNavigationType
-import com.nvshink.winterarc.ui.viewModel.ExerciseViewModel
-import com.nvshink.winterarc.ui.viewModel.ProfileViewModel
+import com.nvshink.winterarc.ui.viewModels.ExerciseViewModel
+import com.nvshink.winterarc.ui.viewModels.ProfileViewModel
 
 @Composable
 fun WinterArcApp(
@@ -44,7 +44,7 @@ fun WinterArcApp(
 ) {
     val contentType: WinterArcContentType
     val navigationType: WinterArcNavigationType
-    var screensShape: RoundedCornerShape = RoundedCornerShape(0.dp)
+    var screensShape = RoundedCornerShape(0.dp)
     when (windowSize) {
         WindowWidthSizeClass.Compact -> {
             contentType = WinterArcContentType.LIST_ONLY
@@ -91,7 +91,7 @@ fun WinterArcApp(
                             .clip(
                                 screensShape
                             )
-                            .background(MaterialTheme.colorScheme.surface),
+                            .background(MaterialTheme.colorScheme.surfaceContainer),
                         trainingPlanUiState = trainingPlanUiState,
                         trainingPlanScreenModifier = Modifier
                             .clip(

@@ -9,10 +9,9 @@ import kotlinx.serialization.Serializable
 
 /**
  * A class which represent training plan.
- * @param id Unique ID of an exercise.
- * @param name Name of the exercise.
- * @param description Description of the correct exercise performance.
- * @param exercises Contain list of exercises that recorded in this training plan.
+ * @param id Unique ID of an training plan.
+ * @param name Name of the training plan.
+ * @param description Description of the training plan.
  */
 @Entity(tableName = "training_plan")
 @Serializable

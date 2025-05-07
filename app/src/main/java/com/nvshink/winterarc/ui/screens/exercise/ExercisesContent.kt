@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.nvshink.winterarc.R
 import com.nvshink.winterarc.ui.components.generic.WinterArcItemScreenTopBar
-import com.nvshink.winterarc.ui.viewModel.ExerciseUiState
+import com.nvshink.winterarc.ui.states.ExerciseUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,7 +43,7 @@ fun WinterArcExerciseItemScreen(
     }
     if (exerciseUiState.currentExercise != null) { //TODO create handler empty current exercise navigate
         val carouselState =
-            rememberCarouselState { exerciseUiState.currentExercise.images.size }
+            rememberCarouselState { exerciseUiState.currentExercise!!.images.size }
         Column(modifier = modifier.fillMaxSize()) {
             WinterArcItemScreenTopBar(modifier = Modifier.padding(16.dp), isBigScreen = exerciseUiState.isBigScreen, onBackButtonClicked = onBackPressed) {
                 if (onEditButtonClick != null) {
@@ -62,10 +62,10 @@ fun WinterArcExerciseItemScreen(
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
                 Text(
-                    text = exerciseUiState.currentExercise.name,
+                    text = exerciseUiState.currentExercise!!.name,
                     style = MaterialTheme.typography.titleLarge,
                 )
-                if (exerciseUiState.currentExercise.images.isNotEmpty()){
+                if (exerciseUiState.currentExercise!!.images.isNotEmpty()){
                     HorizontalMultiBrowseCarousel(
                         state = carouselState,
                         preferredItemWidth = 300.dp,    //TODO Fix single image width
@@ -78,7 +78,7 @@ fun WinterArcExerciseItemScreen(
                             .height(height = 300.dp)
                     ) { itemIndex ->
                         AsyncImage(
-                            model = exerciseUiState.currentExercise.images[itemIndex],
+                            model = exerciseUiState.currentExercise!!.images[itemIndex],
                             contentDescription = null,
                             modifier = Modifier
                                 .fillMaxSize()
@@ -89,7 +89,7 @@ fun WinterArcExerciseItemScreen(
                     }
                 }
                 Text(
-                    text = exerciseUiState.currentExercise.description,
+                    text = exerciseUiState.currentExercise!!.description,
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }

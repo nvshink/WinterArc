@@ -1,12 +1,11 @@
-package com.nvshink.winterarc.ui.viewModel
+package com.nvshink.winterarc.ui.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nvshink.winterarc.data.model.Exercise
 import com.nvshink.winterarc.data.model.TrainingPlan
 import com.nvshink.winterarc.data.repository.TrainingPlanRepository
-import com.nvshink.winterarc.data.repository.TrainingPlanRepository.TrainingPlanExerciseParams
 import com.nvshink.winterarc.ui.event.TrainingPlanEvent
+import com.nvshink.winterarc.ui.states.TrainingPlanUiState
 import com.nvshink.winterarc.ui.utils.SortTypes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -162,15 +161,3 @@ class TrainingPlanViewModel @Inject constructor(
 
 }
 
-data class TrainingPlanUiState(
-    val trainingPlansMap: MutableMap<Int, TrainingPlan> = mutableMapOf(),
-    val currentTrainingPlan: TrainingPlan? = null,
-    val name: String = "",
-    val description: String = "",
-    val trainingPlanExercises: List<Pair<Exercise, TrainingPlanExerciseParams>> = emptyList(),
-    val isShowingList: Boolean = true,
-    val isAddingTrainingPlan: Boolean = true,
-    val isBigScreen: Boolean = false,
-    val isShowingEditDialog: Boolean = false,
-    val sortType: SortTypes = SortTypes.NAME
-)
