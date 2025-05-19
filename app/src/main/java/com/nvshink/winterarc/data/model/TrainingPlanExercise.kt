@@ -23,7 +23,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class TrainingPlanExercise(
     @ColumnInfo(name = "exercise_id_foreign_key")
-    val exerciseIdForeignKey: Int,
+    val exerciseIdForeignKey: Long,
     @ColumnInfo(name = "duration")
     val duration: Int,
     @ColumnInfo(name = "is_in_sets")
@@ -32,5 +32,5 @@ data class TrainingPlanExercise(
     val trainingPlanIdForeignKey: Long,
     @ColumnInfo(name = "training_plan_exercise_id")
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0
+    val id: Long = 0
 )

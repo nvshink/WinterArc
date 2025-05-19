@@ -1,5 +1,6 @@
 package com.nvshink.winterarc.ui.components.trainingplan
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -35,7 +37,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.nvshink.winterarc.R
-import com.nvshink.winterarc.data.repository.TrainingPlanRepository
 import com.nvshink.winterarc.ui.components.generic.WinterArcListItem
 import com.nvshink.winterarc.ui.components.generic.WinterArcListOfItems
 import com.nvshink.winterarc.ui.event.TrainingPlanEvent
@@ -47,11 +48,18 @@ import com.nvshink.winterarc.ui.states.TrainingPlanUiState
 fun TrainingPlanEditDialog(
     modifier: Modifier = Modifier,
     title: String,
-    trainingPlanUiState: TrainingPlanUiState,
+    trainingPlanUiState: TrainingPlanUiState.SuccessState,
     onEvent: (TrainingPlanEvent) -> Unit
 ) {
     val exerciseViewModel: ExerciseViewModel = hiltViewModel()
     val exerciseUiState = exerciseViewModel.uiState.collectAsState().value
+    if (trainingPlanUiState.isShowingExerciseSelector) {
+        ExerciseSelectorDialog(
+            trainingPlanUiState = trainingPlanUiState,
+            exerciseUiState = exerciseUiState,
+            onEvent = onEvent
+        )
+    }
     Dialog(
         onDismissRequest = {
             onEvent(TrainingPlanEvent.HideDialog)
@@ -160,16 +168,9 @@ fun TrainingPlanEditDialog(
                             Card(
                                 onClick = {
                                     onEvent(
-                                        TrainingPlanEvent.SetTrainingPlanExercises(
-                                            trainingPlanExercises = trainingPlanUiState.trainingPlanExercises + Pair(
-                                                exerciseUiState.exercisesMap[11]!!,
-                                                TrainingPlanRepository.TrainingPlanExerciseParams(
-                                                    10,
-                                                    true
-                                                )
-                                            )
-                                        )
+                                        TrainingPlanEvent.ShowExerciseSelector
                                     )
+                                    Log.d("SELECTOR", trainingPlanUiState.isShowingExerciseSelector.toString())
                                 },
                                 modifier = Modifier
                                     .size(100.dp)
@@ -207,18 +208,36 @@ fun ExerciseSelectorDialog(
         },
         properties = DialogProperties(usePlatformDefaultWidth = trainingPlanUiState.isBigScreen)
     ) {
-        WinterArcListOfItems(
-            listOfItems = exerciseUiState.exercisesMap, listItem = {
-                Row {
-                    (
-                            WinterArcListItem(title = it.name, subtitle = null, onCardClick = {
+        when (exerciseUiState) {
+            is ExerciseUiState.SuccessState -> {
+                WinterArcListOfItems(
+                    listOfItems = exerciseUiState.exercisesMap, listItem = {
+                        Row {
+                            (
+                                    WinterArcListItem(
+                                        title = it.name,
+                                        subtitle = null,
+                                        onCardClick = {
 //                                onEvent(TrainingPlanEvent.SetTrainingPlanExercises(trainingPlanUiState.trainingPlanExercises + listOf(Pair(it, ))))
-                            })
-                            )
-                }
-            },
-            listArrangement = 8.dp,
-            fab = {}
-        )
+                                        })
+                                    )
+                        }
+                    },
+                    listArrangement = 8.dp,
+                    isLoading = exerciseUiState::class == ExerciseUiState.LoadingState::class,
+                    listTopContent = {},
+                    fab = {}
+                )
+            }
+
+            is ExerciseUiState.LoadingState -> {
+                CircularProgressIndicator()
+            }
+
+            is ExerciseUiState.ErrorState -> {
+                Text("Error")
+            }
+
+        }
     }
 }

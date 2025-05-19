@@ -34,7 +34,7 @@ data class Exercise(
     val description: String,
     @ColumnInfo(name = "exercise_id")
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0
+    val id: Long = 0
 )
 
 data class ExerciseWithTrainingPlanExercises(

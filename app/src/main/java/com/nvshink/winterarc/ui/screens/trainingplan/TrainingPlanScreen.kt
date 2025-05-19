@@ -1,4 +1,4 @@
-package com.nvshink.winterarc.ui.screens
+package com.nvshink.winterarc.ui.screens.trainingplan
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -29,7 +29,9 @@ import com.nvshink.winterarc.ui.components.generic.WinterArcListItem
 import com.nvshink.winterarc.ui.components.trainingplan.TrainingPlanEditDialog
 import com.nvshink.winterarc.ui.event.ExerciseEvent
 import com.nvshink.winterarc.ui.event.TrainingPlanEvent
+import com.nvshink.winterarc.ui.screens.WinterArcEmptyItemScreen
 import com.nvshink.winterarc.ui.screens.exercise.WinterArcExerciseItemScreen
+import com.nvshink.winterarc.ui.states.ExerciseUiState
 import com.nvshink.winterarc.ui.utils.ExerciseItemScreen
 import com.nvshink.winterarc.ui.utils.EmptyItemScreen
 import com.nvshink.winterarc.ui.utils.TrainingPlanItemScreen
@@ -44,8 +46,8 @@ fun TrainingPlanScreen(
     trainingPlanScreenModifier: Modifier,
     contentType: WinterArcContentType,
     innerPadding: PaddingValues,
-    onTrainingPlanItemListPressed: (TrainingPlan) -> Unit,
-    onTrainingPlanItemScreenBackPressed: () -> Unit,
+//    onTrainingPlanItemListPressed: (TrainingPlan) -> Unit,
+//    onTrainingPlanItemScreenBackPressed: () -> Unit,
     onEvent: (TrainingPlanEvent) -> Unit,
     onExerciseEvent: (ExerciseEvent) -> Unit,
 ) {
@@ -67,33 +69,35 @@ fun TrainingPlanScreen(
                     onExercisePressed = { id ->
                         navController.navigate(route = ExerciseItemScreen(id))
                     },
-                    onBackPressed = onTrainingPlanItemScreenBackPressed
+                    onBackPressed = {}
                 )
             }
             composable<ExerciseItemScreen> {
                 val args = it.toRoute<ExerciseItemScreen>()
                 val exerciseViewModel: ExerciseViewModel = hiltViewModel()
-                val exerciseItemScreenUiState = exerciseViewModel. uiState.collectAsState().value
-                val exercise: Exercise? = exerciseItemScreenUiState.exercisesMap[args.id]
-                if (exercise != null) {
-                    onExerciseEvent(ExerciseEvent.UpdateCurrentExercise(exercise))
-                    WinterArcExerciseItemScreen(
-                        exerciseUiState = exerciseItemScreenUiState,
-                        onEditButtonClick = {
-                            onExerciseEvent(ExerciseEvent.ShowDialog(isAdding = false))
-                        },
-                        onDeleteButtonClick = {
-                            onExerciseEvent(ExerciseEvent.DeleteExercise(exercise))
-                        },
-                        onBackPressed = {
-                            navController.navigate(EmptyItemScreen)
-                        }
-                    )
+                val exerciseItemScreenUiState = exerciseViewModel.uiState.collectAsState().value
+                if (exerciseItemScreenUiState is ExerciseUiState.SuccessState) {
+                    val exercise: Exercise? = exerciseItemScreenUiState.exercisesMap[args.id]
+                    if (exercise != null) {
+                        onExerciseEvent(ExerciseEvent.UpdateCurrentExercise(exercise))
+                        WinterArcExerciseItemScreen(
+                            exerciseUiState = exerciseItemScreenUiState,
+                            onEditButtonClick = {
+                                onExerciseEvent(ExerciseEvent.ShowDialog(isAdding = false))
+                            },
+                            onDeleteButtonClick = {
+                                onExerciseEvent(ExerciseEvent.DeleteExercise(exercise))
+                            },
+                            onBackPressed = {
+                                navController.navigate(EmptyItemScreen)
+                            }
+                        )
+                    }
                 }
             }
         }
     }
-    if (trainingPlanUiState.isShowingEditDialog) TrainingPlanEditDialog (
+    if (trainingPlanUiState.isShowingEditDialog && trainingPlanUiState is TrainingPlanUiState.SuccessState) TrainingPlanEditDialog(
         trainingPlanUiState = trainingPlanUiState,
         title = stringResource(R.string.dialog_title_add_training_plan),
         onEvent = onEvent
@@ -103,7 +107,7 @@ fun TrainingPlanScreen(
             modifier = Modifier.padding(innerPadding),
             contentType = contentType,
             isShowingList = trainingPlanUiState.isShowingList,
-            listOfItems = trainingPlanUiState.trainingPlansMap,
+            listOfItems = if (trainingPlanUiState is TrainingPlanUiState.SuccessState) trainingPlanUiState.trainingPlansMap else emptyMap(),
             emptyListIcon = Icons.Filled.AddBox,
             emptyListIconDescription = stringResource(R.string.empty_list_icon_description_training_plan),
             emptyListTitle = stringResource(R.string.empty_list_title_training_plan),
@@ -120,16 +124,21 @@ fun TrainingPlanScreen(
                     subtitle = null,
                     additionalInfo = null,
                     onCardClick = {
-                        onTrainingPlanItemListPressed(item)
+//                        onTrainingPlanItemListPressed(item)
                         navController.navigate(route = TrainingPlanItemScreen(item.id))
                     }
                 )
             },
+//            isLoading = trainingPlanUiState::class == TrainingPlanUiState.Loading::class,
+            isLoading = false,
             fab = {
                 FloatingActionButton({
                     onEvent(TrainingPlanEvent.ShowDialog(true))
                 }, modifier = it) {
-                    Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.add_exercise_button_icon_description))
+                    Icon(
+                        Icons.Filled.Add,
+                        contentDescription = stringResource(R.string.add_exercise_button_icon_description)
+                    )
                 }
             }
         )

@@ -27,10 +27,17 @@ class TrainingPlanRepository(
         trainingPlanDao.deleteTrainingPlan(trainingPlan = trainingPlan)
 
     /**
-     * @return Flow with mutable map sorted by name, there key is training plan id, value is training plan.
+     * @return Flow with liat sorted by name in ascending order.
      */
-    fun getTrainingPlansByName(): Flow<MutableMap<Int, TrainingPlan>> =
-        trainingPlanDao.getTrainingPlanByName()
+    fun getTrainingPlansByNameASC(): Flow<List<TrainingPlan>> =
+        trainingPlanDao.getTrainingPlanByNameASC()
+
+    /**
+     * @return Flow with liat sorted by name in descending order.
+     */
+    fun getTrainingPlansByNameDESC(): Flow<List<TrainingPlan>> =
+        trainingPlanDao.getTrainingPlanByNameDESC()
+
 
     /**
      * Insert an training plan exercise in Realm DB or update, if it has already been inserted.

@@ -27,7 +27,7 @@ import com.nvshink.winterarc.ui.components.generic.WinterArcNavigationBarLayout
 import com.nvshink.winterarc.ui.components.generic.WinterArcNavigationRailLayout
 import com.nvshink.winterarc.ui.screens.exercise.ExercisesScreen
 import com.nvshink.winterarc.ui.screens.ProfileScreen
-import com.nvshink.winterarc.ui.screens.TrainingPlanScreen
+import com.nvshink.winterarc.ui.screens.trainingplan.TrainingPlanScreen
 import com.nvshink.winterarc.ui.viewModels.TrainingPlanViewModel
 import com.nvshink.winterarc.ui.utils.ExerciseScreenRoute
 import com.nvshink.winterarc.ui.utils.ProfileScreenRoute
@@ -101,12 +101,12 @@ fun WinterArcApp(
                         contentType = contentType,
                         innerPadding = innerPadding,
                         onEvent = trainingPlanViewModel::onEvent,
-                        onTrainingPlanItemListPressed = { trainingPlan: TrainingPlan ->
-                            trainingPlanViewModel.updateTrainingPlanItemState(trainingPlan)
-                        },
-                        onTrainingPlanItemScreenBackPressed = {
-                            trainingPlanViewModel.resetTrainingPlansListState()
-                        },
+//                        onTrainingPlanItemListPressed = { trainingPlan: TrainingPlan ->
+//                            trainingPlanViewModel.updateTrainingPlanItemState(trainingPlan)
+//                        },
+//                        onTrainingPlanItemScreenBackPressed = {
+//                            trainingPlanViewModel.resetTrainingPlansListState()
+//                        },
                         onExerciseEvent = {
                         }
                     )

@@ -40,7 +40,7 @@ object EmptyItemScreen
 
 @Serializable
 data class ExerciseItemScreen(
-    val id: Int
+    val id: Long
 )
 
 @Serializable

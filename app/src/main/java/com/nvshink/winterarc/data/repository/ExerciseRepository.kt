@@ -25,9 +25,14 @@ class ExerciseRepository(
     suspend fun deleteExercise(exercise: Exercise) = dao.deleteExercise(exercise = exercise)
 
     /**
-     * @return Flow with mutable map sorted by name, there key is exercise id, value is exercise.
+     * @return Flow with List sorted by name in ascending order.
      */
-    fun getExercisesByName(): Flow<MutableMap<Int, Exercise>> = dao.getExercisesByName()
+    fun getExercisesByNameASC(): Flow<List<Exercise>> = dao.getExercisesByNameASC()
+
+    /**
+     * @return Flow with List sorted by name in descending order.
+     */
+    fun getExercisesByNameDESC(): Flow<List<Exercise>> = dao.getExercisesByNameDESC()
 
     /**
      * Saves the photo to the local storage.

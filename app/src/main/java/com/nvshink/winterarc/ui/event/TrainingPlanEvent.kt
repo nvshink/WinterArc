@@ -12,6 +12,8 @@ sealed interface TrainingPlanEvent {
     data object HideDialog: TrainingPlanEvent
     data object ShowList: TrainingPlanEvent
     data object HideList: TrainingPlanEvent
+    data object ShowExerciseSelector: TrainingPlanEvent
+    data object HideExerciseSelector: TrainingPlanEvent
     data class SetIsBigScreen (val isBigScreen: Boolean): TrainingPlanEvent
     data class UpdateCurrentTrainingPlan (val trainingPlan: TrainingPlan): TrainingPlanEvent
     data class SetName (val name: String): TrainingPlanEvent

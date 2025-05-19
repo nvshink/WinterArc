@@ -1,4 +1,4 @@
-package com.nvshink.winterarc.ui.screens
+package com.nvshink.winterarc.ui.screens.trainingplan
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
@@ -21,7 +21,7 @@ import com.nvshink.winterarc.ui.states.TrainingPlanUiState
 @Composable
 fun WinterArcTrainingPlanItemScreen(
     modifier: Modifier = Modifier,
-    onExercisePressed: (Int) -> Unit,
+    onExercisePressed: (Long) -> Unit,
     onBackPressed: () -> Unit,
     trainingPlanUiState: TrainingPlanUiState,
 ) {
@@ -45,12 +45,12 @@ fun WinterArcTrainingPlanItemScreen(
                 .padding(20.dp)) {
                 item {
                     Text(
-                        text = trainingPlanUiState.currentTrainingPlan.name,
+                        text = trainingPlanUiState.currentTrainingPlan!!.name,
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.padding(bottom = 20.dp)
                     )
                     Text(
-                        text = trainingPlanUiState.currentTrainingPlan.description,
+                        text = trainingPlanUiState.currentTrainingPlan!!.description,
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(bottom = 15.dp)
                     )

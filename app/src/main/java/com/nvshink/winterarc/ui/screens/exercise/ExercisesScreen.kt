@@ -2,14 +2,17 @@ package com.nvshink.winterarc.ui.screens.exercise
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddBox
 import androidx.compose.material.icons.filled.Chair
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.movableContentOf
 import androidx.compose.ui.Modifier
@@ -32,6 +35,7 @@ import com.nvshink.winterarc.ui.utils.EmptyItemScreen
 import com.nvshink.winterarc.ui.utils.WinterArcContentType
 import com.nvshink.winterarc.ui.utils.WinterArcNavigationType
 import com.nvshink.winterarc.ui.states.ExerciseUiState
+import com.nvshink.winterarc.ui.utils.SortTypes
 
 @Composable
 fun ExercisesScreen(
@@ -56,7 +60,8 @@ fun ExercisesScreen(
             }
             composable<ExerciseItemScreen> {
                 val args = it.toRoute<ExerciseItemScreen>()
-                val exercise: Exercise? = exerciseUiState.exercisesMap[args.id]
+                val exercise: Exercise? =
+                    if (exerciseUiState is ExerciseUiState.SuccessState) exerciseUiState.exercisesMap[args.id] else null
                 if (exercise != null) {
                     onEvent(ExerciseEvent.UpdateCurrentExercise(exercise))
                     onEvent(ExerciseEvent.HideList)
@@ -91,49 +96,61 @@ fun ExercisesScreen(
         onEvent = onEvent
     )
     Box(modifier = modifier) {
-        if (exerciseUiState::class == ExerciseUiState.Loading::class) {
-            CircularProgressIndicator()
-        } else {
-            WinterArcListDetailRoute(
-                modifier = Modifier.padding(innerPadding),
-                contentType = contentType,
-                isShowingList = exerciseUiState.isShowingList,
-                listOfItems = exerciseUiState.exercisesMap,
-                emptyListIcon = Icons.Filled.AddBox,
-                emptyListIconDescription = stringResource(R.string.empty_list_icon_description_exercise),
-                emptyListTitle = stringResource(R.string.empty_list_title_exercise),
-                listArrangement = 10.dp,
-                onEvent = onEvent,
-                details = {
-                    WinterArcItemDetail {
-                        navHost(PaddingValues())
-                    }
-                },
-                listItem = { item ->
-                    WinterArcListItem(
-                        title = item.name,
-                        subtitle = null,
-                        additionalInfo = null,
-                        onCardClick = {
-                            navController.navigate(route = ExerciseItemScreen(item.id))
-                        },
-                    )
-                },
-                fab = {
-                    FloatingActionButton({
-                        onEvent(ExerciseEvent.SetName(""))
-                        onEvent(ExerciseEvent.SetDescription(""))
-                        onEvent(ExerciseEvent.SetImages(emptyList()))
-                        onEvent(ExerciseEvent.ShowDialog(true))
-                    }, modifier = it) {
-                        Icon(
-                            Icons.Filled.Add,
-                            contentDescription = stringResource(R.string.add_exercise_button_icon_description)
-                        )
-                    }
+        WinterArcListDetailRoute(
+            modifier = Modifier.padding(innerPadding),
+            contentType = contentType,
+            isShowingList = exerciseUiState.isShowingList,
+            listOfItems = if (exerciseUiState is ExerciseUiState.SuccessState) exerciseUiState.exercisesMap else mutableMapOf(),
+            emptyListIcon = Icons.Filled.AddBox,
+            emptyListIconDescription = stringResource(R.string.empty_list_icon_description_exercise),
+            emptyListTitle = stringResource(R.string.empty_list_title_exercise),
+            listArrangement = 10.dp,
+            onEvent = onEvent,
+            details = {
+                WinterArcItemDetail {
+                    navHost(PaddingValues())
                 }
-            )
-        }
+            },
+            listItem = { item ->
+                WinterArcListItem(
+                    title = item.name,
+                    subtitle = null,
+                    additionalInfo = null,
+                    onCardClick = {
+                        navController.navigate(route = ExerciseItemScreen(item.id))
+                    },
+                )
+            },
+            isLoading = exerciseUiState::class == ExerciseUiState.LoadingState::class,
+            listTopContent = {
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    OutlinedButton(onClick = {
+                        onEvent(
+                            ExerciseEvent.SortExercises(
+                                sortType = when (exerciseUiState.sortType) {
+                                    SortTypes.NAME_ASC -> SortTypes.NAME_DESC
+                                    SortTypes.NAME_DESC -> SortTypes.NAME_ASC
+                                }
+                            )
+                        )
+                    }) { Text(text = "Sort " + stringResource(exerciseUiState.sortType.stringResourceName)) }
+                    Text(text = "Now sorted " + exerciseUiState.sortType.name)
+                }
+            },
+            fab = {
+                FloatingActionButton({
+                    onEvent(ExerciseEvent.SetName(""))
+                    onEvent(ExerciseEvent.SetDescription(""))
+                    onEvent(ExerciseEvent.SetImages(emptyList()))
+                    onEvent(ExerciseEvent.ShowDialog(true))
+                }, modifier = it) {
+                    Icon(
+                        Icons.Filled.Add,
+                        contentDescription = stringResource(R.string.add_exercise_button_icon_description)
+                    )
+                }
+            }
+        )
     }
 }
 

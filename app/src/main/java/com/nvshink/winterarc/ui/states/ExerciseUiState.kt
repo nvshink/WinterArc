@@ -4,7 +4,6 @@ import com.nvshink.winterarc.data.model.Exercise
 import com.nvshink.winterarc.ui.utils.SortTypes
 
 sealed interface ExerciseUiState {
-    val exercisesMap: MutableMap<Int, Exercise>
     val currentExercise: Exercise?
     val name: String
     val description: String
@@ -14,8 +13,8 @@ sealed interface ExerciseUiState {
     val isBigScreen: Boolean
     val isShowingEditDialog: Boolean
     val sortType: SortTypes
-    data class Loading (
-        override val exercisesMap: MutableMap<Int, Exercise> = mutableMapOf(),
+
+    data class LoadingState(
         override val currentExercise: Exercise? = null,
         override val name: String = "",
         override val description: String = "",
@@ -24,10 +23,11 @@ sealed interface ExerciseUiState {
         override val isAddingExercise: Boolean = true,
         override val isBigScreen: Boolean = false,
         override val isShowingEditDialog: Boolean = false,
-        override val sortType: SortTypes = SortTypes.NAME
-    ): ExerciseUiState
-    data class Success (
-        override val exercisesMap: MutableMap<Int, Exercise> = mutableMapOf(),
+        override val sortType: SortTypes = SortTypes.NAME_ASC
+    ) : ExerciseUiState
+
+    data class SuccessState(
+        val exercisesMap: Map<Long, Exercise> = emptyMap(),
         override val currentExercise: Exercise? = null,
         override val name: String = "",
         override val description: String = "",
@@ -36,10 +36,10 @@ sealed interface ExerciseUiState {
         override val isAddingExercise: Boolean = true,
         override val isBigScreen: Boolean = false,
         override val isShowingEditDialog: Boolean = false,
-        override val sortType: SortTypes = SortTypes.NAME
-    ): ExerciseUiState
-    data class Error (
-        override val exercisesMap: MutableMap<Int, Exercise> = mutableMapOf(),
+        override val sortType: SortTypes = SortTypes.NAME_ASC
+    ) : ExerciseUiState
+
+    data class ErrorState(
         override val currentExercise: Exercise? = null,
         override val name: String = "",
         override val description: String = "",
@@ -48,6 +48,6 @@ sealed interface ExerciseUiState {
         override val isAddingExercise: Boolean = true,
         override val isBigScreen: Boolean = false,
         override val isShowingEditDialog: Boolean = false,
-        override val sortType: SortTypes = SortTypes.NAME
-    ): ExerciseUiState
+        override val sortType: SortTypes = SortTypes.NAME_ASC
+    ) : ExerciseUiState
 }

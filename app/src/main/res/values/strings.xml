@@ -29,4 +29,6 @@
     <string name="empty_list_icon_description_training_plan">Add box icon.</string>
     <string name="empty_screen_title_training_plan">We are waiting for you to choose an training plan.</string>
     <string name="empty_screen_icon_description_training_plan">Chair icon.</string>
+    <string name="sort_type_by_name_ASC">by name in ascending order</string>
+    <string name="sort_type_by_name_DESC">by name in descending order</string>
 </resources>

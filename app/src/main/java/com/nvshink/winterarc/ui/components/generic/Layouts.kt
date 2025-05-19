@@ -15,19 +15,25 @@ import androidx.compose.ui.unit.dp
 import com.nvshink.winterarc.ui.event.ExerciseEvent
 import com.nvshink.winterarc.ui.utils.WinterArcContentType
 
+/**
+ * TODO
+ */
+
 @Composable
 fun <T> WinterArcListDetailRoute(
     modifier: Modifier = Modifier,
     isShowingList: Boolean,
     details: @Composable () -> Unit,
-    listOfItems: MutableMap<Int, T>,
+    listOfItems: Map<Long, T>,
     listItem: @Composable (T) -> Unit,
     emptyListIcon: ImageVector? = null,
     emptyListIconDescription: String = "",
     emptyListTitle: String? = "",
     listArrangement: Dp = 0.dp,
+    isLoading: Boolean,
     onEvent: (ExerciseEvent) -> Unit,
     contentType: WinterArcContentType = WinterArcContentType.LIST_ONLY,
+    listTopContent: (@Composable () -> Unit) = {},
     fab: (@Composable (Modifier) -> Unit)? = null
 ) {
     Box(modifier = modifier) {
@@ -41,6 +47,8 @@ fun <T> WinterArcListDetailRoute(
                     emptyListIconDescription = emptyListIconDescription,
                     emptyListTitle = emptyListTitle,
                     listArrangement = listArrangement,
+                    isLoading = isLoading,
+                    listTopContent = listTopContent,
                     fab = fab
                 )
             } else {
@@ -59,6 +67,8 @@ fun <T> WinterArcListDetailRoute(
                 emptyListTitle = emptyListTitle,
                 details = details,
                 listArrangement = listArrangement,
+                isLoading = isLoading,
+                listTopContent = listTopContent,
                 fab = fab
             )
             BackHandler { onEvent(ExerciseEvent.ShowList)  }
@@ -69,13 +79,15 @@ fun <T> WinterArcListDetailRoute(
 @Composable
 fun <T> WinterArcListAndDetail(
     modifier: Modifier = Modifier,
-    listOfItems: MutableMap<Int, T>,
+    listOfItems: Map<Long, T>,
     listItem: @Composable (T) -> Unit,
     emptyListIcon: ImageVector? = null,
     emptyListIconDescription: String = "",
     emptyListTitle: String? = "",
     listArrangement: Dp = 0.dp,
     details: @Composable () -> Unit,
+    isLoading: Boolean,
+    listTopContent: (@Composable () -> Unit),
     fab: (@Composable (Modifier) -> Unit)?
 ) {
     Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -87,6 +99,8 @@ fun <T> WinterArcListAndDetail(
             emptyListIconDescription = emptyListIconDescription,
             emptyListTitle = emptyListTitle,
             listArrangement = listArrangement,
+            isLoading = isLoading,
+            listTopContent = listTopContent,
             fab = fab
         )
         WinterArcItemDetail(

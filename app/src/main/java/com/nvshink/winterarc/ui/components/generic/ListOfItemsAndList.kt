@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -31,53 +32,62 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun <T> WinterArcListOfItems(
     modifier: Modifier = Modifier,
-    listOfItems: MutableMap<Int, T>,
+    listOfItems: Map<Long, T>,
     listItem: @Composable (T) -> Unit,
     emptyListIcon: ImageVector? = null,
     emptyListIconDescription: String = "",
     emptyListTitle: String? = "",
     listArrangement: Dp = 0.dp,
+    isLoading: Boolean,
+    listTopContent: (@Composable () -> Unit),
     fab: (@Composable (Modifier) -> Unit)?
 ) {
-    Box(
-        modifier = modifier
-            .padding(16.dp)
-    ) {
-        if (listOfItems.isNotEmpty()) {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(listArrangement)
-            ) {
-                items(listOfItems.toList()) { item ->
-                    listItem(item.second)
+    if (isLoading) {
+        CircularProgressIndicator()
+    } else {
+        Box(
+            modifier = modifier
+                .padding(16.dp)
+        ) {
+            if (listOfItems.isNotEmpty()) {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(listArrangement)
+                ) {
+                    item {
+                        listTopContent()
+                    }
+                    items(listOfItems.toList()) { item ->
+                        listItem(item.second)
+                    }
+                }
+            } else {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    if (emptyListIcon != null) Icon(
+                        imageVector = emptyListIcon,
+                        contentDescription = emptyListIconDescription,
+                        modifier = Modifier.size(64.dp)
+                    )
+                    if (emptyListTitle != null) Text(
+                        text = emptyListTitle,
+                        style = MaterialTheme.typography.titleLarge,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .width(300.dp)
+                            .padding(top = 20.dp)
+                    )
                 }
             }
-        } else {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                if (emptyListIcon != null) Icon(
-                    imageVector = emptyListIcon,
-                    contentDescription = emptyListIconDescription,
-                    modifier = Modifier.size(64.dp)
-                )
-                if (emptyListTitle != null) Text(
-                    text = emptyListTitle,
-                    style = MaterialTheme.typography.titleLarge,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(top = 20.dp)
+            if (fab != null) {
+                fab(
+                    Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(16.dp)
                 )
             }
-        }
-        if (fab != null) {
-            fab(
-                Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(16.dp)
-            )
         }
     }
 }
