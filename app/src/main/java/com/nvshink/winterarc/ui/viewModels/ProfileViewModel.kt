@@ -1,8 +1,8 @@
 package com.nvshink.winterarc.ui.viewModels
 
 import androidx.lifecycle.ViewModel
-import com.nvshink.winterarc.data.model.User
-import com.nvshink.winterarc.data.repository.UserRepository
+import com.nvshink.winterarc.data.local.user.entity.User
+import com.nvshink.winterarc.data.local.user.repository.UserRepository
 import com.nvshink.winterarc.ui.states.ProfileUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

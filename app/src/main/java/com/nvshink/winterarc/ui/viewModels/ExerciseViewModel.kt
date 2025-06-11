@@ -3,7 +3,7 @@ package com.nvshink.winterarc.ui.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nvshink.winterarc.data.model.Exercise
-import com.nvshink.winterarc.data.repository.ExerciseRepository
+import com.nvshink.winterarc.data.local.exercise.repository.ExerciseRepository
 import com.nvshink.winterarc.ui.event.ExerciseEvent
 import com.nvshink.winterarc.ui.states.ExerciseUiState
 import com.nvshink.winterarc.ui.utils.SortTypes
@@ -19,9 +19,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import androidx.core.net.toUri
-import com.nvshink.winterarc.data.utils.dataStatus
+import com.nvshink.winterarc.domain.utils.dataStatus
 import com.nvshink.winterarc.ui.states.ExerciseUiState.*
-import kotlinx.coroutines.flow.StateFlow
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
@@ -55,110 +54,148 @@ open class ExerciseViewModel @Inject constructor(
         _uiState,
         _exercises,
         _isLoading
-    ) { state, exercises, isLoading ->
+    ) { uiState, exercises, isLoading ->
         val exercisesMap = exercises.associateBy { it.id }
-        when (state) {
+        when (uiState) {
             is LoadingState -> {
                 when (isLoading) {
-                    dataStatus.LOADING -> state.copy(
+                    dataStatus.LOADING -> uiState.copy(
                         sortType = _sortType.value
                     )
 
-                    dataStatus.SUCCESS ->
-                        SuccessState(
-                            exercisesMap = exercisesMap,
-                            currentExercise = state.currentExercise,
-                            name = state.name,
-                            description = state.description,
-                            images = state.images,
-                            isShowingList = state.isShowingList,
-                            isAddingExercise = state.isAddingExercise,
-                            isBigScreen = state.isBigScreen,
-                            isShowingEditDialog = state.isShowingEditDialog,
+                    dataStatus.SUCCESS -> {
+                        _uiState.update{
+                            SuccessState(
+                                exercisesMap = exercisesMap,
+                                currentExercise = uiState.currentExercise,
+                                name = uiState.name,
+                                description = uiState.description,
+                                images = uiState.images,
+                                isShowingList = uiState.isShowingList,
+                                isAddingExercise = uiState.isAddingExercise,
+                                isBigScreen = uiState.isBigScreen,
+                                isShowingEditDialog = uiState.isShowingEditDialog,
+                                sortType = _sortType.value
+                            )
+                        }
+                        uiState.copy(
                             sortType = _sortType.value
                         )
+                    }
 
-                    dataStatus.ERROR ->
-                        ErrorState(
-                            currentExercise = state.currentExercise,
-                            name = state.name,
-                            description = state.description,
-                            images = state.images,
-                            isShowingList = state.isShowingList,
-                            isAddingExercise = state.isAddingExercise,
-                            isBigScreen = state.isBigScreen,
-                            isShowingEditDialog = state.isShowingEditDialog,
-                            sortType = state.sortType
+                    dataStatus.ERROR -> {
+                        _uiState.update{
+                            ErrorState(
+                                currentExercise = uiState.currentExercise,
+                                name = uiState.name,
+                                description = uiState.description,
+                                images = uiState.images,
+                                isShowingList = uiState.isShowingList,
+                                isAddingExercise = uiState.isAddingExercise,
+                                isBigScreen = uiState.isBigScreen,
+                                isShowingEditDialog = uiState.isShowingEditDialog,
+                                sortType = uiState.sortType
+                            )
+                        }
+                        uiState.copy(
+                            sortType = _sortType.value
                         )
+                    }
                 }
             }
 
             is SuccessState -> {
                 when (isLoading) {
-                    dataStatus.LOADING ->
-                        LoadingState(
-                            currentExercise = state.currentExercise,
-                            name = state.name,
-                            description = state.description,
-                            images = state.images,
-                            isShowingList = state.isShowingList,
-                            isAddingExercise = state.isAddingExercise,
-                            isBigScreen = state.isBigScreen,
-                            isShowingEditDialog = state.isShowingEditDialog,
-                            sortType = state.sortType
+                    dataStatus.LOADING -> {
+                        _uiState.update{
+                            LoadingState(
+                                currentExercise = uiState.currentExercise,
+                                name = uiState.name,
+                                description = uiState.description,
+                                images = uiState.images,
+                                isShowingList = uiState.isShowingList,
+                                isAddingExercise = uiState.isAddingExercise,
+                                isBigScreen = uiState.isBigScreen,
+                                isShowingEditDialog = uiState.isShowingEditDialog,
+                                sortType = uiState.sortType
+                            )
+                        }
+                        uiState.copy(
+                            exercisesMap = exercisesMap,
+                            sortType = _sortType.value
                         )
+                    }
 
-                    dataStatus.SUCCESS -> state.copy(
+                    dataStatus.SUCCESS -> uiState.copy(
                         exercisesMap = exercisesMap,
                         sortType = _sortType.value
                     )
 
-                    dataStatus.ERROR ->
-                        ErrorState(
-                            currentExercise = state.currentExercise,
-                            name = state.name,
-                            description = state.description,
-                            images = state.images,
-                            isShowingList = state.isShowingList,
-                            isAddingExercise = state.isAddingExercise,
-                            isBigScreen = state.isBigScreen,
-                            isShowingEditDialog = state.isShowingEditDialog,
-                            sortType = state.sortType
+                    dataStatus.ERROR -> {
+                        _uiState.update{
+                            ErrorState(
+                                currentExercise = uiState.currentExercise,
+                                name = uiState.name,
+                                description = uiState.description,
+                                images = uiState.images,
+                                isShowingList = uiState.isShowingList,
+                                isAddingExercise = uiState.isAddingExercise,
+                                isBigScreen = uiState.isBigScreen,
+                                isShowingEditDialog = uiState.isShowingEditDialog,
+                                sortType = uiState.sortType
+                            )
+                        }
+                        uiState.copy(
+                            exercisesMap = exercisesMap,
+                            sortType = _sortType.value
                         )
+                    }
                 }
             }
 
             is ErrorState -> {
                 when (isLoading) {
-                    dataStatus.LOADING ->
-                        LoadingState(
-                            currentExercise = state.currentExercise,
-                            name = state.name,
-                            description = state.description,
-                            images = state.images,
-                            isShowingList = state.isShowingList,
-                            isAddingExercise = state.isAddingExercise,
-                            isBigScreen = state.isBigScreen,
-                            isShowingEditDialog = state.isShowingEditDialog,
-                            sortType = state.sortType
-                        )
-
-
-                    dataStatus.SUCCESS ->
-                        SuccessState(
-                            exercisesMap = exercisesMap,
-                            currentExercise = state.currentExercise,
-                            name = state.name,
-                            description = state.description,
-                            images = state.images,
-                            isShowingList = state.isShowingList,
-                            isAddingExercise = state.isAddingExercise,
-                            isBigScreen = state.isBigScreen,
-                            isShowingEditDialog = state.isShowingEditDialog,
+                    dataStatus.LOADING -> {
+                        _uiState.update{
+                            LoadingState(
+                                currentExercise = uiState.currentExercise,
+                                name = uiState.name,
+                                description = uiState.description,
+                                images = uiState.images,
+                                isShowingList = uiState.isShowingList,
+                                isAddingExercise = uiState.isAddingExercise,
+                                isBigScreen = uiState.isBigScreen,
+                                isShowingEditDialog = uiState.isShowingEditDialog,
+                                sortType = uiState.sortType
+                            )
+                        }
+                        uiState.copy(
                             sortType = _sortType.value
                         )
+                    }
 
-                    dataStatus.ERROR -> state.copy(
+
+                    dataStatus.SUCCESS -> {
+                        _uiState.update{
+                            SuccessState(
+                                exercisesMap = exercisesMap,
+                                currentExercise = uiState.currentExercise,
+                                name = uiState.name,
+                                description = uiState.description,
+                                images = uiState.images,
+                                isShowingList = uiState.isShowingList,
+                                isAddingExercise = uiState.isAddingExercise,
+                                isBigScreen = uiState.isBigScreen,
+                                isShowingEditDialog = uiState.isShowingEditDialog,
+                                sortType = _sortType.value
+                            )
+                        }
+                        uiState.copy(
+                            sortType = _sortType.value
+                        )
+                    }
+
+                    dataStatus.ERROR -> uiState.copy(
                         sortType = _sortType.value
                     )
                 }

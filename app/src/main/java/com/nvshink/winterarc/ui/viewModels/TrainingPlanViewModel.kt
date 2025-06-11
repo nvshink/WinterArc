@@ -2,12 +2,10 @@ package com.nvshink.winterarc.ui.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nvshink.winterarc.data.model.Exercise
-import com.nvshink.winterarc.data.model.TrainingPlan
-import com.nvshink.winterarc.data.repository.TrainingPlanRepository
-import com.nvshink.winterarc.data.utils.dataStatus
+import com.nvshink.winterarc.data.local.trainingplan.TrainingPlan
+import com.nvshink.winterarc.data.local.trainingplan.repository.TrainingPlanRepository
+import com.nvshink.winterarc.domain.utils.dataStatus
 import com.nvshink.winterarc.ui.event.TrainingPlanEvent
-import com.nvshink.winterarc.ui.states.ExerciseUiState
 import com.nvshink.winterarc.ui.states.TrainingPlanUiState.ErrorState
 import com.nvshink.winterarc.ui.states.TrainingPlanUiState.LoadingState
 import com.nvshink.winterarc.ui.states.TrainingPlanUiState.SuccessState
@@ -58,76 +56,102 @@ class TrainingPlanViewModel @Inject constructor(
         _sortType,
         _trainingPlans,
         _isLoading
-    ) { state, sortType, trainingPlans, isLoading ->
+    ) { uiState, sortType, trainingPlans, isLoading ->
         val trainingPlansMap = trainingPlans.associateBy { it.id }
-        when (state) {
+        when (uiState) {
             is LoadingState -> {
                 when (isLoading) {
-                    dataStatus.LOADING -> state.copy(
+                    dataStatus.LOADING -> uiState.copy(
                         sortType = _sortType.value
                     )
 
-                    dataStatus.SUCCESS ->
-                        SuccessState(
-                            trainingPlansMap = trainingPlansMap,
-                            currentTrainingPlan = state.currentTrainingPlan,
-                            name = state.name,
-                            description = state.description,
-                            trainingPlanExercises = state.trainingPlanExercises,
-                            isShowingList = state.isShowingList,
-                            isAddingTrainingPlan = state.isAddingTrainingPlan,
-                            isBigScreen = state.isBigScreen,
-                            isShowingEditDialog = state.isShowingEditDialog,
+                    dataStatus.SUCCESS -> {
+                        _uiState.update {
+                            SuccessState(
+                                trainingPlansMap = trainingPlansMap,
+                                currentTrainingPlan = uiState.currentTrainingPlan,
+                                name = uiState.name,
+                                description = uiState.description,
+//                                trainingPlanExercises = state.trainingPlanExercises,
+                                isShowingList = uiState.isShowingList,
+                                isAddingTrainingPlan = uiState.isAddingTrainingPlan,
+                                isBigScreen = uiState.isBigScreen,
+                                isShowingEditDialog = uiState.isShowingEditDialog,
+                                sortType = _sortType.value
+                            )
+                        }
+                        uiState.copy(
                             sortType = _sortType.value
                         )
+                    }
 
-                    dataStatus.ERROR ->
-                        ErrorState(
-                            currentTrainingPlan = state.currentTrainingPlan,
-                            name = state.name,
-                            description = state.description,
-                            trainingPlanExercises = state.trainingPlanExercises,
-                            isShowingList = state.isShowingList,
-                            isAddingTrainingPlan = state.isAddingTrainingPlan,
-                            isBigScreen = state.isBigScreen,
-                            isShowingEditDialog = state.isShowingEditDialog,
+                    dataStatus.ERROR -> {
+                        _uiState.update{
+                            ErrorState(
+                                currentTrainingPlan = uiState.currentTrainingPlan,
+                                name = uiState.name,
+                                description = uiState.description,
+//                                trainingPlanExercises = state.trainingPlanExercises,
+                                isShowingList = uiState.isShowingList,
+                                isAddingTrainingPlan = uiState.isAddingTrainingPlan,
+                                isBigScreen = uiState.isBigScreen,
+                                isShowingEditDialog = uiState.isShowingEditDialog,
+                                sortType = _sortType.value
+                            )
+                        }
+                        uiState.copy(
                             sortType = _sortType.value
                         )
+                    }
                 }
             }
 
             is SuccessState -> {
                 when (isLoading) {
-                    dataStatus.LOADING ->
-                        LoadingState(
-                            currentTrainingPlan = state.currentTrainingPlan,
-                            name = state.name,
-                            description = state.description,
-                            trainingPlanExercises = state.trainingPlanExercises,
-                            isShowingList = state.isShowingList,
-                            isAddingTrainingPlan = state.isAddingTrainingPlan,
-                            isBigScreen = state.isBigScreen,
-                            isShowingEditDialog = state.isShowingEditDialog,
+                    dataStatus.LOADING -> {
+                        _uiState.update{
+                            LoadingState(
+                                currentTrainingPlan = uiState.currentTrainingPlan,
+                                name = uiState.name,
+                                description = uiState.description,
+//                                trainingPlanExercises = state.trainingPlanExercises,
+                                isShowingList = uiState.isShowingList,
+                                isAddingTrainingPlan = uiState.isAddingTrainingPlan,
+                                isBigScreen = uiState.isBigScreen,
+                                isShowingEditDialog = uiState.isShowingEditDialog,
+                                sortType = _sortType.value
+                            )
+                        }
+                        uiState.copy(
+                            trainingPlansMap = trainingPlansMap,
                             sortType = _sortType.value
                         )
+                    }
 
-                    dataStatus.SUCCESS -> state.copy(
+                    dataStatus.SUCCESS -> uiState.copy(
                         trainingPlansMap = trainingPlansMap,
                         sortType = _sortType.value
                     )
 
-                    dataStatus.ERROR ->
-                        ErrorState(
-                            currentTrainingPlan = state.currentTrainingPlan,
-                            name = state.name,
-                            description = state.description,
-                            trainingPlanExercises = state.trainingPlanExercises,
-                            isShowingList = state.isShowingList,
-                            isAddingTrainingPlan = state.isAddingTrainingPlan,
-                            isBigScreen = state.isBigScreen,
-                            isShowingEditDialog = state.isShowingEditDialog,
+                    dataStatus.ERROR -> {
+                        _uiState.update{
+                            ErrorState(
+                                currentTrainingPlan = uiState.currentTrainingPlan,
+                                name = uiState.name,
+                                description = uiState.description,
+//                                trainingPlanExercises = state.trainingPlanExercises,
+                                isShowingList = uiState.isShowingList,
+                                isAddingTrainingPlan = uiState.isAddingTrainingPlan,
+                                isBigScreen = uiState.isBigScreen,
+                                isShowingEditDialog = uiState.isShowingEditDialog,
+                                sortType = _sortType.value
+                            )
+                        }
+                        uiState.copy(
+                            trainingPlansMap = trainingPlansMap,
                             sortType = _sortType.value
                         )
+                    }
                 }
             }
 
@@ -135,32 +159,32 @@ class TrainingPlanViewModel @Inject constructor(
                 when (isLoading) {
                     dataStatus.LOADING ->
                         LoadingState(
-                            currentTrainingPlan = state.currentTrainingPlan,
-                            name = state.name,
-                            description = state.description,
-                            trainingPlanExercises = state.trainingPlanExercises,
-                            isShowingList = state.isShowingList,
-                            isAddingTrainingPlan = state.isAddingTrainingPlan,
-                            isBigScreen = state.isBigScreen,
-                            isShowingEditDialog = state.isShowingEditDialog,
+                            currentTrainingPlan = uiState.currentTrainingPlan,
+                            name = uiState.name,
+                            description = uiState.description,
+//                            trainingPlanExercises = state.trainingPlanExercises,
+                            isShowingList = uiState.isShowingList,
+                            isAddingTrainingPlan = uiState.isAddingTrainingPlan,
+                            isBigScreen = uiState.isBigScreen,
+                            isShowingEditDialog = uiState.isShowingEditDialog,
                             sortType = _sortType.value
                         )
 
 
                     dataStatus.SUCCESS ->
                         SuccessState(
-                            currentTrainingPlan = state.currentTrainingPlan,
-                            name = state.name,
-                            description = state.description,
-                            trainingPlanExercises = state.trainingPlanExercises,
-                            isShowingList = state.isShowingList,
-                            isAddingTrainingPlan = state.isAddingTrainingPlan,
-                            isBigScreen = state.isBigScreen,
-                            isShowingEditDialog = state.isShowingEditDialog,
+                            currentTrainingPlan = uiState.currentTrainingPlan,
+                            name = uiState.name,
+                            description = uiState.description,
+//                            trainingPlanExercises = state.trainingPlanExercises,
+                            isShowingList = uiState.isShowingList,
+                            isAddingTrainingPlan = uiState.isAddingTrainingPlan,
+                            isBigScreen = uiState.isBigScreen,
+                            isShowingEditDialog = uiState.isShowingEditDialog,
                             sortType = _sortType.value
                         )
 
-                    dataStatus.ERROR -> state.copy(
+                    dataStatus.ERROR -> uiState.copy(
                         sortType = _sortType.value
                     )
                 }
@@ -186,10 +210,10 @@ class TrainingPlanViewModel @Inject constructor(
                                 description = uiState.value.description
                             )
                         viewModelScope.launch {
-                            repository.createTrainingPlanWithExercises(
-                                trainingPlan,
-                                uiState.value.trainingPlanExercises
-                            )
+//                            repository.createTrainingPlanWithExercises(
+//                                trainingPlan,
+//                                uiState.value.trainingPlanExercises
+//                            )
                         }
                     }
 
@@ -213,14 +237,6 @@ class TrainingPlanViewModel @Inject constructor(
                         _uiState.update {
                             state.copy(
                                 description = event.description
-                            )
-                        }
-                    }
-
-                    is TrainingPlanEvent.SetTrainingPlanExercises -> {
-                        _uiState.update {
-                            state.copy(
-                                trainingPlanExercises = event.trainingPlanExercises
                             )
                         }
                     }
@@ -285,6 +301,7 @@ class TrainingPlanViewModel @Inject constructor(
                     is TrainingPlanEvent.SortTrainingPlan -> {
                         _sortType.value = event.sortType
                     }
+
                 }
             }
 
@@ -311,14 +328,6 @@ class TrainingPlanViewModel @Inject constructor(
                         _uiState.update {
                             state.copy(
                                 description = event.description
-                            )
-                        }
-                    }
-
-                    is TrainingPlanEvent.SetTrainingPlanExercises -> {
-                        _uiState.update {
-                            state.copy(
-                                trainingPlanExercises = event.trainingPlanExercises
                             )
                         }
                     }
@@ -395,14 +404,6 @@ class TrainingPlanViewModel @Inject constructor(
                         _uiState.update {
                             state.copy(
                                 description = event.description
-                            )
-                        }
-                    }
-
-                    is TrainingPlanEvent.SetTrainingPlanExercises -> {
-                        _uiState.update {
-                            state.copy(
-                                trainingPlanExercises = event.trainingPlanExercises
                             )
                         }
                     }

@@ -40,14 +40,17 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil.compose.AsyncImage
 import com.nvshink.winterarc.R
+import com.nvshink.winterarc.ui.components.generic.WinterArcDialog
 import com.nvshink.winterarc.ui.event.ExerciseEvent
 import com.nvshink.winterarc.ui.states.ExerciseUiState
+import com.nvshink.winterarc.ui.utils.WinterArcContentType
 
 @Composable
 fun ExerciseEditDialog(
     modifier: Modifier = Modifier,
     title: String,
     exerciseUiState: ExerciseUiState,
+    contentType: WinterArcContentType,
     onEvent: (ExerciseEvent) -> Unit
 ) {
     val context = LocalContext.current
@@ -57,156 +60,143 @@ fun ExerciseEditDialog(
             onEvent(ExerciseEvent.SetImages(exerciseUiState.images + uris.map { it.toString() }))
         }
     )
-    Dialog(
-        onDismissRequest = {
-            onEvent(ExerciseEvent.HideDialog)
-        },
-        properties = DialogProperties(usePlatformDefaultWidth = exerciseUiState.isBigScreen)
-    ) {
-        Box(
-            modifier = modifier
-                .clip(
-                    if (exerciseUiState.isBigScreen) MaterialTheme.shapes.extraLarge else RoundedCornerShape(
-                        0.dp
+    WinterArcDialog(
+        topBar = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = {
+                    onEvent(ExerciseEvent.HideDialog)
+                }) {
+                    Icon(
+                        Icons.Filled.Close,
+                        contentDescription = stringResource(R.string.close_button_icon_description),
+                        modifier = Modifier.size(24.dp)
                     )
-                )
-                .background(MaterialTheme.colorScheme.surface),
-        ) {
-            Column(modifier = Modifier
-                .fillMaxSize()
-                .padding(vertical = 16.dp)) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                        .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(onClick = {
-                        onEvent(ExerciseEvent.HideDialog)
-                    }) {
-                        Icon(
-                            Icons.Filled.Close,
-                            contentDescription = stringResource(R.string.close_button_icon_description),
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
-                    Text(
-                        text = title,
-                        textAlign = TextAlign.Start,
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.weight(1f)
-                    )
-                    TextButton(onClick = {
-                        onEvent(ExerciseEvent.SaveExercise(context = context))
-                        onEvent(ExerciseEvent.HideDialog)
-                    }) {
-                        Text(
-                            stringResource(R.string.save_button_name),
-                            style = MaterialTheme.typography.labelLarge,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
                 }
-                Column(
-                    modifier = Modifier.padding(horizontal = 24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    OutlinedTextField(
-                        value = exerciseUiState.name,
-                        label = {
-                            Text(stringResource(R.string.text_field_label_name))
-                        },
-                        placeholder = {
-                            Text(stringResource(R.string.text_field_placeholder_name))
-                        },
-                        onValueChange = { it: String ->
-                            onEvent(ExerciseEvent.SetName(it))
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        singleLine = true
+                Text(
+                    text = title,
+                    textAlign = TextAlign.Start,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.weight(1f)
+                )
+                TextButton(onClick = {
+                    onEvent(ExerciseEvent.SaveExercise(context = context))
+                    onEvent(ExerciseEvent.HideDialog)
+                }) {
+                    Text(
+                        stringResource(R.string.save_button_name),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.primary
                     )
-                    OutlinedTextField(
-                        value = exerciseUiState.description,
-                        label = {
-                            Text(stringResource(R.string.text_field_label_description))
-                        },
-                        placeholder = {
-                            Text(stringResource(R.string.text_field_placeholder_description))
-                        },
-                        onValueChange = { it: String ->
-                            onEvent(ExerciseEvent.SetDescription(it))
-                        },
+                }
+            }
+        },
+        content = {
+            Column(
+                modifier = Modifier.padding(horizontal = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                OutlinedTextField(
+                    value = exerciseUiState.name,
+                    label = {
+                        Text(stringResource(R.string.text_field_label_name))
+                    },
+                    placeholder = {
+                        Text(stringResource(R.string.text_field_placeholder_name))
+                    },
+                    onValueChange = { it: String ->
+                        onEvent(ExerciseEvent.SetName(it))
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+                OutlinedTextField(
+                    value = exerciseUiState.description,
+                    label = {
+                        Text(stringResource(R.string.text_field_label_description))
+                    },
+                    placeholder = {
+                        Text(stringResource(R.string.text_field_placeholder_description))
+                    },
+                    onValueChange = { it: String ->
+                        onEvent(ExerciseEvent.SetDescription(it))
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    maxLines = 3
+                )
+                Column(modifier = Modifier.padding(top = 20.dp)) {
+                    Text(
+                        stringResource(R.string.text_title_selected_examples),
                         modifier = Modifier.fillMaxWidth(),
-                        maxLines = 3
+                        style = MaterialTheme.typography.titleMedium,
+                        textAlign = TextAlign.Start,
                     )
-                    Column(modifier = Modifier.padding(top = 20.dp)) {
-                        Text(
-                            stringResource(R.string.text_title_selected_examples),
-                            modifier = Modifier.fillMaxWidth(),
-                            style = MaterialTheme.typography.titleMedium,
-                            textAlign = TextAlign.Start,
-                        )
-                        LazyVerticalGrid(
-                            columns = GridCells.Adaptive(minSize = 100.dp),
-                        ) {
-                            itemsIndexed(exerciseUiState.images) { index, imageUri ->
-                                Card(
-                                    onClick = {}, modifier = Modifier
-                                        .size(100.dp)
-                                        .padding(5.dp)
-                                ) {
-                                    Box {
-                                        AsyncImage(
-                                            model = imageUri,
-                                            contentDescription = null,
-                                            modifier = Modifier.fillMaxSize(),
-                                            contentScale = ContentScale.Crop
-                                        )
-                                        IconButton(
-                                            onClick = {
-                                                onEvent(ExerciseEvent.SetImages(exerciseUiState.images.filterIndexed { i, _ -> i != index }))
-                                            },
-                                            modifier = Modifier
-                                                .align(Alignment.TopEnd)
-                                        ) {
-                                            Icon(Icons.Filled.Close, contentDescription = "")
-                                        }
+                    LazyVerticalGrid(
+                        columns = GridCells.Adaptive(minSize = 100.dp),
+                    ) {
+                        itemsIndexed(exerciseUiState.images) { index, imageUri ->
+                            Card(
+                                onClick = {}, modifier = Modifier
+                                    .size(100.dp)
+                                    .padding(5.dp)
+                            ) {
+                                Box {
+                                    AsyncImage(
+                                        model = imageUri,
+                                        contentDescription = null,
+                                        modifier = Modifier.fillMaxSize(),
+                                        contentScale = ContentScale.Crop
+                                    )
+                                    IconButton(
+                                        onClick = {
+                                            onEvent(ExerciseEvent.SetImages(exerciseUiState.images.filterIndexed { i, _ -> i != index }))
+                                        },
+                                        modifier = Modifier
+                                            .align(Alignment.TopEnd)
+                                    ) {
+                                        Icon(Icons.Filled.Close, contentDescription = "")
                                     }
                                 }
                             }
-                            item {
-                                Card(
-                                    onClick = {
-                                        multiplePhotoPickerLauncher.launch(
-                                            PickVisualMediaRequest(
-                                                ActivityResultContracts.PickVisualMedia.ImageOnly
-                                            )
+                        }
+                        item {
+                            Card(
+                                onClick = {
+                                    multiplePhotoPickerLauncher.launch(
+                                        PickVisualMediaRequest(
+                                            ActivityResultContracts.PickVisualMedia.ImageOnly
                                         )
-                                    },
-                                    modifier = Modifier
-                                        .size(100.dp)
-                                        .padding(5.dp)
+                                    )
+                                },
+                                modifier = Modifier
+                                    .size(100.dp)
+                                    .padding(5.dp)
+                            ) {
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.Center
                                 ) {
-                                    Box(
-                                        modifier = Modifier.fillMaxSize(),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Icon(
-                                            Icons.Filled.Add,
-                                            contentDescription = stringResource(R.string.add_exercise_image_icon_description),
-                                            modifier = Modifier.size(40.dp)
-                                        )
-                                    }
+                                    Icon(
+                                        Icons.Filled.Add,
+                                        contentDescription = stringResource(R.string.add_exercise_image_icon_description),
+                                        modifier = Modifier.size(40.dp)
+                                    )
                                 }
                             }
                         }
                     }
                 }
             }
-        }
-    }
+        },
+        contentType = contentType,
+        onDismissRequest = { onEvent(ExerciseEvent.HideDialog) }
+    )
 }
 

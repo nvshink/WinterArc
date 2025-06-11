@@ -1,11 +1,11 @@
-package com.nvshink.winterarc.data.repository
+package com.nvshink.winterarc.data.local.exercise.repository
 
 import android.content.Context
 import android.net.Uri
-import com.nvshink.winterarc.data.utils.deleteImageFromLocalStorage
+import com.nvshink.winterarc.domain.utils.deleteImageFromLocalStorage
 import com.nvshink.winterarc.data.model.Exercise
-import com.nvshink.winterarc.data.room.ExerciseDao
-import com.nvshink.winterarc.data.utils.saveImageToLocalStorage
+import com.nvshink.winterarc.data.local.exercise.dao.ExerciseDao
+import com.nvshink.winterarc.domain.utils.saveImageToLocalStorage
 import kotlinx.coroutines.flow.Flow
 import androidx.core.net.toUri
 
@@ -33,6 +33,11 @@ class ExerciseRepository(
      * @return Flow with List sorted by name in descending order.
      */
     fun getExercisesByNameDESC(): Flow<List<Exercise>> = dao.getExercisesByNameDESC()
+
+    /**
+     * @return Flow with exercise by id.
+     */
+    fun getExercisesById(id: Long): Flow<Exercise> = dao.getExercisesById(id)
 
     /**
      * Saves the photo to the local storage.

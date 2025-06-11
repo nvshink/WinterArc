@@ -22,7 +22,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.nvshink.winterarc.data.model.TrainingPlan
 import com.nvshink.winterarc.ui.components.generic.WinterArcNavigationBarLayout
 import com.nvshink.winterarc.ui.components.generic.WinterArcNavigationRailLayout
 import com.nvshink.winterarc.ui.screens.exercise.ExercisesScreen
@@ -101,12 +100,6 @@ fun WinterArcApp(
                         contentType = contentType,
                         innerPadding = innerPadding,
                         onEvent = trainingPlanViewModel::onEvent,
-//                        onTrainingPlanItemListPressed = { trainingPlan: TrainingPlan ->
-//                            trainingPlanViewModel.updateTrainingPlanItemState(trainingPlan)
-//                        },
-//                        onTrainingPlanItemScreenBackPressed = {
-//                            trainingPlanViewModel.resetTrainingPlansListState()
-//                        },
                         onExerciseEvent = {
                         }
                     )
@@ -130,7 +123,6 @@ fun WinterArcApp(
                             .background(MaterialTheme.colorScheme.surface),
                         contentType = contentType,
                         innerPadding = innerPadding,
-                        navigationType = navigationType,
                         onEvent = exerciseViewModel::onEvent
                     )
                 }

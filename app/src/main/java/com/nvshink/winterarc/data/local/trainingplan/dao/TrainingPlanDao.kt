@@ -1,12 +1,12 @@
-package com.nvshink.winterarc.data.room
+package com.nvshink.winterarc.data.local.trainingplan.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
-import com.nvshink.winterarc.data.model.TrainingPlan
-import com.nvshink.winterarc.data.model.TrainingPlanWithTrainingPlanExercises
+import com.nvshink.winterarc.data.local.trainingplan.TrainingPlan
+import com.nvshink.winterarc.data.local.trainingplan.entity.TrainingPlanWithTrainingPlanExercises
 import kotlinx.coroutines.flow.Flow
 
 @Dao

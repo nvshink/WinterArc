@@ -1,11 +1,8 @@
-package com.nvshink.winterarc.data.model
+package com.nvshink.winterarc.data.local.trainingplanexercise.entity
 
 import androidx.room.ColumnInfo
-import androidx.room.Embedded
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import androidx.room.Relation
 import kotlinx.serialization.Serializable
 
 
@@ -33,4 +30,14 @@ data class TrainingPlanExercise(
     @ColumnInfo(name = "training_plan_exercise_id")
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0
-)
+) {
+    /**
+     * Supported class to contain exercise params
+     * @param duration Exercise duration. Use for sets and time exercises.
+     * @param isInSets Define duration as sets or as seconds
+     */
+    data class TrainingPlanExerciseParams(
+        val duration: Int,
+        val isInSets: Boolean,
+    )
+}

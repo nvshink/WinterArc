@@ -28,6 +28,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.nvshink.winterarc.ui.screens.WinterArcEmptyItemScreen
+import com.nvshink.winterarc.ui.screens.WinterArcEmptyItemScreenColors
 
 @Composable
 fun <T> WinterArcListOfItems(
@@ -40,6 +42,7 @@ fun <T> WinterArcListOfItems(
     listArrangement: Dp = 0.dp,
     isLoading: Boolean,
     listTopContent: (@Composable () -> Unit),
+    colors: WinterArcEmptyItemScreenColors,
     fab: (@Composable (Modifier) -> Unit)?
 ) {
     if (isLoading) {
@@ -49,35 +52,22 @@ fun <T> WinterArcListOfItems(
             modifier = modifier
                 .padding(16.dp)
         ) {
-            if (listOfItems.isNotEmpty()) {
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(listArrangement)
-                ) {
-                    item {
-                        listTopContent()
+            Column {
+                listTopContent()
+                if (listOfItems.isNotEmpty()) {
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(listArrangement)
+                    ) {
+                        items(listOfItems.toList()) { item ->
+                            listItem(item.second)
+                        }
                     }
-                    items(listOfItems.toList()) { item ->
-                        listItem(item.second)
-                    }
-                }
-            } else {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    if (emptyListIcon != null) Icon(
-                        imageVector = emptyListIcon,
-                        contentDescription = emptyListIconDescription,
-                        modifier = Modifier.size(64.dp)
-                    )
-                    if (emptyListTitle != null) Text(
-                        text = emptyListTitle,
-                        style = MaterialTheme.typography.titleLarge,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .width(300.dp)
-                            .padding(top = 20.dp)
+                } else {
+                    WinterArcEmptyItemScreen(
+                        title = emptyListTitle,
+                        icon = emptyListIcon,
+                        iconDescription = emptyListIconDescription,
+                        colors = colors
                     )
                 }
             }

@@ -1,15 +1,13 @@
 package com.nvshink.winterarc.ui.states
 
-import com.nvshink.winterarc.data.model.Exercise
-import com.nvshink.winterarc.data.model.TrainingPlan
-import com.nvshink.winterarc.data.repository.TrainingPlanRepository
+import com.nvshink.winterarc.data.local.trainingplan.TrainingPlan
 import com.nvshink.winterarc.ui.utils.SortTypes
 
 sealed interface TrainingPlanUiState {
     val currentTrainingPlan: TrainingPlan?
     val name: String
     val description: String
-    val trainingPlanExercises: List<Pair<Exercise, TrainingPlanRepository.TrainingPlanExerciseParams>>
+//    val trainingPlanExercises: List<TrainingPlanExercise>
     val isShowingList: Boolean
     val isAddingTrainingPlan: Boolean
     val isBigScreen: Boolean
@@ -20,7 +18,7 @@ sealed interface TrainingPlanUiState {
         override val currentTrainingPlan: TrainingPlan? = null,
         override val name: String = "",
         override val description: String = "",
-        override val trainingPlanExercises: List<Pair<Exercise, TrainingPlanRepository.TrainingPlanExerciseParams>> = emptyList(),
+//        override val trainingPlanExercises: List<TrainingPlanExercise> = emptyList(),
         override val isShowingList: Boolean = true,
         override val isAddingTrainingPlan: Boolean = true,
         override val isBigScreen: Boolean = false,
@@ -33,7 +31,7 @@ sealed interface TrainingPlanUiState {
         override val currentTrainingPlan: TrainingPlan? = null,
         override val name: String = "",
         override val description: String = "",
-        override val trainingPlanExercises: List<Pair<Exercise, TrainingPlanRepository.TrainingPlanExerciseParams>> = emptyList(),
+//        override val trainingPlanExercises: List<TrainingPlanExercise> = emptyList(),
         override val isShowingList: Boolean = true,
         override val isAddingTrainingPlan: Boolean = true,
         override val isBigScreen: Boolean = false,
@@ -46,7 +44,7 @@ sealed interface TrainingPlanUiState {
         override val currentTrainingPlan: TrainingPlan? = null,
         override val name: String = "",
         override val description: String = "",
-        override val trainingPlanExercises: List<Pair<Exercise, TrainingPlanRepository.TrainingPlanExerciseParams>> = emptyList(),
+//        override val trainingPlanExercises: List<TrainingPlanExercise> = emptyList(),
         override val isShowingList: Boolean = true,
         override val isAddingTrainingPlan: Boolean = true,
         override val isBigScreen: Boolean = false,

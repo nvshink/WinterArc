@@ -1,4 +1,4 @@
-package com.nvshink.winterarc.data.room
+package com.nvshink.winterarc.data.local
 
 import androidx.room.TypeConverter
 import kotlinx.serialization.json.Json

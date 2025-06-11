@@ -1,5 +1,6 @@
 package com.nvshink.winterarc.ui.screens.exercise
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -11,6 +12,7 @@ import androidx.compose.material.icons.filled.AddBox
 import androidx.compose.material.icons.filled.Chair
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,6 +32,7 @@ import com.nvshink.winterarc.ui.components.generic.WinterArcListDetailRoute
 import com.nvshink.winterarc.ui.components.generic.WinterArcListItem
 import com.nvshink.winterarc.ui.event.ExerciseEvent
 import com.nvshink.winterarc.ui.screens.WinterArcEmptyItemScreen
+import com.nvshink.winterarc.ui.screens.WinterArcEmptyItemScreenColors
 import com.nvshink.winterarc.ui.utils.ExerciseItemScreen
 import com.nvshink.winterarc.ui.utils.EmptyItemScreen
 import com.nvshink.winterarc.ui.utils.WinterArcContentType
@@ -44,10 +47,9 @@ fun ExercisesScreen(
     exerciseScreenModifier: Modifier,
     contentType: WinterArcContentType,
     innerPadding: PaddingValues,
-    navigationType: WinterArcNavigationType,
     onEvent: (ExerciseEvent) -> Unit
 ) {
-    onEvent(ExerciseEvent.SetIsBigScreen(navigationType != WinterArcNavigationType.BOTTOM_NAVIGATION))
+    onEvent(ExerciseEvent.SetIsBigScreen(contentType == WinterArcContentType.LIST_AND_DETAIL))
     val navController = rememberNavController()
     val navHost = movableContentOf<PaddingValues> {
         NavHost(navController = navController, startDestination = EmptyItemScreen) {
@@ -63,8 +65,6 @@ fun ExercisesScreen(
                 val exercise: Exercise? =
                     if (exerciseUiState is ExerciseUiState.SuccessState) exerciseUiState.exercisesMap[args.id] else null
                 if (exercise != null) {
-                    onEvent(ExerciseEvent.UpdateCurrentExercise(exercise))
-                    onEvent(ExerciseEvent.HideList)
                     WinterArcExerciseItemScreen(
                         modifier = exerciseScreenModifier,
                         exerciseUiState = exerciseUiState,
@@ -93,6 +93,7 @@ fun ExercisesScreen(
     if (exerciseUiState.isShowingEditDialog) ExerciseEditDialog(
         exerciseUiState = exerciseUiState,
         title = stringResource(R.string.dialog_title_add_exercise),
+        contentType = contentType,
         onEvent = onEvent
     )
     Box(modifier = modifier) {
@@ -117,6 +118,8 @@ fun ExercisesScreen(
                     subtitle = null,
                     additionalInfo = null,
                     onCardClick = {
+                        onEvent(ExerciseEvent.UpdateCurrentExercise(item))
+                        onEvent(ExerciseEvent.HideList)
                         navController.navigate(route = ExerciseItemScreen(item.id))
                     },
                 )
@@ -137,6 +140,10 @@ fun ExercisesScreen(
                     Text(text = "Now sorted " + exerciseUiState.sortType.name)
                 }
             },
+            colors = WinterArcEmptyItemScreenColors(
+                iconTintColor = MaterialTheme.colorScheme.onSurface,
+                textColor = MaterialTheme.colorScheme.outline
+            ),
             fab = {
                 FloatingActionButton({
                     onEvent(ExerciseEvent.SetName(""))

@@ -1,10 +1,11 @@
-package com.nvshink.winterarc.data.model
+package com.nvshink.winterarc.data.local.trainingplan.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Relation
+import com.nvshink.winterarc.data.local.trainingplanexercise.entity.TrainingPlanExercise
 import kotlinx.serialization.Serializable
 
 /**
@@ -15,7 +16,7 @@ import kotlinx.serialization.Serializable
  */
 @Entity(tableName = "training_plan")
 @Serializable
-data class TrainingPlan(
+data class TrainingPlanEntity(
     @ColumnInfo(name = "name")
     var name: String,
     @ColumnInfo(name = "description")
@@ -26,7 +27,7 @@ data class TrainingPlan(
 )
 
 data class TrainingPlanWithTrainingPlanExercises(
-    @Embedded val trainingPlan: TrainingPlan,
+    @Embedded val trainingPlan: TrainingPlanEntity,
     @Relation(
         parentColumn = "training_plan_id",
         entityColumn  = "training_plan_exercise_id"

@@ -1,4 +1,4 @@
-package com.nvshink.winterarc.data.utils
+package com.nvshink.winterarc.domain.utils
 
 enum class dataStatus {
     LOADING,

@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.nvshink.winterarc.ui.event.ExerciseEvent
+import com.nvshink.winterarc.ui.screens.WinterArcEmptyItemScreenColors
 import com.nvshink.winterarc.ui.utils.WinterArcContentType
 
 /**
@@ -29,11 +30,12 @@ fun <T> WinterArcListDetailRoute(
     emptyListIcon: ImageVector? = null,
     emptyListIconDescription: String = "",
     emptyListTitle: String? = "",
-    listArrangement: Dp = 0.dp,
+    listArrangement: Dp = 5.dp,
     isLoading: Boolean,
     onEvent: (ExerciseEvent) -> Unit,
     contentType: WinterArcContentType = WinterArcContentType.LIST_ONLY,
     listTopContent: (@Composable () -> Unit) = {},
+    colors: WinterArcEmptyItemScreenColors,
     fab: (@Composable (Modifier) -> Unit)? = null
 ) {
     Box(modifier = modifier) {
@@ -49,6 +51,7 @@ fun <T> WinterArcListDetailRoute(
                     listArrangement = listArrangement,
                     isLoading = isLoading,
                     listTopContent = listTopContent,
+                    colors = colors,
                     fab = fab
                 )
             } else {
@@ -69,6 +72,7 @@ fun <T> WinterArcListDetailRoute(
                 listArrangement = listArrangement,
                 isLoading = isLoading,
                 listTopContent = listTopContent,
+                colors = colors,
                 fab = fab
             )
             BackHandler { onEvent(ExerciseEvent.ShowList)  }
@@ -87,6 +91,7 @@ fun <T> WinterArcListAndDetail(
     listArrangement: Dp = 0.dp,
     details: @Composable () -> Unit,
     isLoading: Boolean,
+    colors: WinterArcEmptyItemScreenColors,
     listTopContent: (@Composable () -> Unit),
     fab: (@Composable (Modifier) -> Unit)?
 ) {
@@ -101,6 +106,7 @@ fun <T> WinterArcListAndDetail(
             listArrangement = listArrangement,
             isLoading = isLoading,
             listTopContent = listTopContent,
+            colors = colors,
             fab = fab
         )
         WinterArcItemDetail(

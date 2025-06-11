@@ -1,10 +1,10 @@
-package com.nvshink.winterarc.data.repository
+package com.nvshink.winterarc.data.local.trainingplan.repository
 
 import com.nvshink.winterarc.data.model.Exercise
-import com.nvshink.winterarc.data.model.TrainingPlan
-import com.nvshink.winterarc.data.model.TrainingPlanExercise
-import com.nvshink.winterarc.data.room.TrainingPlanDao
-import com.nvshink.winterarc.data.room.TrainingPlanExerciseDao
+import com.nvshink.winterarc.data.local.trainingplan.TrainingPlan
+import com.nvshink.winterarc.data.local.trainingplanexercise.entity.TrainingPlanExercise
+import com.nvshink.winterarc.data.local.trainingplan.dao.TrainingPlanDao
+import com.nvshink.winterarc.data.local.trainingplanexercise.dao.TrainingPlanExerciseDao
 import kotlinx.coroutines.flow.Flow
 
 class TrainingPlanRepository(
@@ -15,7 +15,7 @@ class TrainingPlanRepository(
      * Insert an training plan in Realm DB or update, if it has already been inserted.
      * @param trainingPlan An training plan that is being recorded or updated in the DB.
      */
-    suspend fun upsertTrainingPlan(trainingPlan: TrainingPlan): Long {
+    private suspend fun upsertTrainingPlan(trainingPlan: TrainingPlan): Long {
         return trainingPlanDao.upsertTrainingPlan(trainingPlan = trainingPlan)
     }
 
@@ -27,13 +27,13 @@ class TrainingPlanRepository(
         trainingPlanDao.deleteTrainingPlan(trainingPlan = trainingPlan)
 
     /**
-     * @return Flow with liat sorted by name in ascending order.
+     * @return Flow with list sorted by name in ascending order.
      */
     fun getTrainingPlansByNameASC(): Flow<List<TrainingPlan>> =
         trainingPlanDao.getTrainingPlanByNameASC()
 
     /**
-     * @return Flow with liat sorted by name in descending order.
+     * @return Flow with list sorted by name in descending order.
      */
     fun getTrainingPlansByNameDESC(): Flow<List<TrainingPlan>> =
         trainingPlanDao.getTrainingPlanByNameDESC()
@@ -60,7 +60,7 @@ class TrainingPlanRepository(
      */
     suspend fun createTrainingPlanWithExercises(
         trainingPlan: TrainingPlan,
-        exercisesWithParams: List<Pair<Exercise, TrainingPlanExerciseParams>>
+        exercisesWithParams: List<Pair<Exercise, TrainingPlanExercise.TrainingPlanExerciseParams>>
     ) {
         val planId = upsertTrainingPlan(trainingPlan)
 
@@ -77,12 +77,15 @@ class TrainingPlanRepository(
     }
 
     /**
-     * Supported class to contain exercise params
-     * @param duration Exercise duration. Use for sets and time exercises.
-     * @param isInSets Define duration as sets or as seconds
+     * @return Flow with list training plan exercises.
      */
-    data class TrainingPlanExerciseParams(
-        val duration: Int,
-        val isInSets: Boolean,
-    )
+    fun getTrainingPlanExercisesByTrainingPlanId(trainingPlanId: Long) =
+        trainingPlanExerciseDao.getTrainingPlanExercisesByTrainingPlanId(trainingPlanId)
+
+    /**
+     * @return Flow with training plan exercise.
+     */
+    fun getTrainingPlanExercisesById(id: Long) =
+        trainingPlanExerciseDao.getTrainingPlanExercisesById(id)
+
 }

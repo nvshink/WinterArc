@@ -1,6 +1,5 @@
 package com.nvshink.winterarc.ui.screens
 
-import android.graphics.drawable.Icon
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,35 +12,64 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun WinterArcEmptyItemScreen(
-    title: String,
-    icon: ImageVector,
-    iconDescription: String
+    title: String?,
+    icon: ImageVector?,
+    iconDescription: String,
+    colors: WinterArcEmptyItemScreenColors = WinterArcEmptyItemScreenColors(
+        iconTintColor = MaterialTheme.colorScheme.outline,
+        textColor = MaterialTheme.colorScheme.outline
+    )
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = iconDescription,
-            modifier = Modifier.size(64.dp),
-            tint = MaterialTheme.colorScheme.outline
-        )
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleLarge,
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.outline,
-            modifier = Modifier
-                .width(300.dp)
-                .padding(top = 20.dp)
-        )
+        if (icon != null) {
+            Icon(
+                imageVector = icon,
+                contentDescription = iconDescription,
+                modifier = Modifier.size(64.dp),
+                tint = colors.iconTintColor
+            )
+        }
+        if (title != null) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleLarge,
+                textAlign = TextAlign.Center,
+                color = colors.textColor,
+                modifier = Modifier
+                    .width(300.dp)
+                    .padding(top = 20.dp)
+            )
+        }
     }
+}
+
+class WinterArcEmptyItemScreenColors
+constructor(
+    val iconTintColor: Color,
+    val textColor: Color,
+) {
+    /**
+     * Returns a copy of this ButtonColors, optionally overriding some of the values. This uses the
+     * Color.Unspecified to mean “use the value from the source”
+     */
+    fun copy(
+        containerColor: Color = this.iconTintColor,
+        contentColor: Color = this.textColor,
+    ) =
+        WinterArcEmptyItemScreenColors(
+            containerColor.takeOrElse { this.iconTintColor },
+            contentColor.takeOrElse { this.textColor },
+        )
 }
