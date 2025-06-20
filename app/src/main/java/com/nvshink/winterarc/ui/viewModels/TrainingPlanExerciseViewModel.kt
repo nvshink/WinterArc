@@ -7,7 +7,7 @@ import com.nvshink.winterarc.data.local.trainingplanexercise.entity.TrainingPlan
 import com.nvshink.winterarc.data.local.trainingplanexercise.entity.TrainingPlanExercise.TrainingPlanExerciseParams
 import com.nvshink.winterarc.data.local.exercise.repository.ExerciseRepository
 import com.nvshink.winterarc.data.local.trainingplan.repository.TrainingPlanRepository
-import com.nvshink.winterarc.domain.utils.dataStatus
+import com.nvshink.domain.utils.dataStatus
 import com.nvshink.winterarc.ui.event.TrainingPlanExercisesEvent
 import com.nvshink.winterarc.ui.states.TrainingPlanExerciseUiState
 import com.nvshink.winterarc.ui.states.TrainingPlanExerciseUiState.SuccessState
@@ -33,14 +33,14 @@ class TrainingPlanExerciseViewModel @Inject constructor(
 ) : ViewModel() {
     private val _trainingPlanId = MutableStateFlow<Long?>(null)
 
-    private val _isLoading = MutableStateFlow(dataStatus.LOADING)
+    private val _isLoading = MutableStateFlow(com.nvshink.domain.utils.dataStatus.LOADING)
 
     private val _trainingPlanExercises = _trainingPlanId
         .flatMapLatest { trainingPlanId ->
-            _isLoading.update { dataStatus.LOADING }
+            _isLoading.update { com.nvshink.domain.utils.dataStatus.LOADING }
             val trainingPlansExercises: Flow<List<TrainingPlanExercise>> =
                 trainingPlanRepository.getTrainingPlanExercisesByTrainingPlanId(trainingPlanId ?: 0)
-            _isLoading.update { dataStatus.SUCCESS }
+            _isLoading.update { com.nvshink.domain.utils.dataStatus.SUCCESS }
             return@flatMapLatest trainingPlansExercises
         }
         .stateIn(
@@ -72,13 +72,13 @@ class TrainingPlanExerciseViewModel @Inject constructor(
         when (uiState) {
             is LoadingState -> {
                 when (isLoading) {
-                    dataStatus.LOADING -> uiState.copy(
+                    com.nvshink.domain.utils.dataStatus.LOADING -> uiState.copy(
                         trainingPlanExercises = trainingPlanExercises,
                         pairExerciseAndParams = pairExerciseAndParams
 
                     )
 
-                    dataStatus.SUCCESS -> {
+                    com.nvshink.domain.utils.dataStatus.SUCCESS -> {
                         _uiState.update {
                             SuccessState(
                                 trainingPlanExercises = uiState.trainingPlanExercises,
@@ -93,7 +93,7 @@ class TrainingPlanExerciseViewModel @Inject constructor(
                         )
                     }
 
-                    dataStatus.ERROR -> {
+                    com.nvshink.domain.utils.dataStatus.ERROR -> {
                         _uiState.update {
                             ErrorState(
                                 trainingPlanExercises = uiState.trainingPlanExercises,
@@ -113,7 +113,7 @@ class TrainingPlanExerciseViewModel @Inject constructor(
 
             is SuccessState -> {
                 when (isLoading) {
-                    dataStatus.LOADING -> {
+                    com.nvshink.domain.utils.dataStatus.LOADING -> {
                         _uiState.update {
                             LoadingState(
                                 trainingPlanExercises = uiState.trainingPlanExercises,
@@ -128,7 +128,7 @@ class TrainingPlanExerciseViewModel @Inject constructor(
                         )
                     }
 
-                    dataStatus.SUCCESS -> {
+                    com.nvshink.domain.utils.dataStatus.SUCCESS -> {
 
                         uiState.copy(
                             trainingPlanExercises = trainingPlanExercises,
@@ -137,7 +137,7 @@ class TrainingPlanExerciseViewModel @Inject constructor(
                         )
                     }
 
-                    dataStatus.ERROR -> {
+                    com.nvshink.domain.utils.dataStatus.ERROR -> {
                         _uiState.update {
                             ErrorState(
                                 trainingPlanExercises = uiState.trainingPlanExercises,
@@ -157,7 +157,7 @@ class TrainingPlanExerciseViewModel @Inject constructor(
 
             is ErrorState -> {
                 when (isLoading) {
-                    dataStatus.LOADING -> {
+                    com.nvshink.domain.utils.dataStatus.LOADING -> {
                         _uiState.update {
                             LoadingState(
                                 trainingPlanExercises = uiState.trainingPlanExercises,
@@ -172,7 +172,7 @@ class TrainingPlanExerciseViewModel @Inject constructor(
                         )
                     }
 
-                    dataStatus.SUCCESS -> {
+                    com.nvshink.domain.utils.dataStatus.SUCCESS -> {
                         _uiState.update {
                             SuccessState(
                                 trainingPlanExercises = uiState.trainingPlanExercises,
@@ -187,7 +187,7 @@ class TrainingPlanExerciseViewModel @Inject constructor(
                         )
                     }
 
-                    dataStatus.ERROR ->
+                    com.nvshink.domain.utils.dataStatus.ERROR ->
                         uiState.copy(
                             trainingPlanExercises = trainingPlanExercises,
                             pairExerciseAndParams = pairExerciseAndParams

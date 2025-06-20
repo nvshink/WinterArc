@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import androidx.core.net.toUri
-import com.nvshink.winterarc.domain.utils.dataStatus
+import com.nvshink.domain.utils.dataStatus
 import com.nvshink.winterarc.ui.states.ExerciseUiState.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -30,16 +30,16 @@ open class ExerciseViewModel @Inject constructor(
 
     private val _sortType = MutableStateFlow(SortTypes.NAME_ASC)
 
-    private val _isLoading = MutableStateFlow(dataStatus.LOADING)
+    private val _isLoading = MutableStateFlow(com.nvshink.domain.utils.dataStatus.LOADING)
 
     private val _exercises = _sortType
         .flatMapLatest { sortType ->
-            _isLoading.update { dataStatus.LOADING }
+            _isLoading.update { com.nvshink.domain.utils.dataStatus.LOADING }
             val exercises: Flow<List<Exercise>> = when (sortType) {
                 SortTypes.NAME_ASC -> repository.getExercisesByNameASC()
                 SortTypes.NAME_DESC -> repository.getExercisesByNameDESC()
             }
-            _isLoading.update { dataStatus.SUCCESS }
+            _isLoading.update { com.nvshink.domain.utils.dataStatus.SUCCESS }
             return@flatMapLatest exercises
         }
         .stateIn(
@@ -59,11 +59,11 @@ open class ExerciseViewModel @Inject constructor(
         when (uiState) {
             is LoadingState -> {
                 when (isLoading) {
-                    dataStatus.LOADING -> uiState.copy(
+                    com.nvshink.domain.utils.dataStatus.LOADING -> uiState.copy(
                         sortType = _sortType.value
                     )
 
-                    dataStatus.SUCCESS -> {
+                    com.nvshink.domain.utils.dataStatus.SUCCESS -> {
                         _uiState.update{
                             SuccessState(
                                 exercisesMap = exercisesMap,
@@ -83,7 +83,7 @@ open class ExerciseViewModel @Inject constructor(
                         )
                     }
 
-                    dataStatus.ERROR -> {
+                    com.nvshink.domain.utils.dataStatus.ERROR -> {
                         _uiState.update{
                             ErrorState(
                                 currentExercise = uiState.currentExercise,
@@ -106,7 +106,7 @@ open class ExerciseViewModel @Inject constructor(
 
             is SuccessState -> {
                 when (isLoading) {
-                    dataStatus.LOADING -> {
+                    com.nvshink.domain.utils.dataStatus.LOADING -> {
                         _uiState.update{
                             LoadingState(
                                 currentExercise = uiState.currentExercise,
@@ -126,12 +126,12 @@ open class ExerciseViewModel @Inject constructor(
                         )
                     }
 
-                    dataStatus.SUCCESS -> uiState.copy(
+                    com.nvshink.domain.utils.dataStatus.SUCCESS -> uiState.copy(
                         exercisesMap = exercisesMap,
                         sortType = _sortType.value
                     )
 
-                    dataStatus.ERROR -> {
+                    com.nvshink.domain.utils.dataStatus.ERROR -> {
                         _uiState.update{
                             ErrorState(
                                 currentExercise = uiState.currentExercise,
@@ -155,7 +155,7 @@ open class ExerciseViewModel @Inject constructor(
 
             is ErrorState -> {
                 when (isLoading) {
-                    dataStatus.LOADING -> {
+                    com.nvshink.domain.utils.dataStatus.LOADING -> {
                         _uiState.update{
                             LoadingState(
                                 currentExercise = uiState.currentExercise,
@@ -175,7 +175,7 @@ open class ExerciseViewModel @Inject constructor(
                     }
 
 
-                    dataStatus.SUCCESS -> {
+                    com.nvshink.domain.utils.dataStatus.SUCCESS -> {
                         _uiState.update{
                             SuccessState(
                                 exercisesMap = exercisesMap,
@@ -195,7 +195,7 @@ open class ExerciseViewModel @Inject constructor(
                         )
                     }
 
-                    dataStatus.ERROR -> uiState.copy(
+                    com.nvshink.domain.utils.dataStatus.ERROR -> uiState.copy(
                         sortType = _sortType.value
                     )
                 }

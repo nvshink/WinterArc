@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nvshink.winterarc.data.local.trainingplan.TrainingPlan
 import com.nvshink.winterarc.data.local.trainingplan.repository.TrainingPlanRepository
-import com.nvshink.winterarc.domain.utils.dataStatus
+import com.nvshink.domain.utils.dataStatus
 import com.nvshink.winterarc.ui.event.TrainingPlanEvent
 import com.nvshink.winterarc.ui.states.TrainingPlanUiState.ErrorState
 import com.nvshink.winterarc.ui.states.TrainingPlanUiState.LoadingState
@@ -31,16 +31,16 @@ class TrainingPlanViewModel @Inject constructor(
 
     private val _sortType = MutableStateFlow(SortTypes.NAME_ASC)
 
-    private val _isLoading = MutableStateFlow(dataStatus.LOADING)
+    private val _isLoading = MutableStateFlow(com.nvshink.domain.utils.dataStatus.LOADING)
 
     private val _trainingPlans = _sortType
         .flatMapLatest { sortType ->
-            _isLoading.update { dataStatus.LOADING }
+            _isLoading.update { com.nvshink.domain.utils.dataStatus.LOADING }
             val trainingPlans: Flow<List<TrainingPlan>> = when (sortType) {
                 SortTypes.NAME_ASC -> repository.getTrainingPlansByNameASC()
                 SortTypes.NAME_DESC -> repository.getTrainingPlansByNameDESC()
             }
-            _isLoading.update { dataStatus.SUCCESS }
+            _isLoading.update { com.nvshink.domain.utils.dataStatus.SUCCESS }
             return@flatMapLatest trainingPlans
         }
         .stateIn(
@@ -61,11 +61,11 @@ class TrainingPlanViewModel @Inject constructor(
         when (uiState) {
             is LoadingState -> {
                 when (isLoading) {
-                    dataStatus.LOADING -> uiState.copy(
+                    com.nvshink.domain.utils.dataStatus.LOADING -> uiState.copy(
                         sortType = _sortType.value
                     )
 
-                    dataStatus.SUCCESS -> {
+                    com.nvshink.domain.utils.dataStatus.SUCCESS -> {
                         _uiState.update {
                             SuccessState(
                                 trainingPlansMap = trainingPlansMap,
@@ -85,7 +85,7 @@ class TrainingPlanViewModel @Inject constructor(
                         )
                     }
 
-                    dataStatus.ERROR -> {
+                    com.nvshink.domain.utils.dataStatus.ERROR -> {
                         _uiState.update{
                             ErrorState(
                                 currentTrainingPlan = uiState.currentTrainingPlan,
@@ -108,7 +108,7 @@ class TrainingPlanViewModel @Inject constructor(
 
             is SuccessState -> {
                 when (isLoading) {
-                    dataStatus.LOADING -> {
+                    com.nvshink.domain.utils.dataStatus.LOADING -> {
                         _uiState.update{
                             LoadingState(
                                 currentTrainingPlan = uiState.currentTrainingPlan,
@@ -128,12 +128,12 @@ class TrainingPlanViewModel @Inject constructor(
                         )
                     }
 
-                    dataStatus.SUCCESS -> uiState.copy(
+                    com.nvshink.domain.utils.dataStatus.SUCCESS -> uiState.copy(
                         trainingPlansMap = trainingPlansMap,
                         sortType = _sortType.value
                     )
 
-                    dataStatus.ERROR -> {
+                    com.nvshink.domain.utils.dataStatus.ERROR -> {
                         _uiState.update{
                             ErrorState(
                                 currentTrainingPlan = uiState.currentTrainingPlan,
@@ -157,7 +157,7 @@ class TrainingPlanViewModel @Inject constructor(
 
             is ErrorState -> {
                 when (isLoading) {
-                    dataStatus.LOADING ->
+                    com.nvshink.domain.utils.dataStatus.LOADING ->
                         LoadingState(
                             currentTrainingPlan = uiState.currentTrainingPlan,
                             name = uiState.name,
@@ -171,7 +171,7 @@ class TrainingPlanViewModel @Inject constructor(
                         )
 
 
-                    dataStatus.SUCCESS ->
+                    com.nvshink.domain.utils.dataStatus.SUCCESS ->
                         SuccessState(
                             currentTrainingPlan = uiState.currentTrainingPlan,
                             name = uiState.name,
@@ -184,7 +184,7 @@ class TrainingPlanViewModel @Inject constructor(
                             sortType = _sortType.value
                         )
 
-                    dataStatus.ERROR -> uiState.copy(
+                    com.nvshink.domain.utils.dataStatus.ERROR -> uiState.copy(
                         sortType = _sortType.value
                     )
                 }
