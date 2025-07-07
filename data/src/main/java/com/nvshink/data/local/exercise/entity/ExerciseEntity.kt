@@ -3,7 +3,6 @@ package com.nvshink.data.local.exercise.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlinx.serialization.Serializable
 
 /**
  * A class which represent exercise.
@@ -13,7 +12,6 @@ import kotlinx.serialization.Serializable
  * @param description Description of the correct exercise performance.
  */
 @Entity(tableName = "exercise")
-@Serializable
 data class ExerciseEntity(
     @ColumnInfo(name = "name")
     val name: String,

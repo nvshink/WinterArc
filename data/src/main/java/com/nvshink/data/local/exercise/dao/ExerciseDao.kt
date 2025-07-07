@@ -5,8 +5,8 @@ import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
-import com.nvshink.winterarc.data.local.exercise.entity.ExerciseEntity
-import com.nvshink.winterarc.data.local.exercise.entity.ExerciseWithTrainingPlanExercises
+import com.nvshink.data.local.exercise.entity.ExerciseEntity
+import com.nvshink.data.local.exercise.relation.ExerciseWithTrainingPlanExercises
 import kotlinx.coroutines.flow.Flow
 
 @Dao

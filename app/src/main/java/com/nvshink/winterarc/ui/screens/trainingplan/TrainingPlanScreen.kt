@@ -21,9 +21,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.nvshink.domain.exercise.model.ExerciseModel
+import com.nvshink.domain.trainingplan.model.TrainingPlanModel
 import com.nvshink.winterarc.R
-import com.nvshink.winterarc.data.model.Exercise
-import com.nvshink.winterarc.data.local.trainingplan.TrainingPlan
 import com.nvshink.winterarc.ui.components.generic.WinterArcItemDetail
 import com.nvshink.winterarc.ui.components.generic.WinterArcListDetailRoute
 import com.nvshink.winterarc.ui.components.generic.WinterArcListItem
@@ -66,7 +66,7 @@ fun TrainingPlanScreen(
             }
             composable<TrainingPlanItemScreen> {
                 val args = it.toRoute<TrainingPlanItemScreen>()
-                val trainingPlan: TrainingPlan? =
+                val trainingPlan: TrainingPlanModel? =
                     if (trainingPlanUiState is TrainingPlanUiState.SuccessState) trainingPlanUiState.trainingPlansMap[args.id] else null
                 val trainingPlanExerciseViewModel: TrainingPlanExerciseViewModel = hiltViewModel()
                 val trainingPlanExerciseUiState = trainingPlanExerciseViewModel.uiState.collectAsState().value
@@ -105,7 +105,7 @@ fun TrainingPlanScreen(
                 val exerciseViewModel: ExerciseViewModel = hiltViewModel()
                 val exerciseItemScreenUiState = exerciseViewModel.uiState.collectAsState().value
                 if (exerciseItemScreenUiState is ExerciseUiState.SuccessState) {
-                    val exercise: Exercise? = exerciseItemScreenUiState.exercisesMap[args.id]
+                    val exercise: ExerciseModel? = exerciseItemScreenUiState.exercisesMap[args.id]
                     if (exercise != null) {
                         onExerciseEvent(ExerciseEvent.UpdateCurrentExercise(exercise))
                         WinterArcExerciseItemScreen(

@@ -1,7 +1,6 @@
 plugins {
     id("java-library")
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.jetbrains.kotlin.jvm)
 }
 java {
     sourceCompatibility = JavaVersion.VERSION_21
@@ -11,4 +10,7 @@ kotlin {
     compilerOptions {
         jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
     }
+}
+dependencies {
+    implementation(libs.kotlinx.coroutines.core)
 }

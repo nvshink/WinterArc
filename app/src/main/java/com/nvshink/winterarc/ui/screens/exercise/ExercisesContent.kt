@@ -43,7 +43,7 @@ fun WinterArcExerciseItemScreen(
     }
     if (exerciseUiState.currentExercise != null) { //TODO create handler empty current exercise navigate
         val carouselState =
-            rememberCarouselState { exerciseUiState.currentExercise!!.images.size }
+            rememberCarouselState { exerciseUiState.currentExercise!!.imageLinks.size }
         Column(modifier = modifier.fillMaxSize()) {
             WinterArcItemScreenTopBar(modifier = Modifier.padding(16.dp), isBigScreen = exerciseUiState.isBigScreen, onBackButtonClicked = onBackPressed) {
                 if (onEditButtonClick != null) {
@@ -65,7 +65,7 @@ fun WinterArcExerciseItemScreen(
                     text = exerciseUiState.currentExercise!!.name,
                     style = MaterialTheme.typography.titleLarge,
                 )
-                if (exerciseUiState.currentExercise!!.images.isNotEmpty()){
+                if (exerciseUiState.currentExercise!!.imageLinks.isNotEmpty()){
                     HorizontalMultiBrowseCarousel(
                         state = carouselState,
                         preferredItemWidth = 300.dp,    //TODO Fix single image width
@@ -78,7 +78,7 @@ fun WinterArcExerciseItemScreen(
                             .height(height = 300.dp)
                     ) { itemIndex ->
                         AsyncImage(
-                            model = exerciseUiState.currentExercise!!.images[itemIndex],
+                            model = exerciseUiState.currentExercise!!.imageLinks[itemIndex],
                             contentDescription = null,
                             modifier = Modifier
                                 .fillMaxSize()

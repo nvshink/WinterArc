@@ -2,8 +2,6 @@ package com.nvshink.winterarc.ui.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nvshink.winterarc.data.model.Exercise
-import com.nvshink.winterarc.data.local.exercise.repository.ExerciseRepository
 import com.nvshink.winterarc.ui.event.ExerciseEvent
 import com.nvshink.winterarc.ui.states.ExerciseUiState
 import com.nvshink.winterarc.ui.utils.SortTypes
@@ -19,28 +17,30 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import androidx.core.net.toUri
-import com.nvshink.domain.utils.dataStatus
+import com.nvshink.data.local.exercise.repository.ExerciseRepositoryImpl
+import com.nvshink.domain.exercise.model.ExerciseModel
 import com.nvshink.winterarc.ui.states.ExerciseUiState.*
+import com.nvshink.winterarc.ui.utils.dataStatus
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 open class ExerciseViewModel @Inject constructor(
-    private val repository: ExerciseRepository
+    private val repository: ExerciseRepositoryImpl
 ) : ViewModel() {
 
     private val _sortType = MutableStateFlow(SortTypes.NAME_ASC)
 
-    private val _isLoading = MutableStateFlow(com.nvshink.domain.utils.dataStatus.LOADING)
+    private val _isLoading = MutableStateFlow(dataStatus.LOADING)
 
     private val _exercises = _sortType
         .flatMapLatest { sortType ->
-            _isLoading.update { com.nvshink.domain.utils.dataStatus.LOADING }
-            val exercises: Flow<List<Exercise>> = when (sortType) {
+            _isLoading.update { dataStatus.LOADING }
+            val exercises: Flow<List<ExerciseModel>> = when (sortType) {
                 SortTypes.NAME_ASC -> repository.getExercisesByNameASC()
                 SortTypes.NAME_DESC -> repository.getExercisesByNameDESC()
             }
-            _isLoading.update { com.nvshink.domain.utils.dataStatus.SUCCESS }
-            return@flatMapLatest exercises
+            _isLoading.update { dataStatus.SUCCESS }
+            exercises
         }
         .stateIn(
             viewModelScope,
@@ -59,11 +59,11 @@ open class ExerciseViewModel @Inject constructor(
         when (uiState) {
             is LoadingState -> {
                 when (isLoading) {
-                    com.nvshink.domain.utils.dataStatus.LOADING -> uiState.copy(
+                    dataStatus.LOADING -> uiState.copy(
                         sortType = _sortType.value
                     )
 
-                    com.nvshink.domain.utils.dataStatus.SUCCESS -> {
+                    dataStatus.SUCCESS -> {
                         _uiState.update{
                             SuccessState(
                                 exercisesMap = exercisesMap,
@@ -83,7 +83,7 @@ open class ExerciseViewModel @Inject constructor(
                         )
                     }
 
-                    com.nvshink.domain.utils.dataStatus.ERROR -> {
+                    dataStatus.ERROR -> {
                         _uiState.update{
                             ErrorState(
                                 currentExercise = uiState.currentExercise,
@@ -106,7 +106,7 @@ open class ExerciseViewModel @Inject constructor(
 
             is SuccessState -> {
                 when (isLoading) {
-                    com.nvshink.domain.utils.dataStatus.LOADING -> {
+                    dataStatus.LOADING -> {
                         _uiState.update{
                             LoadingState(
                                 currentExercise = uiState.currentExercise,
@@ -126,12 +126,12 @@ open class ExerciseViewModel @Inject constructor(
                         )
                     }
 
-                    com.nvshink.domain.utils.dataStatus.SUCCESS -> uiState.copy(
+                    dataStatus.SUCCESS -> uiState.copy(
                         exercisesMap = exercisesMap,
                         sortType = _sortType.value
                     )
 
-                    com.nvshink.domain.utils.dataStatus.ERROR -> {
+                    dataStatus.ERROR -> {
                         _uiState.update{
                             ErrorState(
                                 currentExercise = uiState.currentExercise,
@@ -155,7 +155,7 @@ open class ExerciseViewModel @Inject constructor(
 
             is ErrorState -> {
                 when (isLoading) {
-                    com.nvshink.domain.utils.dataStatus.LOADING -> {
+                    dataStatus.LOADING -> {
                         _uiState.update{
                             LoadingState(
                                 currentExercise = uiState.currentExercise,
@@ -175,7 +175,7 @@ open class ExerciseViewModel @Inject constructor(
                     }
 
 
-                    com.nvshink.domain.utils.dataStatus.SUCCESS -> {
+                    dataStatus.SUCCESS -> {
                         _uiState.update{
                             SuccessState(
                                 exercisesMap = exercisesMap,
@@ -195,7 +195,7 @@ open class ExerciseViewModel @Inject constructor(
                         )
                     }
 
-                    com.nvshink.domain.utils.dataStatus.ERROR -> uiState.copy(
+                    dataStatus.ERROR -> uiState.copy(
                         sortType = _sortType.value
                     )
                 }
@@ -212,16 +212,16 @@ open class ExerciseViewModel @Inject constructor(
                     is ExerciseEvent.DeleteExercise -> {
                         viewModelScope.launch {
                             repository.deleteExercise(event.exercise)
-                            repository.deleteImagesList(event.exercise.images)
+                            repository.deleteImagesList(event.exercise.imageLinks)
                         }
                     }
 
                     is ExerciseEvent.SaveExercise -> {
-                        val exercise: Exercise =
+                        val exercise: ExerciseModel =
                             if (uiState.value.currentExercise == null || uiState.value.isAddingExercise) {
-                                Exercise(
+                                ExerciseModel(
                                     name = uiState.value.name,
-                                    images = repository.saveImagesList(
+                                    imageLinks = repository.saveImagesList(
                                         context = event.context,
                                         uriList = uiState.value.images
                                     ),
@@ -230,8 +230,8 @@ open class ExerciseViewModel @Inject constructor(
                             } else {
                                 uiState.value.currentExercise!!.copy(
                                     name = uiState.value.name,
-                                    images = uiState.value.images.map { imagesUriString ->
-                                        if (!uiState.value.currentExercise!!.images.contains(
+                                    imageLinks = uiState.value.images.map { imagesUriString ->
+                                        if (!uiState.value.currentExercise!!.imageLinks.contains(
                                                 imagesUriString
                                             )
                                         ) {
@@ -249,7 +249,7 @@ open class ExerciseViewModel @Inject constructor(
                         viewModelScope.launch {
                             repository.upsertExercise(exercise)
                             if (uiState.value.currentExercise != null) {
-                                uiState.value.currentExercise!!.images.forEach {
+                                uiState.value.currentExercise!!.imageLinks.forEach {
                                     if (!uiState.value.images.contains(it)) repository.deleteImage(
                                         it.toUri()
                                     )

@@ -35,6 +35,8 @@ gson = "2.12.1"
 jetbrainsKotlinJvm = "2.1.20"
 appcompat = "1.6.1"
 material = "1.10.0"
+kotlinxCoroutinesCore = "1.10.2"
+roomCompilerVersion = "2.7.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -75,6 +77,8 @@ androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navig
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompilerVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -29,9 +29,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.room.Index
+import com.nvshink.domain.exercise.model.ExerciseModel
 import com.nvshink.winterarc.R
-import com.nvshink.winterarc.data.model.Exercise
 import com.nvshink.winterarc.ui.components.generic.WinterArcDialog
 import com.nvshink.winterarc.ui.components.generic.WinterArcListItem
 import com.nvshink.winterarc.ui.components.generic.WinterArcListOfItems
@@ -47,7 +46,7 @@ fun ExerciseSelectorDialog(
     trainingPlanUiState: TrainingPlanUiState,
     exerciseUiState: ExerciseUiState,
     contentType: WinterArcContentType,
-    onExerciseClick:(Exercise) -> Unit,
+    onExerciseClick:(ExerciseModel) -> Unit,
     onBack: () -> Unit
 ) {
     WinterArcDialog(

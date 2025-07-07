@@ -1,11 +1,11 @@
-package com.nvshink.domain.di
+package com.nvshink.data.local.di
 
 import android.content.Context
 import androidx.room.Room
-import com.nvshink.winterarc.data.local.WinterArcDatabase
-import com.nvshink.winterarc.data.local.exercise.dao.ExerciseDao
-import com.nvshink.winterarc.data.local.trainingplan.dao.TrainingPlanDao
-import com.nvshink.winterarc.data.local.trainingplanexercise.dao.TrainingPlanExerciseDao
+import com.nvshink.data.local.WinterArcDatabase
+import com.nvshink.data.local.exercise.dao.ExerciseDao
+import com.nvshink.data.local.trainingplan.dao.TrainingPlanDao
+import com.nvshink.data.local.trainingplanexercise.dao.TrainingPlanExerciseDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,6 +36,5 @@ object RoomModule {
 
     @Provides
     @Singleton
-    fun provideTrainingPlanExerciseDao(db: WinterArcDatabase): TrainingPlanExerciseDao =
-        db.trainingPlanExerciseDao
+    fun provideTrainingPlanExerciseDao(db: WinterArcDatabase): TrainingPlanExerciseDao = db.trainingPlanExerciseDao
 }

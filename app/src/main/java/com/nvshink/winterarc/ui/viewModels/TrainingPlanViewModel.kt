@@ -2,9 +2,9 @@ package com.nvshink.winterarc.ui.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nvshink.winterarc.data.local.trainingplan.TrainingPlan
-import com.nvshink.winterarc.data.local.trainingplan.repository.TrainingPlanRepository
-import com.nvshink.domain.utils.dataStatus
+import com.nvshink.domain.trainingplan.model.TrainingPlanModel
+import com.nvshink.domain.trainingplan.repository.TrainingPlanRepository
+import com.nvshink.winterarc.ui.utils.dataStatus
 import com.nvshink.winterarc.ui.event.TrainingPlanEvent
 import com.nvshink.winterarc.ui.states.TrainingPlanUiState.ErrorState
 import com.nvshink.winterarc.ui.states.TrainingPlanUiState.LoadingState
@@ -31,17 +31,17 @@ class TrainingPlanViewModel @Inject constructor(
 
     private val _sortType = MutableStateFlow(SortTypes.NAME_ASC)
 
-    private val _isLoading = MutableStateFlow(com.nvshink.domain.utils.dataStatus.LOADING)
+    private val _isLoading = MutableStateFlow(dataStatus.LOADING)
 
     private val _trainingPlans = _sortType
         .flatMapLatest { sortType ->
-            _isLoading.update { com.nvshink.domain.utils.dataStatus.LOADING }
-            val trainingPlans: Flow<List<TrainingPlan>> = when (sortType) {
+            _isLoading.update { dataStatus.LOADING }
+            val trainingPlans: Flow<List<TrainingPlanModel>> = when (sortType) {
                 SortTypes.NAME_ASC -> repository.getTrainingPlansByNameASC()
                 SortTypes.NAME_DESC -> repository.getTrainingPlansByNameDESC()
             }
-            _isLoading.update { com.nvshink.domain.utils.dataStatus.SUCCESS }
-            return@flatMapLatest trainingPlans
+            _isLoading.update { dataStatus.SUCCESS }
+            trainingPlans
         }
         .stateIn(
             viewModelScope,
@@ -61,11 +61,11 @@ class TrainingPlanViewModel @Inject constructor(
         when (uiState) {
             is LoadingState -> {
                 when (isLoading) {
-                    com.nvshink.domain.utils.dataStatus.LOADING -> uiState.copy(
+                    dataStatus.LOADING -> uiState.copy(
                         sortType = _sortType.value
                     )
 
-                    com.nvshink.domain.utils.dataStatus.SUCCESS -> {
+                    dataStatus.SUCCESS -> {
                         _uiState.update {
                             SuccessState(
                                 trainingPlansMap = trainingPlansMap,
@@ -85,7 +85,7 @@ class TrainingPlanViewModel @Inject constructor(
                         )
                     }
 
-                    com.nvshink.domain.utils.dataStatus.ERROR -> {
+                    dataStatus.ERROR -> {
                         _uiState.update{
                             ErrorState(
                                 currentTrainingPlan = uiState.currentTrainingPlan,
@@ -108,7 +108,7 @@ class TrainingPlanViewModel @Inject constructor(
 
             is SuccessState -> {
                 when (isLoading) {
-                    com.nvshink.domain.utils.dataStatus.LOADING -> {
+                    dataStatus.LOADING -> {
                         _uiState.update{
                             LoadingState(
                                 currentTrainingPlan = uiState.currentTrainingPlan,
@@ -128,12 +128,12 @@ class TrainingPlanViewModel @Inject constructor(
                         )
                     }
 
-                    com.nvshink.domain.utils.dataStatus.SUCCESS -> uiState.copy(
+                    dataStatus.SUCCESS -> uiState.copy(
                         trainingPlansMap = trainingPlansMap,
                         sortType = _sortType.value
                     )
 
-                    com.nvshink.domain.utils.dataStatus.ERROR -> {
+                    dataStatus.ERROR -> {
                         _uiState.update{
                             ErrorState(
                                 currentTrainingPlan = uiState.currentTrainingPlan,
@@ -157,7 +157,7 @@ class TrainingPlanViewModel @Inject constructor(
 
             is ErrorState -> {
                 when (isLoading) {
-                    com.nvshink.domain.utils.dataStatus.LOADING ->
+                    dataStatus.LOADING ->
                         LoadingState(
                             currentTrainingPlan = uiState.currentTrainingPlan,
                             name = uiState.name,
@@ -171,7 +171,7 @@ class TrainingPlanViewModel @Inject constructor(
                         )
 
 
-                    com.nvshink.domain.utils.dataStatus.SUCCESS ->
+                    dataStatus.SUCCESS ->
                         SuccessState(
                             currentTrainingPlan = uiState.currentTrainingPlan,
                             name = uiState.name,
@@ -184,7 +184,7 @@ class TrainingPlanViewModel @Inject constructor(
                             sortType = _sortType.value
                         )
 
-                    com.nvshink.domain.utils.dataStatus.ERROR -> uiState.copy(
+                    dataStatus.ERROR -> uiState.copy(
                         sortType = _sortType.value
                     )
                 }
@@ -204,8 +204,8 @@ class TrainingPlanViewModel @Inject constructor(
                     }
 
                     is TrainingPlanEvent.SaveTrainingPlan -> {
-                        val trainingPlan: TrainingPlan =
-                            uiState.value.currentTrainingPlan ?: TrainingPlan(
+                        val trainingPlan: TrainingPlanModel =
+                            uiState.value.currentTrainingPlan ?: TrainingPlanModel(
                                 name = uiState.value.name,
                                 description = uiState.value.description
                             )

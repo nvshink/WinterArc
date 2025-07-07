@@ -3,7 +3,6 @@ package com.nvshink.data.local.trainingplanexercise.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlinx.serialization.Serializable
 
 
 /**
@@ -17,8 +16,7 @@ import kotlinx.serialization.Serializable
 @Entity(
     tableName = "training_plan_exercise",
 )
-@Serializable
-data class TrainingPlanExercise(
+data class TrainingPlanExerciseEntity(
     @ColumnInfo(name = "exercise_id_foreign_key")
     val exerciseIdForeignKey: Long,
     @ColumnInfo(name = "duration")

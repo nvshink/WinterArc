@@ -88,14 +88,10 @@ dependencies {
     //Google play services
     implementation(libs.play.services.auth)
     implementation(libs.com.google.gms.google.services.gradle.plugin)
-    // Room Database
-    implementation(libs.androidx.room.ktx)
-    implementation(libs.androidx.room.common)
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.hilt.navigation.compose)
-    ksp(libs.androidx.room.compiler)
+
     // Hilt
     implementation(libs.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
 
     testImplementation(libs.junit)

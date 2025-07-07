@@ -58,7 +58,7 @@ fun TrainingPlanEditDialog(
             exerciseUiState = exerciseUiState,
             contentType = contentType,
             onExerciseClick = {
-                onTrainingPlanExercisesEvent(TrainingPlanExercisesEvent.AddTrainingPlanExercise(insertedIndex = trainingPlanExerciseUiState.insertedIndexExercise, it))
+                onTrainingPlanExercisesEvent(TrainingPlanExercisesEvent.AddTrainingPlanExercise(insertedIndex = trainingPlanExerciseUiState.insertedIndexExercise, exercise = it))
                 onTrainingPlanEvent(TrainingPlanEvent.HideExerciseSelector)
             },
             onBack = {
@@ -138,47 +138,47 @@ fun TrainingPlanEditDialog(
                     maxLines = 3
                 )
                 LazyColumn {
-                    itemsIndexed(trainingPlanExerciseUiState.pairExerciseAndParams) { index, it ->
-                        val exercise = it.first
-                        val params = it.second
-                        Card {
-                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                                Text(exercise.name)
-                                Text(params.duration.toString())
-                                IconButton(onClick = {
-                                    onTrainingPlanExercisesEvent(TrainingPlanExercisesEvent.DeleteTrainingPlanExercise(index))
-                                }) { Icon(Icons.Filled.Close, contentDescription = "") }
-                            }
-                        }
-                        if(index < trainingPlanExerciseUiState.pairExerciseAndParams.lastIndex){
-                            Card(
-                                onClick = {
-                                    onTrainingPlanExercisesEvent(
-                                        TrainingPlanExercisesEvent.SetInsertedIndexExercise(index + 1)
-                                    )
-                                    onTrainingPlanEvent(
-                                        TrainingPlanEvent.ShowExerciseSelector
-                                    )
-
-                                },
-                                modifier = Modifier
-                                    .height(40.dp)
-                                    .fillParentMaxWidth()
-                                    .padding(5.dp)
-                            ) {
-                                Box(
-                                    modifier = Modifier.fillMaxSize(),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Icon(
-                                        Icons.Filled.Add,
-                                        contentDescription = "stringResource", //TODO()
-                                        modifier = Modifier.size(20.dp)
-                                    )
-                                }
-                            }
-                        }
-                    }
+//                    itemsIndexed(trainingPlanExerciseUiState.pairExerciseAndParams) { index, it ->
+//                        val exercise = it.first
+//                        val params = it.second
+//                        Card {
+//                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+//                                Text(exercise.name)
+//                                Text(params.duration.toString())
+//                                IconButton(onClick = {
+//                                    onTrainingPlanExercisesEvent(TrainingPlanExercisesEvent.DeleteTrainingPlanExercise(index))
+//                                }) { Icon(Icons.Filled.Close, contentDescription = "") }
+//                            }
+//                        }
+//                        if(index < trainingPlanExerciseUiState.pairExerciseAndParams.lastIndex){
+//                            Card(
+//                                onClick = {
+//                                    onTrainingPlanExercisesEvent(
+//                                        TrainingPlanExercisesEvent.SetInsertedIndexExercise(index + 1)
+//                                    )
+//                                    onTrainingPlanEvent(
+//                                        TrainingPlanEvent.ShowExerciseSelector
+//                                    )
+//
+//                                },
+//                                modifier = Modifier
+//                                    .height(40.dp)
+//                                    .fillParentMaxWidth()
+//                                    .padding(5.dp)
+//                            ) {
+//                                Box(
+//                                    modifier = Modifier.fillMaxSize(),
+//                                    contentAlignment = Alignment.Center
+//                                ) {
+//                                    Icon(
+//                                        Icons.Filled.Add,
+//                                        contentDescription = "stringResource", //TODO()
+//                                        modifier = Modifier.size(20.dp)
+//                                    )
+//                                }
+//                            }
+//                        }
+//                    }
                     item {
                         Card(
                             onClick = {

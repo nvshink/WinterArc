@@ -24,8 +24,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.nvshink.domain.exercise.model.ExerciseModel
 import com.nvshink.winterarc.R
-import com.nvshink.winterarc.data.model.Exercise
 import com.nvshink.winterarc.ui.components.exercise.ExerciseEditDialog
 import com.nvshink.winterarc.ui.components.generic.WinterArcItemDetail
 import com.nvshink.winterarc.ui.components.generic.WinterArcListDetailRoute
@@ -62,7 +62,7 @@ fun ExercisesScreen(
             }
             composable<ExerciseItemScreen> {
                 val args = it.toRoute<ExerciseItemScreen>()
-                val exercise: Exercise? =
+                val exercise: ExerciseModel? =
                     if (exerciseUiState is ExerciseUiState.SuccessState) exerciseUiState.exercisesMap[args.id] else null
                 if (exercise != null) {
                     WinterArcExerciseItemScreen(
@@ -71,7 +71,7 @@ fun ExercisesScreen(
                         onEditButtonClick = {
                             onEvent(ExerciseEvent.SetName(exercise.name))
                             onEvent(ExerciseEvent.SetDescription(exercise.description))
-                            onEvent(ExerciseEvent.SetImages(exercise.images))
+                            onEvent(ExerciseEvent.SetImages(exercise.imageLinks))
                             onEvent(ExerciseEvent.ShowDialog(false))
                         },
                         onDeleteButtonClick = {

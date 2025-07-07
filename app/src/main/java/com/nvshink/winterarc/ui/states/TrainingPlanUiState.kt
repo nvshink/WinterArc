@@ -1,10 +1,10 @@
 package com.nvshink.winterarc.ui.states
 
-import com.nvshink.winterarc.data.local.trainingplan.TrainingPlan
+import com.nvshink.domain.trainingplan.model.TrainingPlanModel
 import com.nvshink.winterarc.ui.utils.SortTypes
 
 sealed interface TrainingPlanUiState {
-    val currentTrainingPlan: TrainingPlan?
+    val currentTrainingPlan: TrainingPlanModel?
     val name: String
     val description: String
 //    val trainingPlanExercises: List<TrainingPlanExercise>
@@ -15,7 +15,7 @@ sealed interface TrainingPlanUiState {
     val sortType: SortTypes
 
     data class LoadingState(
-        override val currentTrainingPlan: TrainingPlan? = null,
+        override val currentTrainingPlan: TrainingPlanModel? = null,
         override val name: String = "",
         override val description: String = "",
 //        override val trainingPlanExercises: List<TrainingPlanExercise> = emptyList(),
@@ -27,8 +27,8 @@ sealed interface TrainingPlanUiState {
     ) : TrainingPlanUiState
 
     data class SuccessState(
-        val trainingPlansMap: Map<Long, TrainingPlan> = mutableMapOf(),
-        override val currentTrainingPlan: TrainingPlan? = null,
+        val trainingPlansMap: Map<Long, TrainingPlanModel> = mutableMapOf(),
+        override val currentTrainingPlan: TrainingPlanModel? = null,
         override val name: String = "",
         override val description: String = "",
 //        override val trainingPlanExercises: List<TrainingPlanExercise> = emptyList(),
@@ -41,7 +41,7 @@ sealed interface TrainingPlanUiState {
     ) : TrainingPlanUiState
 
     data class ErrorState(
-        override val currentTrainingPlan: TrainingPlan? = null,
+        override val currentTrainingPlan: TrainingPlanModel? = null,
         override val name: String = "",
         override val description: String = "",
 //        override val trainingPlanExercises: List<TrainingPlanExercise> = emptyList(),

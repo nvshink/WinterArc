@@ -1,4 +1,4 @@
-package com.nvshink.domain.utils
+package com.nvshink.data.local.utils
 
 import android.content.Context
 import android.net.Uri
