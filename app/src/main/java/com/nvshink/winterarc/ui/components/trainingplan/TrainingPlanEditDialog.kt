@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
@@ -34,10 +33,9 @@ import com.nvshink.winterarc.ui.components.generic.WinterArcDialog
 import com.nvshink.winterarc.ui.event.TrainingPlanEvent
 import com.nvshink.winterarc.ui.event.TrainingPlanExercisesEvent
 import com.nvshink.winterarc.ui.states.TrainingPlanExerciseUiState
-import com.nvshink.winterarc.ui.viewModels.ExerciseViewModel
+import com.nvshink.winterarc.ui.viewModels.exercise.ExerciseViewModel
 import com.nvshink.winterarc.ui.states.TrainingPlanUiState
 import com.nvshink.winterarc.ui.utils.WinterArcContentType
-import com.nvshink.winterarc.ui.viewModels.TrainingPlanExerciseViewModel
 
 @Composable
 fun TrainingPlanEditDialog(
@@ -50,12 +48,12 @@ fun TrainingPlanEditDialog(
     onTrainingPlanExercisesEvent: (TrainingPlanExercisesEvent) -> Unit,
 ) {
     val exerciseViewModel: ExerciseViewModel = hiltViewModel()
-    val exerciseUiState = exerciseViewModel.uiState.collectAsState().value
+    val exerciseUiState = exerciseViewModel.listUIState.collectAsState().value
 
     if (trainingPlanUiState.isShowingExerciseSelector && trainingPlanExerciseUiState is TrainingPlanExerciseUiState.SuccessState) {
         ExerciseSelectorDialog(
             trainingPlanUiState = trainingPlanUiState,
-            exerciseUiState = exerciseUiState,
+            exerciseListUiState = exerciseUiState,
             contentType = contentType,
             onExerciseClick = {
                 onTrainingPlanExercisesEvent(TrainingPlanExercisesEvent.AddTrainingPlanExercise(insertedIndex = trainingPlanExerciseUiState.insertedIndexExercise, exercise = it))

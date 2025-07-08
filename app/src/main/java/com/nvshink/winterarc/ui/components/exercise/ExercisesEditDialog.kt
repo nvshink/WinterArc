@@ -3,7 +3,6 @@ package com.nvshink.winterarc.ui.components.exercise
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
@@ -30,26 +28,23 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import coil.compose.AsyncImage
 import com.nvshink.winterarc.R
 import com.nvshink.winterarc.ui.components.generic.WinterArcDialog
 import com.nvshink.winterarc.ui.event.ExerciseEvent
-import com.nvshink.winterarc.ui.states.ExerciseUiState
+import com.nvshink.winterarc.ui.states.exercise.ExerciseListUiState
 import com.nvshink.winterarc.ui.utils.WinterArcContentType
 
 @Composable
 fun ExerciseEditDialog(
     modifier: Modifier = Modifier,
     title: String,
-    exerciseUiState: ExerciseUiState,
+    exerciseListUiState: ExerciseListUiState,
     contentType: WinterArcContentType,
     onEvent: (ExerciseEvent) -> Unit
 ) {
@@ -57,7 +52,7 @@ fun ExerciseEditDialog(
     val multiplePhotoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickMultipleVisualMedia(),
         onResult = { uris ->
-            onEvent(ExerciseEvent.SetImages(exerciseUiState.images + uris.map { it.toString() }))
+            onEvent(ExerciseEvent.SetImages(exerciseListUiState.images + uris.map { it.toString() }))
         }
     )
     WinterArcDialog(
@@ -104,7 +99,7 @@ fun ExerciseEditDialog(
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 OutlinedTextField(
-                    value = exerciseUiState.name,
+                    value = exerciseListUiState.name,
                     label = {
                         Text(stringResource(R.string.text_field_label_name))
                     },
@@ -118,7 +113,7 @@ fun ExerciseEditDialog(
                     singleLine = true
                 )
                 OutlinedTextField(
-                    value = exerciseUiState.description,
+                    value = exerciseListUiState.description,
                     label = {
                         Text(stringResource(R.string.text_field_label_description))
                     },
@@ -141,7 +136,7 @@ fun ExerciseEditDialog(
                     LazyVerticalGrid(
                         columns = GridCells.Adaptive(minSize = 100.dp),
                     ) {
-                        itemsIndexed(exerciseUiState.images) { index, imageUri ->
+                        itemsIndexed(exerciseListUiState.images) { index, imageUri ->
                             Card(
                                 onClick = {}, modifier = Modifier
                                     .size(100.dp)
@@ -156,7 +151,7 @@ fun ExerciseEditDialog(
                                     )
                                     IconButton(
                                         onClick = {
-                                            onEvent(ExerciseEvent.SetImages(exerciseUiState.images.filterIndexed { i, _ -> i != index }))
+                                            onEvent(ExerciseEvent.SetImages(exerciseListUiState.images.filterIndexed { i, _ -> i != index }))
                                         },
                                         modifier = Modifier
                                             .align(Alignment.TopEnd)

@@ -1,6 +1,5 @@
 package com.nvshink.winterarc.ui.screens.exercise
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -36,14 +35,13 @@ import com.nvshink.winterarc.ui.screens.WinterArcEmptyItemScreenColors
 import com.nvshink.winterarc.ui.utils.ExerciseItemScreen
 import com.nvshink.winterarc.ui.utils.EmptyItemScreen
 import com.nvshink.winterarc.ui.utils.WinterArcContentType
-import com.nvshink.winterarc.ui.utils.WinterArcNavigationType
-import com.nvshink.winterarc.ui.states.ExerciseUiState
+import com.nvshink.winterarc.ui.states.exercise.ExerciseListUiState
 import com.nvshink.winterarc.ui.utils.SortTypes
 
 @Composable
 fun ExercisesScreen(
     modifier: Modifier = Modifier,
-    exerciseUiState: ExerciseUiState,
+    exerciseListUiState: ExerciseListUiState,
     exerciseScreenModifier: Modifier,
     contentType: WinterArcContentType,
     innerPadding: PaddingValues,
@@ -63,11 +61,11 @@ fun ExercisesScreen(
             composable<ExerciseItemScreen> {
                 val args = it.toRoute<ExerciseItemScreen>()
                 val exercise: ExerciseModel? =
-                    if (exerciseUiState is ExerciseUiState.SuccessState) exerciseUiState.exercisesMap[args.id] else null
+                    if (exerciseListUiState is ExerciseListUiState.SuccessStateList) exerciseListUiState.exercisesMap[args.id] else null
                 if (exercise != null) {
                     WinterArcExerciseItemScreen(
                         modifier = exerciseScreenModifier,
-                        exerciseUiState = exerciseUiState,
+                        exerciseListUiState = exerciseListUiState,
                         onEditButtonClick = {
                             onEvent(ExerciseEvent.SetName(exercise.name))
                             onEvent(ExerciseEvent.SetDescription(exercise.description))
@@ -90,8 +88,8 @@ fun ExercisesScreen(
             }
         }
     }
-    if (exerciseUiState.isShowingEditDialog) ExerciseEditDialog(
-        exerciseUiState = exerciseUiState,
+    if (exerciseListUiState.isShowingEditDialog) ExerciseEditDialog(
+        exerciseListUiState = exerciseListUiState,
         title = stringResource(R.string.dialog_title_add_exercise),
         contentType = contentType,
         onEvent = onEvent
@@ -100,8 +98,8 @@ fun ExercisesScreen(
         WinterArcListDetailRoute(
             modifier = Modifier.padding(innerPadding),
             contentType = contentType,
-            isShowingList = exerciseUiState.isShowingList,
-            listOfItems = if (exerciseUiState is ExerciseUiState.SuccessState) exerciseUiState.exercisesMap else mutableMapOf(),
+            isShowingList = exerciseListUiState.isShowingList,
+            listOfItems = if (exerciseListUiState is ExerciseListUiState.SuccessStateList) exerciseListUiState.exercisesMap else mutableMapOf(),
             emptyListIcon = Icons.Filled.AddBox,
             emptyListIconDescription = stringResource(R.string.empty_list_icon_description_exercise),
             emptyListTitle = stringResource(R.string.empty_list_title_exercise),
@@ -124,20 +122,20 @@ fun ExercisesScreen(
                     },
                 )
             },
-            isLoading = exerciseUiState::class == ExerciseUiState.LoadingState::class,
+            isLoading = exerciseListUiState::class == ExerciseListUiState.LoadingStateList::class,
             listTopContent = {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     OutlinedButton(onClick = {
                         onEvent(
                             ExerciseEvent.SortExercises(
-                                sortType = when (exerciseUiState.sortType) {
+                                sortType = when (exerciseListUiState.sortType) {
                                     SortTypes.NAME_ASC -> SortTypes.NAME_DESC
                                     SortTypes.NAME_DESC -> SortTypes.NAME_ASC
                                 }
                             )
                         )
-                    }) { Text(text = "Sort " + stringResource(exerciseUiState.sortType.stringResourceName)) }
-                    Text(text = "Now sorted " + exerciseUiState.sortType.name)
+                    }) { Text(text = "Sort " + stringResource(exerciseListUiState.sortType.stringResourceName)) }
+                    Text(text = "Now sorted " + exerciseListUiState.sortType.name)
                 }
             },
             colors = WinterArcEmptyItemScreenColors(

@@ -34,7 +34,7 @@ import com.nvshink.winterarc.ui.utils.TrainingPlanScreenRoute
 import com.nvshink.winterarc.ui.utils.WinterArcContentType
 import com.nvshink.winterarc.ui.utils.WinterArcDestinations
 import com.nvshink.winterarc.ui.utils.WinterArcNavigationType
-import com.nvshink.winterarc.ui.viewModels.ExerciseViewModel
+import com.nvshink.winterarc.ui.viewModels.exercise.ExerciseViewModel
 import com.nvshink.winterarc.ui.viewModels.ProfileViewModel
 
 @Composable
@@ -106,7 +106,7 @@ fun WinterArcApp(
                 }
                 composable<ExerciseScreenRoute> {
                     val exerciseViewModel: ExerciseViewModel = hiltViewModel()
-                    val exerciseUiState = exerciseViewModel.uiState.collectAsState().value
+                    val exerciseUiState = exerciseViewModel.listUIState.collectAsState().value
                     ExercisesScreen(
                         modifier = Modifier
                             .clip(
@@ -115,7 +115,7 @@ fun WinterArcApp(
                             .background(
                                 MaterialTheme.colorScheme.surfaceContainer
                             ),
-                        exerciseUiState = exerciseUiState,
+                        exerciseListUiState = exerciseUiState,
                         exerciseScreenModifier = Modifier
                             .clip(
                                 screensShape

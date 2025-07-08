@@ -5,9 +5,7 @@ import com.nvshink.domain.exercise.model.ExerciseModel
 import com.nvshink.winterarc.ui.utils.SortTypes
 
 sealed interface ExerciseEvent {
-    data class SaveExercise(val context: Context): ExerciseEvent
-    data class ShowDialog(val isAdding: Boolean): ExerciseEvent
-    data object HideDialog: ExerciseEvent
+    data class SaveExercise(val context: Context, val exercise: ExerciseModel): ExerciseEvent
     data object ShowList: ExerciseEvent
     data object HideList: ExerciseEvent
     data class SetIsBigScreen (val isBigScreen: Boolean): ExerciseEvent

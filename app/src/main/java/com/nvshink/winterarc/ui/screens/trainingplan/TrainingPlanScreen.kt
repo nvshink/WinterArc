@@ -34,12 +34,12 @@ import com.nvshink.winterarc.ui.event.TrainingPlanExercisesEvent
 import com.nvshink.winterarc.ui.screens.WinterArcEmptyItemScreen
 import com.nvshink.winterarc.ui.screens.WinterArcEmptyItemScreenColors
 import com.nvshink.winterarc.ui.screens.exercise.WinterArcExerciseItemScreen
-import com.nvshink.winterarc.ui.states.ExerciseUiState
+import com.nvshink.winterarc.ui.states.exercise.ExerciseListUiState
 import com.nvshink.winterarc.ui.utils.ExerciseItemScreen
 import com.nvshink.winterarc.ui.utils.EmptyItemScreen
 import com.nvshink.winterarc.ui.utils.TrainingPlanItemScreen
 import com.nvshink.winterarc.ui.utils.WinterArcContentType
-import com.nvshink.winterarc.ui.viewModels.ExerciseViewModel
+import com.nvshink.winterarc.ui.viewModels.exercise.ExerciseViewModel
 import com.nvshink.winterarc.ui.states.TrainingPlanUiState
 import com.nvshink.winterarc.ui.viewModels.TrainingPlanExerciseViewModel
 
@@ -103,13 +103,13 @@ fun TrainingPlanScreen(
             composable<ExerciseItemScreen> {
                 val args = it.toRoute<ExerciseItemScreen>()
                 val exerciseViewModel: ExerciseViewModel = hiltViewModel()
-                val exerciseItemScreenUiState = exerciseViewModel.uiState.collectAsState().value
-                if (exerciseItemScreenUiState is ExerciseUiState.SuccessState) {
+                val exerciseItemScreenUiState = exerciseViewModel.listUIState.collectAsState().value
+                if (exerciseItemScreenUiState is ExerciseListUiState.SuccessStateList) {
                     val exercise: ExerciseModel? = exerciseItemScreenUiState.exercisesMap[args.id]
                     if (exercise != null) {
                         onExerciseEvent(ExerciseEvent.UpdateCurrentExercise(exercise))
                         WinterArcExerciseItemScreen(
-                            exerciseUiState = exerciseItemScreenUiState,
+                            exerciseListUiState = exerciseItemScreenUiState,
                             onEditButtonClick = {
                                 onExerciseEvent(ExerciseEvent.ShowDialog(isAdding = false))
                             },

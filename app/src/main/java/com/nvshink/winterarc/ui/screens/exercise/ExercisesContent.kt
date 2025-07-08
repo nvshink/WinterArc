@@ -27,13 +27,13 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.nvshink.winterarc.R
 import com.nvshink.winterarc.ui.components.generic.WinterArcItemScreenTopBar
-import com.nvshink.winterarc.ui.states.ExerciseUiState
+import com.nvshink.winterarc.ui.states.exercise.ExerciseListUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WinterArcExerciseItemScreen(
     modifier: Modifier = Modifier,
-    exerciseUiState: ExerciseUiState,
+    exerciseListUiState: ExerciseListUiState,
     onEditButtonClick: (() -> Unit)? = null,
     onDeleteButtonClick: (() -> Unit)? = null,
     onBackPressed: () -> Unit,
@@ -41,11 +41,11 @@ fun WinterArcExerciseItemScreen(
     BackHandler {
         onBackPressed()
     }
-    if (exerciseUiState.currentExercise != null) { //TODO create handler empty current exercise navigate
+    if (exerciseListUiState.currentExercise != null) { //TODO create handler empty current exercise navigate
         val carouselState =
-            rememberCarouselState { exerciseUiState.currentExercise!!.imageLinks.size }
+            rememberCarouselState { exerciseListUiState.currentExercise!!.imageLinks.size }
         Column(modifier = modifier.fillMaxSize()) {
-            WinterArcItemScreenTopBar(modifier = Modifier.padding(16.dp), isBigScreen = exerciseUiState.isBigScreen, onBackButtonClicked = onBackPressed) {
+            WinterArcItemScreenTopBar(modifier = Modifier.padding(16.dp), isBigScreen = exerciseListUiState.isBigScreen, onBackButtonClicked = onBackPressed) {
                 if (onEditButtonClick != null) {
                     IconButton(onClick = onEditButtonClick) {
                         Icon(Icons.Filled.Edit, contentDescription = stringResource(R.string.edit_exercise_button_icon_description))
@@ -62,10 +62,10 @@ fun WinterArcExerciseItemScreen(
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
                 Text(
-                    text = exerciseUiState.currentExercise!!.name,
+                    text = exerciseListUiState.currentExercise!!.name,
                     style = MaterialTheme.typography.titleLarge,
                 )
-                if (exerciseUiState.currentExercise!!.imageLinks.isNotEmpty()){
+                if (exerciseListUiState.currentExercise!!.imageLinks.isNotEmpty()){
                     HorizontalMultiBrowseCarousel(
                         state = carouselState,
                         preferredItemWidth = 300.dp,    //TODO Fix single image width
@@ -78,7 +78,7 @@ fun WinterArcExerciseItemScreen(
                             .height(height = 300.dp)
                     ) { itemIndex ->
                         AsyncImage(
-                            model = exerciseUiState.currentExercise!!.imageLinks[itemIndex],
+                            model = exerciseListUiState.currentExercise!!.imageLinks[itemIndex],
                             contentDescription = null,
                             modifier = Modifier
                                 .fillMaxSize()
@@ -89,7 +89,7 @@ fun WinterArcExerciseItemScreen(
                     }
                 }
                 Text(
-                    text = exerciseUiState.currentExercise!!.description,
+                    text = exerciseListUiState.currentExercise!!.description,
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }
