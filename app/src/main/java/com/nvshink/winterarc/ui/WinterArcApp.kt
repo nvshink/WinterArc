@@ -34,7 +34,7 @@ import com.nvshink.winterarc.ui.utils.TrainingPlanScreenRoute
 import com.nvshink.winterarc.ui.utils.WinterArcContentType
 import com.nvshink.winterarc.ui.utils.WinterArcDestinations
 import com.nvshink.winterarc.ui.utils.WinterArcNavigationType
-import com.nvshink.winterarc.ui.viewModels.exercise.ExerciseViewModel
+import com.nvshink.winterarc.ui.viewModels.exercise.ExerciseListViewModel
 import com.nvshink.winterarc.ui.viewModels.ProfileViewModel
 
 @Composable
@@ -105,8 +105,8 @@ fun WinterArcApp(
                     )
                 }
                 composable<ExerciseScreenRoute> {
-                    val exerciseViewModel: ExerciseViewModel = hiltViewModel()
-                    val exerciseUiState = exerciseViewModel.listUIState.collectAsState().value
+                    val exerciseListViewModel: ExerciseListViewModel = hiltViewModel()
+                    val exerciseListUiState = exerciseListViewModel.listUIState.collectAsState().value
                     ExercisesScreen(
                         modifier = Modifier
                             .clip(
@@ -115,15 +115,15 @@ fun WinterArcApp(
                             .background(
                                 MaterialTheme.colorScheme.surfaceContainer
                             ),
-                        exerciseListUiState = exerciseUiState,
+                        exerciseListUiState = exerciseListUiState,
+                        onExerciseListEvent = exerciseListViewModel::onListEvent,
                         exerciseScreenModifier = Modifier
                             .clip(
                                 screensShape
                             )
                             .background(MaterialTheme.colorScheme.surface),
                         contentType = contentType,
-                        innerPadding = innerPadding,
-                        onEvent = exerciseViewModel::onEvent
+                        innerPadding = innerPadding
                     )
                 }
                 composable<ProfileScreenRoute> {

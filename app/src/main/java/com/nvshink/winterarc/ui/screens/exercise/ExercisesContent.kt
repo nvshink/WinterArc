@@ -27,13 +27,14 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.nvshink.winterarc.R
 import com.nvshink.winterarc.ui.components.generic.WinterArcItemScreenTopBar
+import com.nvshink.winterarc.ui.states.exercise.ExerciseDetailUIState
 import com.nvshink.winterarc.ui.states.exercise.ExerciseListUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WinterArcExerciseItemScreen(
     modifier: Modifier = Modifier,
-    exerciseListUiState: ExerciseListUiState,
+    exerciseDetailUiState: ExerciseDetailUIState,
     onEditButtonClick: (() -> Unit)? = null,
     onDeleteButtonClick: (() -> Unit)? = null,
     onBackPressed: () -> Unit,
@@ -41,58 +42,20 @@ fun WinterArcExerciseItemScreen(
     BackHandler {
         onBackPressed()
     }
-    if (exerciseListUiState.currentExercise != null) { //TODO create handler empty current exercise navigate
-        val carouselState =
-            rememberCarouselState { exerciseListUiState.currentExercise!!.imageLinks.size }
-        Column(modifier = modifier.fillMaxSize()) {
-            WinterArcItemScreenTopBar(modifier = Modifier.padding(16.dp), isBigScreen = exerciseListUiState.isBigScreen, onBackButtonClicked = onBackPressed) {
-                if (onEditButtonClick != null) {
-                    IconButton(onClick = onEditButtonClick) {
-                        Icon(Icons.Filled.Edit, contentDescription = stringResource(R.string.edit_exercise_button_icon_description))
-                    }
-                }
-                if (onDeleteButtonClick != null) {
-                    IconButton(onClick = onDeleteButtonClick) {
-                        Icon(Icons.Filled.Delete, contentDescription = stringResource(R.string.delete_button_icon_description))
-                    }
-                }
-            }
-            Column(
-                modifier = Modifier.padding(20.dp),
-                verticalArrangement = Arrangement.spacedBy(24.dp)
-            ) {
-                Text(
-                    text = exerciseListUiState.currentExercise!!.name,
-                    style = MaterialTheme.typography.titleLarge,
-                )
-                if (exerciseListUiState.currentExercise!!.imageLinks.isNotEmpty()){
-                    HorizontalMultiBrowseCarousel(
-                        state = carouselState,
-                        preferredItemWidth = 300.dp,    //TODO Fix single image width
-                        itemSpacing = 8.dp,
-                        contentPadding = (PaddingValues(horizontal = 16.dp, vertical = 8.dp)),
-                        minSmallItemWidth = 40.dp,
-                        maxSmallItemWidth = 56.dp,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(height = 300.dp)
-                    ) { itemIndex ->
-                        AsyncImage(
-                            model = exerciseListUiState.currentExercise!!.imageLinks[itemIndex],
-                            contentDescription = null,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .maskClip(MaterialTheme.shapes.extraLarge)
-                                .background(MaterialTheme.colorScheme.surface),
-                            contentScale = ContentScale.Crop
-                        )
-                    }
-                }
-                Text(
-                    text = exerciseListUiState.currentExercise!!.description,
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-            }
+    when(exerciseDetailUiState) {
+        is ExerciseDetailUIState.LoadingState -> {
+
+        }
+        is ExerciseDetailUIState.ViewState -> {
+
+        }
+        is ExerciseDetailUIState.AddState -> {
+
+        }
+        is ExerciseDetailUIState.EditState -> {
+
+        }
+        is ExerciseDetailUIState.ErrorState -> {
 
         }
     }

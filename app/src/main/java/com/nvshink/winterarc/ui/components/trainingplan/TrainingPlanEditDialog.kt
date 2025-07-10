@@ -33,7 +33,7 @@ import com.nvshink.winterarc.ui.components.generic.WinterArcDialog
 import com.nvshink.winterarc.ui.event.TrainingPlanEvent
 import com.nvshink.winterarc.ui.event.TrainingPlanExercisesEvent
 import com.nvshink.winterarc.ui.states.TrainingPlanExerciseUiState
-import com.nvshink.winterarc.ui.viewModels.exercise.ExerciseViewModel
+import com.nvshink.winterarc.ui.viewModels.exercise.ExerciseListViewModel
 import com.nvshink.winterarc.ui.states.TrainingPlanUiState
 import com.nvshink.winterarc.ui.utils.WinterArcContentType
 
@@ -47,9 +47,8 @@ fun TrainingPlanEditDialog(
     onTrainingPlanEvent: (TrainingPlanEvent) -> Unit,
     onTrainingPlanExercisesEvent: (TrainingPlanExercisesEvent) -> Unit,
 ) {
-    val exerciseViewModel: ExerciseViewModel = hiltViewModel()
-    val exerciseUiState = exerciseViewModel.listUIState.collectAsState().value
-
+    val exerciseListViewModel: ExerciseListViewModel = hiltViewModel()
+    val exerciseUiState = exerciseListViewModel.listUIState.collectAsState().value
     if (trainingPlanUiState.isShowingExerciseSelector && trainingPlanExerciseUiState is TrainingPlanExerciseUiState.SuccessState) {
         ExerciseSelectorDialog(
             trainingPlanUiState = trainingPlanUiState,

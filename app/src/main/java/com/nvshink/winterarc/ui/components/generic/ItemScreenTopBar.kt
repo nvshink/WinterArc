@@ -13,11 +13,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.nvshink.winterarc.R
+import com.nvshink.winterarc.ui.utils.WinterArcContentType
 
 @Composable
 fun WinterArcItemScreenTopBar(
     modifier: Modifier = Modifier,
-    isBigScreen: Boolean,
+    contentType: WinterArcContentType,
     onBackButtonClicked: (() -> Unit)? = null,
     actions: @Composable (() -> Unit)? = null
 ) {
@@ -28,7 +29,13 @@ fun WinterArcItemScreenTopBar(
     ) {
         if (onBackButtonClicked != null) {
             IconButton(onClick = { onBackButtonClicked() }) {
-                Icon(if (isBigScreen) Icons.Filled.Close else Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.close_button_icon_description))
+                Icon(
+                    imageVector = when (contentType) {
+                        WinterArcContentType.LIST_ONLY -> Icons.Filled.Close
+                        WinterArcContentType.LIST_AND_DETAIL -> Icons.AutoMirrored.Filled.ArrowBack
+                    },
+                    contentDescription = stringResource(R.string.close_button_icon_description)
+                )
             }
         }
         Row {

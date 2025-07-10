@@ -1,0 +1,103 @@
+package com.nvshink.winterarc.ui.components.exercise
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
+import androidx.compose.material3.carousel.rememberCarouselState
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import com.nvshink.winterarc.R
+import com.nvshink.winterarc.ui.components.generic.WinterArcItemScreenTopBar
+import com.nvshink.winterarc.ui.states.exercise.ExerciseDetailUIState
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ExerciseReadItem(
+    modifier: Modifier = Modifier,
+    exerciseDetailUiState: ExerciseDetailUIState.ViewState,
+    onEditButtonClick: (() -> Unit)? = null,
+    onDeleteButtonClick: (() -> Unit)? = null,
+    onBackPressed: () -> Unit,
+) {
+    val carouselState =
+        rememberCarouselState { exerciseDetailUiState.exercise.imageLinks.size }
+    Column(modifier = modifier.fillMaxSize()) {
+        WinterArcItemScreenTopBar(
+            modifier = Modifier.padding(16.dp),
+            contentType = exerciseDetailUiState.contentType,
+            onBackButtonClicked = onBackPressed
+        ) {
+            if (onEditButtonClick != null) {
+                IconButton(onClick = onEditButtonClick) {
+                    Icon(
+                        Icons.Filled.Edit,
+                        contentDescription = stringResource(R.string.edit_exercise_button_icon_description)
+                    )
+                }
+            }
+            if (onDeleteButtonClick != null) {
+                IconButton(onClick = onDeleteButtonClick) {
+                    Icon(
+                        Icons.Filled.Delete,
+                        contentDescription = stringResource(R.string.delete_button_icon_description)
+                    )
+                }
+            }
+        }
+        Column(
+            modifier = Modifier.padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp)
+        ) {
+            Text(
+                text = exerciseDetailUiState.exercise.name,
+                style = MaterialTheme.typography.titleLarge,
+            )
+            if (exerciseDetailUiState.exercise.imageLinks.isNotEmpty()) {
+                HorizontalMultiBrowseCarousel(
+                    state = carouselState,
+                    preferredItemWidth = 300.dp,    //TODO Fix single image width
+                    itemSpacing = 8.dp,
+                    contentPadding = (PaddingValues(horizontal = 16.dp, vertical = 8.dp)),
+                    minSmallItemWidth = 40.dp,
+                    maxSmallItemWidth = 56.dp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(height = 300.dp)
+                ) { itemIndex ->
+                    AsyncImage(
+                        model = exerciseDetailUiState.exercise.imageLinks[itemIndex],
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .maskClip(MaterialTheme.shapes.extraLarge)
+                            .background(MaterialTheme.colorScheme.surface),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+            }
+            Text(
+                text = exerciseDetailUiState.exercise.description,
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        }
+
+    }
+}

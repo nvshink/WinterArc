@@ -12,7 +12,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.nvshink.winterarc.ui.event.ExerciseEvent
+import com.nvshink.winterarc.ui.event.exercise.ExerciseListEvent
 import com.nvshink.winterarc.ui.screens.WinterArcEmptyItemScreenColors
 import com.nvshink.winterarc.ui.utils.WinterArcContentType
 
@@ -32,7 +32,7 @@ fun <T> WinterArcListDetailRoute(
     emptyListTitle: String? = "",
     listArrangement: Dp = 5.dp,
     isLoading: Boolean,
-    onEvent: (ExerciseEvent) -> Unit,
+    onEvent: (ExerciseListEvent) -> Unit,
     contentType: WinterArcContentType = WinterArcContentType.LIST_ONLY,
     listTopContent: (@Composable () -> Unit) = {},
     colors: WinterArcEmptyItemScreenColors,
@@ -55,7 +55,7 @@ fun <T> WinterArcListDetailRoute(
                     fab = fab
                 )
             } else {
-                BackHandler { onEvent(ExerciseEvent.ShowList) }
+                BackHandler { onEvent(ExerciseListEvent.ShowList) }
             }
             WinterArcItemDetail(
                 modifier = Modifier.alpha(if (isShowingList) 0f else 1f),
@@ -75,7 +75,7 @@ fun <T> WinterArcListDetailRoute(
                 colors = colors,
                 fab = fab
             )
-            BackHandler { onEvent(ExerciseEvent.ShowList)  }
+            BackHandler { onEvent(ExerciseListEvent.ShowList)  }
         }
     }
 }

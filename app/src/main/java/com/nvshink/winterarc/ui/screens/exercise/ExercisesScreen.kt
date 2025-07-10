@@ -15,10 +15,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.movableContentOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -29,25 +31,31 @@ import com.nvshink.winterarc.ui.components.exercise.ExerciseEditDialog
 import com.nvshink.winterarc.ui.components.generic.WinterArcItemDetail
 import com.nvshink.winterarc.ui.components.generic.WinterArcListDetailRoute
 import com.nvshink.winterarc.ui.components.generic.WinterArcListItem
-import com.nvshink.winterarc.ui.event.ExerciseEvent
+import com.nvshink.winterarc.ui.event.exercise.ExerciseDetailEvent
+import com.nvshink.winterarc.ui.event.exercise.ExerciseListEvent
 import com.nvshink.winterarc.ui.screens.WinterArcEmptyItemScreen
 import com.nvshink.winterarc.ui.screens.WinterArcEmptyItemScreenColors
+import com.nvshink.winterarc.ui.states.exercise.ExerciseDetailUIState
 import com.nvshink.winterarc.ui.utils.ExerciseItemScreen
 import com.nvshink.winterarc.ui.utils.EmptyItemScreen
 import com.nvshink.winterarc.ui.utils.WinterArcContentType
 import com.nvshink.winterarc.ui.states.exercise.ExerciseListUiState
 import com.nvshink.winterarc.ui.utils.SortTypes
+import com.nvshink.winterarc.ui.viewModels.exercise.ExerciseDetailViewModel
+import com.nvshink.winterarc.ui.viewModels.exercise.ExerciseListViewModel
 
 @Composable
 fun ExercisesScreen(
     modifier: Modifier = Modifier,
     exerciseListUiState: ExerciseListUiState,
+    onExerciseListEvent: (ExerciseListEvent) -> Unit,
     exerciseScreenModifier: Modifier,
     contentType: WinterArcContentType,
-    innerPadding: PaddingValues,
-    onEvent: (ExerciseEvent) -> Unit
+    innerPadding: PaddingValues
 ) {
-    onEvent(ExerciseEvent.SetIsBigScreen(contentType == WinterArcContentType.LIST_AND_DETAIL))
+    val exerciseDetailViewModel: ExerciseDetailViewModel = hiltViewModel()
+    val exerciseDetailUiState = exerciseDetailViewModel.detailUIState.collectAsState().value
+    val onExerciseDetailEvent = exerciseDetailViewModel :: onDetailEvent
     val navController = rememberNavController()
     val navHost = movableContentOf<PaddingValues> {
         NavHost(navController = navController, startDestination = EmptyItemScreen) {
@@ -60,40 +68,35 @@ fun ExercisesScreen(
             }
             composable<ExerciseItemScreen> {
                 val args = it.toRoute<ExerciseItemScreen>()
-                val exercise: ExerciseModel? =
-                    if (exerciseListUiState is ExerciseListUiState.SuccessStateList) exerciseListUiState.exercisesMap[args.id] else null
-                if (exercise != null) {
-                    WinterArcExerciseItemScreen(
-                        modifier = exerciseScreenModifier,
-                        exerciseListUiState = exerciseListUiState,
-                        onEditButtonClick = {
-                            onEvent(ExerciseEvent.SetName(exercise.name))
-                            onEvent(ExerciseEvent.SetDescription(exercise.description))
-                            onEvent(ExerciseEvent.SetImages(exercise.imageLinks))
-                            onEvent(ExerciseEvent.ShowDialog(false))
-                        },
-                        onDeleteButtonClick = {
-                            onEvent(ExerciseEvent.ShowList)
+                onExerciseDetailEvent(ExerciseDetailEvent.SetExercise(args.id))
+                onExerciseDetailEvent(ExerciseDetailEvent.ViewExercise)
+                WinterArcExerciseItemScreen(
+                    modifier = exerciseScreenModifier,
+                    exerciseDetailUiState = exerciseDetailUiState,
+                    onEditButtonClick = {
+                        onExerciseDetailEvent(ExerciseDetailEvent.EditExercise)
+                    },
+                    onDeleteButtonClick = {
+                        if (exerciseDetailUiState is ExerciseDetailUIState.ViewState){
+                            onExerciseListEvent(ExerciseListEvent.ShowList)
                             navController.navigate(EmptyItemScreen)
-                            onEvent(ExerciseEvent.UpdateCurrentExercise(null))
-                            onEvent(ExerciseEvent.DeleteExercise(exercise))
-                        },
-                        onBackPressed = {
-                            onEvent(ExerciseEvent.ShowList)
-                            navController.navigate(EmptyItemScreen)
-                            onEvent(ExerciseEvent.UpdateCurrentExercise(null))
+                            onExerciseListEvent(ExerciseListEvent.UpdateCurrentExercise(null))
+                            onExerciseDetailEvent(
+                                ExerciseDetailEvent.DeleteExercise(
+                                    exerciseDetailUiState.exercise
+                                )
+                            )
                         }
-                    )
-                }
+                    },
+                    onBackPressed = {
+                        onExerciseListEvent(ExerciseListEvent.ShowList)
+                        navController.navigate(EmptyItemScreen)
+                        onExerciseListEvent(ExerciseListEvent.UpdateCurrentExercise(null))
+                    }
+                )
             }
         }
     }
-    if (exerciseListUiState.isShowingEditDialog) ExerciseEditDialog(
-        exerciseListUiState = exerciseListUiState,
-        title = stringResource(R.string.dialog_title_add_exercise),
-        contentType = contentType,
-        onEvent = onEvent
-    )
     Box(modifier = modifier) {
         WinterArcListDetailRoute(
             modifier = Modifier.padding(innerPadding),
@@ -104,7 +107,7 @@ fun ExercisesScreen(
             emptyListIconDescription = stringResource(R.string.empty_list_icon_description_exercise),
             emptyListTitle = stringResource(R.string.empty_list_title_exercise),
             listArrangement = 10.dp,
-            onEvent = onEvent,
+            onEvent = onExerciseListEvent,
             details = {
                 WinterArcItemDetail {
                     navHost(PaddingValues())
@@ -116,8 +119,8 @@ fun ExercisesScreen(
                     subtitle = null,
                     additionalInfo = null,
                     onCardClick = {
-                        onEvent(ExerciseEvent.UpdateCurrentExercise(item))
-                        onEvent(ExerciseEvent.HideList)
+                        onExerciseListEvent(ExerciseListEvent.UpdateCurrentExercise(item))
+                        onExerciseListEvent(ExerciseListEvent.HideList)
                         navController.navigate(route = ExerciseItemScreen(item.id))
                     },
                 )
@@ -126,8 +129,8 @@ fun ExercisesScreen(
             listTopContent = {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     OutlinedButton(onClick = {
-                        onEvent(
-                            ExerciseEvent.SortExercises(
+                        onExerciseListEvent(
+                            ExerciseListEvent.SortExercises(
                                 sortType = when (exerciseListUiState.sortType) {
                                     SortTypes.NAME_ASC -> SortTypes.NAME_DESC
                                     SortTypes.NAME_DESC -> SortTypes.NAME_ASC
@@ -144,10 +147,7 @@ fun ExercisesScreen(
             ),
             fab = {
                 FloatingActionButton({
-                    onEvent(ExerciseEvent.SetName(""))
-                    onEvent(ExerciseEvent.SetDescription(""))
-                    onEvent(ExerciseEvent.SetImages(emptyList()))
-                    onEvent(ExerciseEvent.ShowDialog(true))
+                    onExerciseDetailEvent(ExerciseDetailEvent.AddExercise)
                 }, modifier = it) {
                     Icon(
                         Icons.Filled.Add,

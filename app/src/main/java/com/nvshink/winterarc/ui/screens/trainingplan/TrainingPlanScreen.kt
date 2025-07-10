@@ -28,7 +28,7 @@ import com.nvshink.winterarc.ui.components.generic.WinterArcItemDetail
 import com.nvshink.winterarc.ui.components.generic.WinterArcListDetailRoute
 import com.nvshink.winterarc.ui.components.generic.WinterArcListItem
 import com.nvshink.winterarc.ui.components.trainingplan.TrainingPlanEditDialog
-import com.nvshink.winterarc.ui.event.ExerciseEvent
+import com.nvshink.winterarc.ui.event.exercise.ExerciseListEvent
 import com.nvshink.winterarc.ui.event.TrainingPlanEvent
 import com.nvshink.winterarc.ui.event.TrainingPlanExercisesEvent
 import com.nvshink.winterarc.ui.screens.WinterArcEmptyItemScreen
@@ -39,7 +39,7 @@ import com.nvshink.winterarc.ui.utils.ExerciseItemScreen
 import com.nvshink.winterarc.ui.utils.EmptyItemScreen
 import com.nvshink.winterarc.ui.utils.TrainingPlanItemScreen
 import com.nvshink.winterarc.ui.utils.WinterArcContentType
-import com.nvshink.winterarc.ui.viewModels.exercise.ExerciseViewModel
+import com.nvshink.winterarc.ui.viewModels.exercise.ExerciseListViewModel
 import com.nvshink.winterarc.ui.states.TrainingPlanUiState
 import com.nvshink.winterarc.ui.viewModels.TrainingPlanExerciseViewModel
 
@@ -51,7 +51,7 @@ fun TrainingPlanScreen(
     contentType: WinterArcContentType,
     innerPadding: PaddingValues,
     onEvent: (TrainingPlanEvent) -> Unit,
-    onExerciseEvent: (ExerciseEvent) -> Unit,
+    onExerciseEvent: (ExerciseListEvent) -> Unit,
 ) {
     onEvent(TrainingPlanEvent.SetIsBigScreen(contentType == WinterArcContentType.LIST_AND_DETAIL))
     val navController = rememberNavController()
@@ -102,19 +102,19 @@ fun TrainingPlanScreen(
             }
             composable<ExerciseItemScreen> {
                 val args = it.toRoute<ExerciseItemScreen>()
-                val exerciseViewModel: ExerciseViewModel = hiltViewModel()
-                val exerciseItemScreenUiState = exerciseViewModel.listUIState.collectAsState().value
+                val exerciseListViewModel: ExerciseListViewModel = hiltViewModel()
+                val exerciseItemScreenUiState = exerciseListViewModel.listUIState.collectAsState().value
                 if (exerciseItemScreenUiState is ExerciseListUiState.SuccessStateList) {
                     val exercise: ExerciseModel? = exerciseItemScreenUiState.exercisesMap[args.id]
                     if (exercise != null) {
-                        onExerciseEvent(ExerciseEvent.UpdateCurrentExercise(exercise))
+                        onExerciseEvent(ExerciseListEvent.UpdateCurrentExercise(exercise))
                         WinterArcExerciseItemScreen(
                             exerciseListUiState = exerciseItemScreenUiState,
                             onEditButtonClick = {
-                                onExerciseEvent(ExerciseEvent.ShowDialog(isAdding = false))
+                                onExerciseEvent(ExerciseListEvent.ShowDialog(isAdding = false))
                             },
                             onDeleteButtonClick = {
-                                onExerciseEvent(ExerciseEvent.DeleteExercise(exercise))
+                                onExerciseEvent(ExerciseListEvent.DeleteExercise(exercise))
                             },
                             onBackPressed = {
                                 navController.navigate(EmptyItemScreen)

@@ -21,7 +21,7 @@ object WinterArcDestinations {
     }
 
     fun getDefaultTopLevelRoute(): TopLevelRoute<out Any> {
-        val defaultTopLevelRoute: TopLevelRoute<out Any> = topLevelRoutes.get(0)
+        val defaultTopLevelRoute: TopLevelRoute<out Any> = topLevelRoutes[0]
         return defaultTopLevelRoute
     }
 }

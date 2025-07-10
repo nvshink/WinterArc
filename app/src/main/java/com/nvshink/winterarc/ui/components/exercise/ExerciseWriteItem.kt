@@ -34,25 +34,30 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.nvshink.domain.exercise.model.ExerciseModel
 import com.nvshink.winterarc.R
 import com.nvshink.winterarc.ui.components.generic.WinterArcDialog
-import com.nvshink.winterarc.ui.event.ExerciseEvent
+import com.nvshink.winterarc.ui.event.exercise.ExerciseDetailEvent
+import com.nvshink.winterarc.ui.event.exercise.ExerciseListEvent
+import com.nvshink.winterarc.ui.states.exercise.ExerciseDetailUIState
 import com.nvshink.winterarc.ui.states.exercise.ExerciseListUiState
 import com.nvshink.winterarc.ui.utils.WinterArcContentType
 
 @Composable
-fun ExerciseEditDialog(
+fun ExerciseWriteItem(
     modifier: Modifier = Modifier,
     title: String,
-    exerciseListUiState: ExerciseListUiState,
+//    exerciseDetailUiState: ExerciseDetailUIState,
+    exercise: ExerciseModel,
     contentType: WinterArcContentType,
-    onEvent: (ExerciseEvent) -> Unit
+    onEvent: (ExerciseDetailEvent) -> Unit,
+    onBackPressed: () -> Unit
 ) {
     val context = LocalContext.current
     val multiplePhotoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickMultipleVisualMedia(),
         onResult = { uris ->
-            onEvent(ExerciseEvent.SetImages(exerciseListUiState.images + uris.map { it.toString() }))
+            onEvent(ExerciseDetailEvent.SetImages(exercise.imageLinks + uris.map { it.toString() }))
         }
     )
     WinterArcDialog(
@@ -66,7 +71,7 @@ fun ExerciseEditDialog(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(onClick = {
-                    onEvent(ExerciseEvent.HideDialog)
+                    onBackPressed()
                 }) {
                     Icon(
                         Icons.Filled.Close,
@@ -81,8 +86,9 @@ fun ExerciseEditDialog(
                     modifier = Modifier.weight(1f)
                 )
                 TextButton(onClick = {
-                    onEvent(ExerciseEvent.SaveExercise(context = context))
-                    onEvent(ExerciseEvent.HideDialog)
+                    onEvent(ExerciseDetailEvent.SaveExercise(exercise))
+                    onEvent(ExerciseDetailEvent.SetExercise(exercise.id))
+                    onEvent(ExerciseDetailEvent.ViewExercise)
                 }) {
                     Text(
                         stringResource(R.string.save_button_name),
@@ -107,7 +113,7 @@ fun ExerciseEditDialog(
                         Text(stringResource(R.string.text_field_placeholder_name))
                     },
                     onValueChange = { it: String ->
-                        onEvent(ExerciseEvent.SetName(it))
+                        onEvent(ExerciseListEvent.SetName(it))
                     },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
@@ -121,7 +127,7 @@ fun ExerciseEditDialog(
                         Text(stringResource(R.string.text_field_placeholder_description))
                     },
                     onValueChange = { it: String ->
-                        onEvent(ExerciseEvent.SetDescription(it))
+                        onEvent(ExerciseListEvent.SetDescription(it))
                     },
                     modifier = Modifier.fillMaxWidth(),
                     maxLines = 3
@@ -151,7 +157,7 @@ fun ExerciseEditDialog(
                                     )
                                     IconButton(
                                         onClick = {
-                                            onEvent(ExerciseEvent.SetImages(exerciseListUiState.images.filterIndexed { i, _ -> i != index }))
+                                            onEvent(ExerciseListEvent.SetImages(exerciseListUiState.images.filterIndexed { i, _ -> i != index }))
                                         },
                                         modifier = Modifier
                                             .align(Alignment.TopEnd)
@@ -191,7 +197,6 @@ fun ExerciseEditDialog(
             }
         },
         contentType = contentType,
-        onDismissRequest = { onEvent(ExerciseEvent.HideDialog) }
+        onDismissRequest = { onEvent(ExerciseListEvent.HideDialog) }
     )
 }
-
